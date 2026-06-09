@@ -1,0 +1,55 @@
+@HttpFiles_HotAddress = https://rickandmortyapi.com/api
+
+### ===============================
+### 
+### ===============================
+
+GET {{HttpFiles_HotAddress}}
+
+### ===============================
+### Get all characters
+### ===============================
+GET {{HttpFiles_HotAddress}}/character
+
+### ===============================
+### Get a single character
+### ===============================
+GET {{HttpFiles_HotAddress}}/character/1
+
+### ===============================
+### Get multiple characters by id
+### ===============================
+GET {{HttpFiles_HotAddress}}/character/[1,2,3]
+
+### ===============================
+### Get all locations
+### ===============================
+GET {{HttpFiles_HotAddress}}/location
+### ===============================
+### Get a single location
+### ===============================
+GET {{HttpFiles_HotAddress}}/location/1
+### ===============================
+### Get multiple locations by id
+### ===============================
+GET {{HttpFiles_HotAddress}}/location/[1,2,3]
+
+### ===============================
+### Get all episodes
+### ===============================
+GET {{HttpFiles_HotAddress}}/episode
+### ===============================
+### Get a single episode
+### ===============================
+GET {{HttpFiles_HotAddress}}/episode/1
+### ===============================
+### Get multiple episodes by id
+### ===============================
+GET {{HttpFiles_HotAddress}}/episode/[1,2,3]
+
+
+### ===============================
+### Get Page 2 of characters
+### ===============================
+
+GET {{HttpFiles_HotAddress}}/character?page=4
