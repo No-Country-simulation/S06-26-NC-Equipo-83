@@ -13,6 +13,7 @@ psycopg2-binary==2.9.10
 # Data validation (bundled with FastAPI, pinned for reproducibility)
 pydantic==2.10.4
 pydantic-settings==2.7.0
+email-validator==2.3.0
 
 # Authentication (JWT)
 python-jose[cryptography]==3.3.0
