@@ -259,3 +259,5 @@ La documentación técnica se encuentra en la carpeta [`/docs`](Docs/):
   <p><strong>App BiT</strong> — Hackathon / No Country</p>
   <p>Proyecto desarrollado con fines educativos y de innovación tecnológica.</p>
 </div>
+
+ejemplo
