@@ -21,6 +21,7 @@ Al crear la cuenta completa:
 **Datos profesionales:** nivel, área de tecnología, qué busca — estudiar / definir camino / buscar empleo / cambiar de empleo
 
 **Dolores reales que la solución debe abordar:**
+
 - Baja autoestima y complejo de inferioridad
 - Ciclo de exclusión — una barrera lleva a otra
 - Desventajas socioeconómicas acumuladas

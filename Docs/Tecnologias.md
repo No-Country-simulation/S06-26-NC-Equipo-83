@@ -9,7 +9,7 @@
 
 | Decisión   | Opciones                                   | Elegido |
 | ---------- | ------------------------------------------ | ------- |
-| Framework  | React / Vue / Angular / Svelte             |         |
+| Framework  | React / Neextjs                            |         |
 | Lenguaje   | JavaScript / TypeScript                    |         |
 | Estilos    | CSS / Tailwind / Bootstrap / Sass          |         |
 | Estado     | Redux / Zustand / Context API / Pinia      |         |
@@ -40,7 +40,7 @@
 
 | Decisión | Opciones | Elegido |
 |----------|----------|---------|
-| Motor | PostgreSQL / MySQL / MongoDB / SQLite | |
+| Motor | PostgreSQL |
 | ORM | Prisma / Sequelize / SQLAlchemy / Mongoose | |
 | Migraciones | Alembic / Prisma Migrate / Knex | |
 
@@ -87,14 +87,6 @@
 | Documentación | Obsidian                                   |         |
 | Comunicación  | Discord                                    |         |
 | GitHub        |                                            |         |
-
----
-
-## Historial de Decisiones
-
-| Fecha | Categoría | Decisión | Motivo |
-|-------|-----------|----------|--------|
-| | | | |
 
 ---
 

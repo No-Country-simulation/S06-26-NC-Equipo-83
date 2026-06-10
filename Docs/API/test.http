@@ -14,7 +14,7 @@ GET {{HttpFiles_HotAddress}}/character
 ### ===============================
 ### Get a single character
 ### ===============================
-GET {{HttpFiles_HotAddress}}/character/1
+GET {{HttpFiles_HotAddress}}/character/10
 
 ### ===============================
 ### Get multiple characters by id
