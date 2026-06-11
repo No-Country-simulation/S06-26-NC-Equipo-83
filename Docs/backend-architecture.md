@@ -14,7 +14,7 @@ backend/
 ├── app/
 │   ├── main.py               ← Entry point FastAPI (único archivo con lógica de app)
 │   ├── enums/
-│   │   ├── init.py           ← Re-exporta CareerObjective, ProfessionalLevel, Mood
+│   │   ├── __init__.py       ← Re-exporta CareerObjective, ProfessionalLevel, Mood
 │   │   ├── career_objective.py
 │   │   ├── mood.py
 │   │   └── professional_level.py
@@ -22,9 +22,10 @@ backend/
 │   │   ├── user.py           ← Tabla SQLModel "users"
 │   │   └── mental_health.py  ← Tabla SQLModel "mental_health_logs"
 │   └── schemas/
-│       ├── init.py           ← Re-exporta todos los schemas
+│       ├── __init__.py       ← Re-exporta todos los schemas
 │       ├── user.py           ← UserCreate, UserResponse, UserLogin, TokenResponse
-│       └── orientar.py       ← OrientarRequest, OrientarResponse, VacancyResponse
+│       ├── orientar.py       ← OrientarRequest, OrientarResponse, VacancyResponse
+│       └── salud.py          ← SaludRequest, SaludResponse
 └── tests/
     ├── test_db.py            ← Crea tablas en SQLite en memoria
     ├── test_enums.py         ← Instancia enums
@@ -174,10 +175,11 @@ class MentalHealthLog(SQLModel, table=True):
     id: UUID = Field(primary_key=True)
     mood: Mood                          # usa el enum
 
-# schemas/salud.py — lo que recibe la API (no existe hoy)
+# schemas/salud.py — lo que recibe la API
 class SaludRequest(SQLModel):
-    mood: Mood                          # mismo enum
-    weekly_score: int = Field(ge=1, le=10)
+    humor: Mood                         # mismo enum, spec en español
+    nota_semanal: int = Field(ge=1, le=10)
+    contexto: str | None = None
 ```
 
 ---
@@ -198,49 +200,45 @@ class SaludRequest(SQLModel):
 
 ## Issues conocidos
 
-Estos problemas existen en el código actual y **deben resolverse antes de implementar endpoints reales**.
+Estos problemas existían en el código al inicio del proyecto.
 
-### 1. `schemas/init.py` debería ser `__init__.py`
+### 1. ~~`schemas/init.py` debería ser `__init__.py`~~ ✅ Resuelto
 
-**Archivo:** `backend/app/schemas/init.py`
+**Archivo:** `backend/app/schemas/__init__.py`
 
-El archivo de inicialización del paquete `schemas` se llama `init.py` en vez de `__init__.py`. Aunque Python 3.3+ permite namespace packages sin `__init__.py`, usar `init.py` (sin doble underscore) es un nombre no estándar. La importación actual funciona porque los schemas se importan desde `app/schemas/user` directamente, pero el módulo `app.schemas` como paquete no se comporta igual que los demás (`enums`, `models`).
+Renombrado a `__init__.py`. El paquete `schemas` ahora es un paquete Python estándar.
 
-**Impacto:** Bajo. Los imports directos funcionan.
+### 2. ~~`schemas/salud.py` no existe pero está importado~~ ✅ Resuelto
 
-**Solución recomendada:** Renombrar `init.py` a `__init__.py`.
+**Archivo:** `backend/app/schemas/salud.py`
 
-### 2. `schemas/salud.py` no existe pero está importado
-
-**Archivo:** `backend/app/schemas/init.py` (líneas 14-17)
+Creado con `SaludRequest` y `SaludResponse` completos:
 
 ```python
-from .salud import (
-    SaludRequest,
-    SaludResponse,
-)
-```
-
-El módulo `salud.py` **no existe** en `schemas/`. Esto provoca `ImportError` si algún código intenta hacer `from app.schemas import SaludRequest` o `from app.schemas.init import SaludRequest`.
-
-**Impacto:** Alto. Rompe cualquier código que importe schemas a través del `__all__` del paquete.
-
-**Solución recomendada:** Crear `schemas/salud.py` con `SaludRequest` y `SaludResponse` basados en el contrato documentado en el `README.md` raíz:
-
-```python
-# schemas/salud.py (esquema)
+# schemas/salud.py (implementado)
+from datetime import datetime
 from uuid import UUID
+
+from pydantic import Field
 from sqlmodel import SQLModel
+
 from app.enums.mood import Mood
+
 
 class SaludRequest(SQLModel):
     usuario_id: UUID
     humor: Mood
-    nota_semanal: int
+    nota_semanal: int = Field(ge=1, le=10)
+    contexto: str | None = None
+
 
 class SaludResponse(SQLModel):
     mensaje: str
     accion_sugerida: str
+    derivar_cvv: bool
+    nota_actual: int
+    alerta: bool
+    created_at: datetime
 ```
 
 ### 3. `app/__init__.py` no existe
