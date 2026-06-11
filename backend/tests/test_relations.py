@@ -1,32 +1,55 @@
-from sqlmodel import SQLModel, Session, create_engine
+from datetime import date
+from uuid import UUID
+
+import pytest
 
 from app.models.user import User
 from app.models.mental_health import MentalHealthLog
 
-engine = create_engine("sqlite:///test_relations.db")
 
-SQLModel.metadata.create_all(engine)
-
-with Session(engine) as session:
-    from datetime import date
-
+def test_create_user(session):
     user = User(
-        email="test@test.com",
-        hashed_password="123",
-        full_name="Ariel",
-        birth_date=date(2002, 1, 1),
+        email="relations@test.com",
+        hashed_password="hashed",
+        full_name="Relations Test",
+        birth_date=date(1995, 6, 15),
+        gender="female",
+        education_level="university",
+        continent="South America",
+        country="Argentina",
+        state="Buenos Aires",
+        city="San Justo",
+        whatsapp="+549111111112",
+        professional_level="junior",
+        tech_area="backend",
+        career_objective="find_job",
+    )
+    session.add(user)
+    session.commit()
+    session.refresh(user)
+
+    assert isinstance(user.id, UUID)
+    assert user.email == "relations@test.com"
+    assert user.full_name == "Relations Test"
+
+
+def test_create_mental_health_log_linked_to_user(session):
+    user = User(
+        email="log@test.com",
+        hashed_password="hashed",
+        full_name="Log Test",
+        birth_date=date(1990, 3, 10),
         gender="male",
         education_level="university",
         continent="South America",
         country="Argentina",
         state="Buenos Aires",
         city="San Justo",
-        whatsapp="123",
-        professional_level="junior",
-        tech_area="backend",
-        career_objective="find_job"
+        whatsapp="+549111111113",
+        professional_level="semi_senior",
+        tech_area="frontend",
+        career_objective="change_job",
     )
-
     session.add(user)
     session.commit()
     session.refresh(user)
@@ -35,12 +58,120 @@ with Session(engine) as session:
         user_id=user.id,
         mood="happy",
         weekly_score=8,
-        response_message="Buen trabajo",
-        suggested_action="Seguí así"
+        response_message="Excelente estado de ánimo",
+        suggested_action="Mantener la rutina actual",
     )
-
     session.add(log)
     session.commit()
+    session.refresh(log)
 
-    print("✅ User created:", user.id)
-    print("✅ MentalHealthLog created:", log.id)
+    assert isinstance(log.id, UUID)
+    assert log.user_id == user.id
+    assert log.mood == "happy"
+    assert log.weekly_score == 8
+    assert log.derivate_cvv is False
+    assert log.alert_triggered is False
+
+
+def test_user_mental_health_logs_relationship(session):
+    user = User(
+        email="rel@test.com",
+        hashed_password="hashed",
+        full_name="Rel Test",
+        birth_date=date(1992, 8, 20),
+        gender="female",
+        education_level="university",
+        continent="South America",
+        country="Argentina",
+        state="Buenos Aires",
+        city="San Justo",
+        whatsapp="+549111111114",
+        professional_level="senior",
+        tech_area="data",
+        career_objective="study",
+    )
+    session.add(user)
+    session.commit()
+    session.refresh(user)
+
+    log1 = MentalHealthLog(
+        user_id=user.id,
+        mood="tired",
+        weekly_score=5,
+        response_message="Descansá un poco",
+        suggested_action="Tomar una pausa",
+    )
+    log2 = MentalHealthLog(
+        user_id=user.id,
+        mood="happy",
+        weekly_score=9,
+        response_message="Gran semana",
+        suggested_action="Seguí así",
+    )
+    session.add_all([log1, log2])
+    session.commit()
+    session.refresh(user)
+
+    logs = session.exec(
+        MentalHealthLog.__table__.select().where(
+            MentalHealthLog.user_id == user.id
+        )
+    ).all()
+
+    assert len(logs) == 2
+    assert logs[0].mood in ("tired", "happy")
+    assert logs[1].mood in ("tired", "happy")
+
+
+def test_foreign_key_enforces_user_exists(session):
+    orphan_log = MentalHealthLog(
+        user_id="00000000-0000-0000-0000-000000000000",
+        mood="happy",
+        weekly_score=8,
+        response_message="N/A",
+        suggested_action="N/A",
+    )
+    session.add(orphan_log)
+    with pytest.raises(Exception):
+        session.flush()
+    session.rollback()
+
+
+def test_derivar_cvv_triggered(session):
+    user = User(
+        email="cvv@test.com",
+        hashed_password="hashed",
+        full_name="CVV Test",
+        birth_date=date(1988, 1, 1),
+        gender="male",
+        education_level="university",
+        continent="South America",
+        country="Argentina",
+        state="Buenos Aires",
+        city="San Justo",
+        whatsapp="+549111111115",
+        professional_level="junior",
+        tech_area="backend",
+        career_objective="find_job",
+    )
+    session.add(user)
+    session.commit()
+    session.refresh(user)
+
+    log = MentalHealthLog(
+        user_id=user.id,
+        mood="sad",
+        weekly_score=3,
+        response_message="Acá estoy para vos",
+        suggested_action="Derivar a CVV",
+        derivate_cvv=True,
+        alert_triggered=True,
+    )
+    session.add(log)
+    session.commit()
+    session.refresh(log)
+
+    assert log.derivate_cvv is True
+    assert log.alert_triggered is True
+    assert log.weekly_score == 3
+    assert log.mood == "sad"

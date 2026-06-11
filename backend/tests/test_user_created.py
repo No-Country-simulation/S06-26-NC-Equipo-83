@@ -1,20 +1,100 @@
+from datetime import date
+
+from app.enums.career_objective import CareerObjective
+from app.enums.professional_level import ProfessionalLevel
 from app.schemas.user import UserCreate
 
-user = UserCreate(
-    email="test@test.com",
-    password="123456",
-    full_name="Ariel Seijo",
-    birth_date="2002-01-01",
-    gender="male",
-    education_level="university",
-    continent="South America",
-    country="Argentina",
-    state="Buenos Aires",
-    city="San Justo",
-    whatsapp="+549111111111",
-    professional_level="junior",
-    tech_area="backend",
-    career_objective="find_job"
-)
 
-print(user)
+def test_user_create_instantiates_with_all_fields():
+    instance = UserCreate(
+        email="test@example.com",
+        password="123456",
+        full_name="Ariel Seijo",
+        birth_date=date(2002, 1, 1),
+        gender="male",
+        education_level="university",
+        continent="South America",
+        country="Argentina",
+        state="Buenos Aires",
+        city="San Justo",
+        whatsapp="+549111111111",
+        professional_level=ProfessionalLevel.JUNIOR,
+        tech_area="backend",
+        career_objective=CareerObjective.FIND_JOB,
+    )
+
+    assert instance.email == "test@example.com"
+    assert instance.full_name == "Ariel Seijo"
+    assert instance.birth_date == date(2002, 1, 1)
+    assert instance.gender == "male"
+    assert instance.education_level == "university"
+    assert instance.continent == "South America"
+    assert instance.country == "Argentina"
+    assert instance.state == "Buenos Aires"
+    assert instance.city == "San Justo"
+    assert instance.whatsapp == "+549111111111"
+    assert instance.professional_level == ProfessionalLevel.JUNIOR
+    assert instance.tech_area == "backend"
+    assert instance.career_objective == CareerObjective.FIND_JOB
+
+
+def test_user_create_accepts_string_enums():
+    instance = UserCreate(
+        email="string@test.com",
+        password="123456",
+        full_name="String Enums",
+        birth_date=date(1999, 12, 31),
+        gender="female",
+        education_level="highschool",
+        continent="North America",
+        country="Mexico",
+        state="CDMX",
+        city="Mexico City",
+        whatsapp="+521111111111",
+        professional_level="senior",
+        tech_area="qa",
+        career_objective="study",
+    )
+
+    assert instance.professional_level == ProfessionalLevel.SENIOR
+    assert instance.career_objective == CareerObjective.STUDY
+
+
+def test_user_create_password_not_in_model_dump():
+    instance = UserCreate(
+        email="modeldump@test.com",
+        password="secret123",
+        full_name="Model Dump",
+        birth_date=date(1995, 6, 15),
+        gender="male",
+        education_level="university",
+        continent="Europe",
+        country="Spain",
+        state="Madrid",
+        city="Madrid",
+        whatsapp="+34111111111",
+        professional_level=ProfessionalLevel.SEMI_SENIOR,
+        tech_area="devops",
+        career_objective=CareerObjective.CHANGE_JOB,
+    )
+
+    dumped = instance.model_dump()
+    assert dumped["email"] == "modeldump@test.com"
+    assert dumped["password"] == "secret123"
+    assert dumped["professional_level"] == "semi_senior"
+
+
+def test_user_login_instantiates():
+    from app.schemas.user import UserLogin
+
+    instance = UserLogin(email="login@test.com", password="pass")
+    assert instance.email == "login@test.com"
+    assert instance.password == "pass"
+
+
+def test_token_response_defaults():
+    from app.schemas.user import TokenResponse
+
+    instance = TokenResponse(access_token="abc.def.ghi")
+    assert instance.access_token == "abc.def.ghi"
+    assert instance.token_type == "bearer"
