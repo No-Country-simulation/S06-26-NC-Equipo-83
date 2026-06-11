@@ -34,10 +34,7 @@ Backend API
    ├── Vacantes
    ├── Mentorías
    ├── Eventos
-   └── IA Externa
-           │
-           ▼
-        Proveedor IA
+   └── Proveedor IA
 ```
 
 ---

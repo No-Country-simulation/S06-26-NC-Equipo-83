@@ -1,4 +1,4 @@
-<div align="center">
+﻿<div align="center">
   <img src="https://img.shields.io/badge/status-MVP%20en%20desarrollo-yellow?style=for-the-badge" alt="Status">
   <img src="https://img.shields.io/badge/licencia-MIT-blue?style=for-the-badge" alt="License">
   <img src="https://img.shields.io/badge/version-1.0.0--alpha-brightgreen?style=for-the-badge" alt="Version">
@@ -69,7 +69,7 @@ Check-in diario vía emojis. El agente de IA detecta el estado emocional y sugie
 
 ![Flujo Usuario](Docs/Flujo%20User.png)
 
-### Flujo del Administrador
+### Flujo del Administrador 
 
 ![Flujo Admin](Docs/Flujo%20Admin.png)
 
@@ -111,59 +111,53 @@ Backend API
 
 ## Stack Tecnológico
 
-| Capa | Tecnología |
-|------|-----------|
-| **Frontend** | *Por definir* |
-| **Backend** | *Por definir* |
-| **Base de Datos** | *Por definir* |
-| **IA** | *Por definir* |
-| **Deploy** | Railway / Render |
-
+![discord](https://www.readmecodegen.com/api/social-icon?name=discord&size=96)
+![github](https://www.readmecodegen.com/api/social-icon?name=github&size=96)
+![javascript](https://www.readmecodegen.com/api/social-icon?name=javascript&size=96)
+![typescript](https://www.readmecodegen.com/api/social-icon?name=typescript&size=96)
+![python](https://www.readmecodegen.com/api/social-icon?name=python&size=96)
+![css3](https://www.readmecodegen.com/api/social-icon?name=css3&size=96)
+![nodejs](https://www.readmecodegen.com/api/social-icon?name=nodejs&size=96)
+![react](https://www.readmecodegen.com/api/social-icon?name=react&size=96)
+![nextjs](https://www.readmecodegen.com/api/social-icon?name=nextjs&size=96)
+![tailwindcss](https://www.readmecodegen.com/api/social-icon?name=tailwindcss&size=96)
+![postgresql](https://www.readmecodegen.com/api/social-icon?name=postgresql&size=96)
 ---
 
 ## Estrategia Git
 
-### Rama principal
+### Ramas principales
 
-**main** — única rama estable. Todo el código funcional converge aquí.
+**main**
+* Rama estable de produccion.
+
+**develop**
+* Rama de integracion. Las funcionalidades completadas se fusionan aqui antes de pasar a main.
 
 ### Flujo de trabajo
 
-Las ramas se crean directamente desde `main` para cada incidencia/issue.
+Las ramas de incidencia se crean desde develop para cada issue del GitHub Project.
 
-```
+`
 incidencia/[id]-[descripcion-corta]
-```
+`
 
 **Ejemplos:**
-```
+`
 incidencia/01-onboarding
 incidencia/02-orientar-endpoint
 incidencia/03-salud-checkin
-```
+`
 
 ### Proceso
 
-1. Crear rama desde `main`
-2. Implementar la funcionalidad o corrección
-3. Abrir Pull Request hacia `main`
-4. Code Review por al menos un integrante
-5. Merge a `main`
-6. Eliminar la rama de incidencia
-
-### Conventional Commits
-
-Usamos [Conventional Commits](https://www.conventionalcommits.org/) para mantener un historial claro y legible:
-
-```
-feat: nueva funcionalidad
-fix: corrección de error
-docs: cambios en documentación
-refactor: mejora de código sin cambiar funcionalidad
-chore: tareas rutinarias
-```
-
----
+1. Crear rama desde develop.
+2. Implementar la funcionalidad o correccion.
+3. Abrir Pull Request hacia develop.
+4. Code Review por al menos un integrante.
+5. Merge a develop.
+6. Al completar un hito, hacer merge de develop hacia main.
+7. Eliminar la rama de incidencia.
 
 ## API
 
@@ -215,11 +209,11 @@ Endpoint de salud mental. Procesa el check-in emocional y sugiere acciones.
 
 | | Rol | Nombre | Contacto |
 |---|------|--------|----------|
-| <img src="https://via.placeholder.com/48x48/1a73e8/ffffff?text=PM" width="48" style="border-radius:50%"> | **Project Manager** | *Tu nombre* | [LinkedIn](#) |
-| <img src="https://via.placeholder.com/48x48/34a853/ffffff?text=FD" width="48" style="border-radius:50%"> | **Frontend Developer** | *Nombre* | [LinkedIn](#) |
-| <img src="https://via.placeholder.com/48x48/ea4335/ffffff?text=BD" width="48" style="border-radius:50%"> | **Backend Developer** | *Nombre* | [LinkedIn](#) |
-| <img src="https://via.placeholder.com/48x48/fbbc04/ffffff?text=FS" width="48" style="border-radius:50%"> | **Full Stack Developer** | *Nombre* | [LinkedIn](#) |
-| <img src="https://via.placeholder.com/48x48/8e24aa/ffffff?text=QA" width="48" style="border-radius:50%"> | **QA** | *Nombre* | [LinkedIn](#) |
+| <img src="https://via.placeholder.com/48x48/1a73e8/ffffff?text=PM" width="48" style="border-radius:50%"> | **Project Manager** | Orlando Cardenas Villegas | [LinkedIn](https://www.linkedin.com/in/orlandocardenasvillegas/) |
+| <img src="https://via.placeholder.com/48x48/ea4335/ffffff?text=BD" width="48" style="border-radius:50%"> | **Backend Developer** | Dante Escalona Bustos | [LinkedIn](https://www.linkedin.com/in/DanteJac) |
+| <img src="https://via.placeholder.com/48x48/ea4335/ffffff?text=BD" width="48" style="border-radius:50%"> | **Backend Developer** | Matias Solanes | [LinkedIn](https://www.linkedin.com/in/matias-solanes/) |
+| <img src="https://via.placeholder.com/48x48/fbbc04/ffffff?text=FS" width="48" style="border-radius:50%"> | **Full Stack Developer** | Luis Feliz | [LinkedIn](https://www.linkedin.com/in/luis-antonio-feliz/) |
+| <img src="https://via.placeholder.com/48x48/fbbc04/ffffff?text=FS" width="48" style="border-radius:50%"> | **Full Stack Developer** | Hugo Ariel Seijo | [LinkedIn](https://www.linkedin.com/in/arielseijo/) |
 
 ---
 
@@ -227,16 +221,16 @@ Endpoint de salud mental. Procesa el check-in emocional y sugiere acciones.
 
 ```bash
 # Clonar el repositorio
-git clone <repository-url>
+git clone https://github.com/No-Country-simulation/S06-26-NC-Equipo-83
 
 # Ingresar al proyecto
-cd app-bit
+cd 
 
 # Instalar dependencias
-npm install
+
 
 # Ejecutar entorno local
-npm run dev
+
 ```
 
 ---

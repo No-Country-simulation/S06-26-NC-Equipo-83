@@ -9,7 +9,7 @@
 
 | Decisión   | Opciones                                   | Elegido |
 | ---------- | ------------------------------------------ | ------- |
-| Framework  | React / Vue / Angular / Svelte             |         |
+| Framework  | React /                                    |         |
 | Lenguaje   | JavaScript / TypeScript                    |         |
 | Estilos    | CSS / Tailwind / Bootstrap / Sass          |         |
 | Estado     | Redux / Zustand / Context API / Pinia      |         |
@@ -23,13 +23,12 @@
 
 ## Backend
 
-| Decisión | Opciones | Elegido |
-|----------|----------|---------|
-| Lenguaje | Python / Node.js / Java / Spring Boot | |
-| Framework | FastAPI / Flask / Express / Django | |
-| API Style | REST / GraphQL | |
-| Auth | JWT / OAuth / Firebase Auth | |
-| Validación | Pydantic / Joi / Zod | |
+| Decisión  | Opciones                  | Elegido |
+| --------- | ------------------------- | ------- |
+| Lenguaje  | Python                    |         |
+| Framework | FastAPI / Flask  / Django |         |
+| API Style | REST                      |         |
+| Auth      | JWT / OAuth /             |         |
 
 **Notas:**
 -
@@ -38,11 +37,10 @@
 
 ## Base de Datos
 
-| Decisión | Opciones | Elegido |
-|----------|----------|---------|
-| Motor | PostgreSQL / MySQL / MongoDB / SQLite | |
-| ORM | Prisma / Sequelize / SQLAlchemy / Mongoose | |
-| Migraciones | Alembic / Prisma Migrate / Knex | |
+| Decisión    | Opciones                                   | Elegido |
+| ----------- | ------------------------------------------ | ------- |
+| Motor       | PostgreSQL                                 |         |
+| ORM         | Prisma / Sequelize / SQLAlchemy / Mongoose |         |
 
 **Notas:**
 -
@@ -87,14 +85,6 @@
 | Documentación | Obsidian                                   |         |
 | Comunicación  | Discord                                    |         |
 | GitHub        |                                            |         |
-
----
-
-## Historial de Decisiones
-
-| Fecha | Categoría | Decisión | Motivo |
-|-------|-----------|----------|--------|
-| | | | |
 
 ---
 
