@@ -9,7 +9,7 @@
 
 | Decisión   | Opciones                                   | Elegido |
 | ---------- | ------------------------------------------ | ------- |
-| Framework  | React / Neextjs                            |         |
+| Framework  | React /                                    |         |
 | Lenguaje   | JavaScript / TypeScript                    |         |
 | Estilos    | CSS / Tailwind / Bootstrap / Sass          |         |
 | Estado     | Redux / Zustand / Context API / Pinia      |         |
