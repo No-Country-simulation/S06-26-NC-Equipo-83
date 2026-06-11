@@ -165,7 +165,7 @@ backend/
 ├── app/
 │   ├── main.py             ← Entry point FastAPI
 │   ├── enums/
-│   │   ├── init.py
+│   │   ├── __init__.py
 │   │   ├── career_objective.py
 │   │   ├── mood.py
 │   │   └── professional_level.py
@@ -173,9 +173,10 @@ backend/
 │   │   ├── user.py
 │   │   └── mental_health.py
 │   └── schemas/
-│       ├── init.py
+│       ├── __init__.py
 │       ├── user.py
-│       └── orientar.py
+│       ├── orientar.py
+│       └── salud.py
 └── tests/
     ├── __init__.py
     ├── conftest.py          ← Fixture de engine + session SQLite
@@ -284,7 +285,6 @@ Definido en el [`README.md` raíz](../README.md):
 | Problema | Causa probable | Solución |
 |----------|---------------|----------|
 | `ModuleNotFoundError: No module named 'app'` | No estás en la carpeta `backend/` o el entorno virtual no está activado | `cd backend` y activar `.venv` |
-| `ImportError` al importar schemas | Falta `schemas/salud.py` | Ver [issue conocido](../docs/backend-architecture.md#issues-conocidos) |
 | `uvicorn` no encontrado | Entorno virtual no activado o dependencias no instaladas | Activar `.venv` y ejecutar `pip install -r requirements.txt` |
 | Puerto 8000 ocupado | Otro proceso usa el puerto | Usar `--port 8001` o matar el proceso |
 | Error de conexión a PostgreSQL | PostgreSQL no está corriendo | Verificar con `pg_isready` o iniciar el servicio |
