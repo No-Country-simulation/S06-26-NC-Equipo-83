@@ -23,5 +23,8 @@ python-multipart==0.0.18
 # HTTP client (para llamadas a servicios externos / IA)
 httpx==0.28.1
 
+# Google Gemini AI
+google-generativeai==0.8.4
+
 # CORS
 # (FastAPI lo maneja vía CORSMiddleware — sin dependencia extra)
