@@ -34,7 +34,7 @@ backend/
 │   │   ├── __init__.py
 │   │   ├── user.py
 │   │   ├── orientar.py
-│   │   └── salud.py            ← [PENDIENTE] Importado pero no existe
+│   │   └── salud.py
 │   ├── routers/
 │   │   ├── __init__.py
 │   │   ├── auth.py             ← POST /auth/register, /auth/login
@@ -138,7 +138,7 @@ Para el endpoint `POST /orientar`:
 2. **`core/config.py`** + `.env.example` — settings con pydantic-settings
 3. **`db/session.py`** — engine y get_session
 4. **`core/security.py`** — JWT + password hashing
-5. **`schemas/salud.py`** — schemas faltantes
+5. ~~`schemas/salud.py`~~ ✅ Ya existe — creado con SaludRequest y SaludResponse
 6. **`routers/auth.py`** + **`services/auth.py`** + **`repositories/user.py`** — registro y login
 7. **`routers/orientar.py`** + **`services/orientar.py`** — orientación profesional
 8. **`routers/salud.py`** + **`services/salud.py`** + **`repositories/mental_health.py`** — check-in emocional
