@@ -8,15 +8,17 @@ class Settings(BaseSettings):
     Si una variable no existe, usa el valor por defecto definido acá.
     """
     # Base de datos — las credenciales vienen de docker-compose.yml
-    DATABASE_URL: str
+    DATABASE_URL: str= (
+        "postgresql://appbit_user:appbit_password@localhost:5432/appbit_database"
+    )
 
     # Seguridad JWT — importado desde app.core.security
-    SECRET_KEY: str 
-    ACCESS_TOKEN_EXPIRE_MINUTES: int
+    SECRET_KEY: str = "cambiar-por-una-clave-segura-de-al-menos-32-caracteres"
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
 
     # Google Gemini — importado desde app.services.ia_agent
-    IA_API_KEY: str
-    IA_MODEL: str 
+    IA_API_KEY: str = ""
+    IA_MODEL: str = "gemini-2.0-flash"
 
     model_config = SettingsConfigDict(
         env_file=".env",
