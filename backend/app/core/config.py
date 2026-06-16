@@ -8,9 +8,7 @@ class Settings(BaseSettings):
     Si una variable no existe, usa el valor por defecto definido acá.
     """
     # Base de datos — las credenciales vienen de docker-compose.yml
-    DATABASE_URL: str= (
-        "postgresql://appbit_user:appbit_password@localhost:5432/appbit_database"
-    )
+    DATABASE_URL: str= ""
 
     # Seguridad JWT — importado desde app.core.security
     SECRET_KEY: str = "cambiar-por-una-clave-segura-de-al-menos-32-caracteres"
