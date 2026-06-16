@@ -1,6 +1,7 @@
 import React from 'react';
 import { Header } from '../components/Header';
 import { BottomNavbar } from '../components/BottomNavbar';
+//import { UserProfilePage } from '../modules/profile/userProfilePage';
 
 interface LayoutProps {
     children: React.ReactNode;
