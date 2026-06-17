@@ -1,17 +1,23 @@
 import { Layout } from "./components/Layout";
+import Register from "./modules/auth/register";
 
 function App() {
   return (
     // Llamamos al Layout que ya unifica la cabecera y la barra inferior móvil
     <Layout>
-      {/* Todo lo que escribas aquí adentro actuará como la vista "Home" o pantalla actual */}
-      <section className="py-6 text-center">
+      {/* ACTUALMENTE CARGAMOS EL REGISTRO.
+        Si quieres volver a ver la vista de inicio temporal, 
+        solo comenta <Register /> y descomenta la <section> de abajo.
+      */}
+      <Register />
+
+      {/* Vista de Inicio Temporal (Comentada por ahora para darle prioridad al registro) */}
+      {/* <section className="py-6 text-center">
         <h1 className="text-xl font-bold text-gray-800">¡Vista de Inicio del MVP!</h1>
         <p className="text-gray-500 mt-2 text-sm">
           Este espacio del medio es donde Elías y tú cargarán los componentes dinámicos de las tareas de App BiT.
         </p>
         
-        {/* Un bloque de relleno solo para probar que el scroll funcione bien y no pise las barras */}
         <div className="mt-8 space-y-4">
           {[1, 2, 3, 4, 5].map((item) => (
             <div key={item} className="p-6 bg-white rounded-xl shadow-sm border border-gray-100 text-left">
@@ -20,7 +26,8 @@ function App() {
             </div>
           ))}
         </div>
-      </section>
+      </section> 
+      */}
     </Layout>
   );
 }
