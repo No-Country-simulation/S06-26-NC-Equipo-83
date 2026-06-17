@@ -18,6 +18,10 @@ class Settings(BaseSettings):
     IA_API_KEY: str = ""
     IA_MODEL: str = "gemini-2.0-flash"
 
+    # Groq — alternativa a Gemini con más cuota gratuita
+    GROQ_API_KEY: str = ""
+    GROQ_MODEL: str = "llama-3.1-8b-instant"
+
     model_config = SettingsConfigDict(
         env_file=".env",
         env_file_encoding="utf-8",

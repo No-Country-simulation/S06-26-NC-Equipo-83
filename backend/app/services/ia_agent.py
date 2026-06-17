@@ -1,46 +1,32 @@
 import json
 
-import google.generativeai as genai
+from groq import AsyncGroq
 
 from app.core.config import settings
 
-# ---------------------------------------------------------------------------
-# Configuración global del SDK de Gemini.
-# Se ejecuta UNA sola vez cuando Python importa este módulo.
-# ---------------------------------------------------------------------------
-genai.configure(api_key=settings.IA_API_KEY)
-
 
 class IAAgent:
-    """Agente de bienestar emocional usando Google Gemini.
+    """Agente de bienestar emocional usando Groq (Llama 3.1).
 
     ATENCIÓN — CONTRATO CON EL EQUIPO:
     Esta clase:
     - GENERA respuestas empáticas y sugerencias de bienestar.
     - NO evalúa si el usuario está en crisis (eso es SaludService).
     - NO diagnostica, receta ni actúa como psicólogo.
-    - Si Gemini falla, devuelve un fallback predefinido.
+    - Si la API falla, devuelve un fallback predefinido.
 
     La firma de generar_respuesta_emocional() NO DEBE CAMBIAR.
-    El dev de /salud ya la está usando con el stub.
     """
 
     def __init__(self):
-        """Inicializa el modelo de Gemini con configuración para JSON."""
-        self.model = genai.GenerativeModel(
-            model_name=settings.IA_MODEL,
-            generation_config={
-                "temperature": 0.7,          # Creatividad media-alta
-                "top_p": 0.9,                # Diversidad en respuestas
-                "max_output_tokens": 150,    # Respuestas breves
-                "response_mime_type": "application/json",  # Forzar JSON
-            },
-        )
+        """Inicializa el cliente asincrónico de Groq."""
+        self.client = AsyncGroq(api_key=settings.GROQ_API_KEY)
+        self.model = settings.GROQ_MODEL
 
     async def generar_respuesta_emocional(
         self, humor: str, nota: int, contexto: str | None
     ) -> dict[str, str]:
-        """Genera un mensaje empático y acción concreta usando Gemini.
+        """Genera un mensaje empático y acción concreta usando Groq.
 
         Args:
             humor: Estado emocional (valores del enum Mood).
@@ -51,72 +37,98 @@ class IAAgent:
         Returns:
             dict con claves "mensaje" y "accion".
         """
-        prompt = self._construir_prompt(humor, nota, contexto)
+        messages = self._construir_messages(humor, nota, contexto)
 
         try:
-            response = await self.model.generate_content_async(prompt)
-            return self._limpiar_respuesta(response.text)
+            response = await self.client.chat.completions.create(
+                messages=messages,
+                model=self.model,
+                temperature=0.7,
+                max_tokens=300,
+                response_format={"type": "json_object"},
+            )
+            return self._sanear_respuesta(
+                self._limpiar_respuesta(
+                    response.choices[0].message.content
+                ),
+                humor,
+            )
         except Exception as e:
-            # Si Gemini falla (sin internet, cuota excedida, error de
-            # API), no crasheamos — devolvemos un fallback seguro.
-            print(f"[IAAgent] Gemini falló, usando fallback. Error: {e}")
+            print(f"[IAAgent] Groq falló, usando fallback. Error: {e}")
             return self._fallback(humor)
 
     # ------------------------------------------------------------------
-    # Métodos privados (el _ al principio es convención Python:
-    # "esto es interno, no lo uses desde afuera de la clase")
+    # Métodos privados
     # ------------------------------------------------------------------
 
-    def _construir_prompt(self, humor: str, nota: int, contexto: str | None) -> str:
-        """Construye el prompt completo con sistema + usuario."""
+    def _construir_messages(
+        self, humor: str, nota: int, contexto: str | None
+    ) -> list[dict[str, str]]:
+        """Construye la lista de mensajes system + user para Groq."""
         contexto_str = contexto or "No proporcionado"
 
-        return f"""Eres un acompañante empático para una persona de un grupo 
-sub-representado en tecnología en LATAM. Validás sus emociones y 
-sugerís UNA acción concreta de bienestar cotidiano.
+        system = (
+            "Eres un acompañante empático para una persona sub-representada "
+            "en tecnología en LATAM.\n\n"
+            "Reglas estrictas:\n"
+            "- NO diagnostiques ni recetes medicación.\n"
+            "- Máximo 2 oraciones en total. Sé cálido y humano.\n"
+            "- Responde en español neutro, breve, sin regionalismos.\n"
+            "- La acción debe ser CONCRETA (nombre real de podcast, libro o técnica).\n"
+            '- NUNCA digas "haz ejercicio", "descansa" o frases genéricas.\n'
+            "- Responde SOLO este JSON exacto, sin backticks ni texto extra:\n"
+            '{"mensaje": "...", "accion": "..."}'
+        )
 
-Reglas estrictas:
-- NO diagnostiques. NO recetes medicación. NO actúes como psicólogo.
-- Sé cálido y humano. Máximo 3 oraciones en total.
-- Hablá en español rioplatense (usá "vos" en lugar de "tú" o "usted").
-- La acción debe ser CONCRETA: nombre real de un podcast, libro con 
-  autor, ejercicio específico. NUNCA digas "hacé ejercicio".
-- Respondé ÚNICA y EXCLUSIVAMENTE un objeto JSON válido, sin texto 
-  antes ni después, sin backticks de markdown:
-  {{"mensaje": "...", "accion": "..."}}
+        user = (
+            f"Estado: se siente {humor}, nota {nota}/10, "
+            f"contexto: {contexto_str}"
+        )
 
-Estado actual de la persona:
-- Se siente: {humor}
-- Nivel de bienestar general: {nota}/10
-- Contexto compartido: {contexto_str}"""
+        return [
+            {"role": "system", "content": system},
+            {"role": "user", "content": user},
+        ]
 
     def _limpiar_respuesta(self, texto: str) -> dict[str, str]:
-        """Limpia la respuesta de Gemini y la convierte a dict.
+        """Limpia la respuesta y la convierte a dict.
 
-        Gemini a veces devuelve JSON envuelto en backticks de markdown:
-        ```json
-        {"mensaje": "...", "accion": "..."}
-        ```
-        O con texto antes/después del JSON. Esta función lo limpia.
+        Los modelos a veces devuelven JSON envuelto en backticks de markdown,
+        o con texto antes/después del JSON. Esta función lo limpia.
         """
         texto = texto.strip()
 
         # Quitar backticks de markdown si existen
         if texto.startswith("```"):
-            # Encontrar el primer salto de línea (fin de ```json)
             primera_linea = texto.find("\n")
             if primera_linea != -1:
                 texto = texto[primera_linea + 1:]
-            # Buscar el ÚLTIMO ``` y cortar ahí
             ultimo_backtick = texto.rfind("```")
             if ultimo_backtick != -1:
                 texto = texto[:ultimo_backtick]
             texto = texto.strip()
 
+        # Extraer el primer objeto JSON si hay texto alrededor
+        inicio = texto.find("{")
+        fin = texto.rfind("}")
+        if inicio != -1 and fin != -1:
+            texto = texto[inicio:fin + 1]
+
         return json.loads(texto)
 
+    def _sanear_respuesta(
+        self, data: dict, humor: str
+    ) -> dict[str, str]:
+        """Garantiza que la respuesta tenga las claves 'mensaje' y 'accion'.
+
+        Si el modelo omite alguna clave, se usa el fallback para ese humor.
+        """
+        if "mensaje" not in data or "accion" not in data:
+            return self._fallback(humor)
+        return {"mensaje": data["mensaje"], "accion": data["accion"]}
+
     def _fallback(self, humor: str) -> dict[str, str]:
-        """Respuestas de emergencia si la API de Gemini no responde.
+        """Respuestas de emergencia si la API no responde.
 
         Las claves DEBEN coincidir con los valores del enum Mood:
         "happy", "tired", "sad", "anxious", "overwhelmed"
