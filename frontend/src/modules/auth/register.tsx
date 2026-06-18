@@ -74,7 +74,7 @@ export default function Register() {
           "
         >
           <img
-            src="/hero.png"
+            src="/heroRegister.png"
             alt="Comienza tu viaje en BiT"
             className="h-full w-full object-cover"
           />

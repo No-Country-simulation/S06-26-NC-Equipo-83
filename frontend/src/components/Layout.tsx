@@ -1,6 +1,9 @@
 import React from 'react';
 import { Header } from '../components/Header';
 import { BottomNavbar } from '../components/BottomNavbar';
+//import { DashboardPage } from '../modules/dashboard/dashboardPage';
+//import { MentalHealthPage } from '../modules/mental-health/mentalHealthPage';
+//import { OrientationPage } from '../modules/orientation/orientationPage';
 //import { UserProfilePage } from '../modules/profile/userProfilePage';
 
 interface LayoutProps {
@@ -9,7 +12,7 @@ interface LayoutProps {
 
 export const Layout: React.FC<LayoutProps> = ({ children }) => {
     return (
-        <div className="min-h-screen flex flex-col bg-slate-50 text-slate-800 antialiased">
+        <div className="min-h-screen flex pb-16 flex-col bg-slate-50 text-slate-800 antialiased">
             {/* 1. Header Semántico superior fijo */}
             <Header />
 
