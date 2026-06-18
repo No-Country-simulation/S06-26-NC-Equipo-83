@@ -7,6 +7,7 @@ FastAPI application entry point.
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from app.routers import auth
 
 # ---------------------------------------------------------------------------
 # Application metadata
@@ -29,6 +30,8 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+# Montar routers
+app.include_router(auth.router)
 
 
 # ---------------------------------------------------------------------------
