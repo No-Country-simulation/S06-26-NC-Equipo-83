@@ -14,9 +14,9 @@ class Settings(BaseSettings):
     SECRET_KEY: str = "cambiar-por-una-clave-segura-de-al-menos-32-caracteres"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
 
-    # Google Gemini — importado desde app.services.ia_agent
-    IA_API_KEY: str = ""
-    IA_MODEL: str = "gemini-2.0-flash"
+    # Groq — LLM para el agente de bienestar (IA)
+    GROQ_API_KEY: str = ""
+    GROQ_MODEL: str = "llama-3.1-8b-instant"
 
     model_config = SettingsConfigDict(
         env_file=".env",
