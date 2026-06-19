@@ -1,4 +1,5 @@
 import Input from "../../../components/ui/Input";
+import Select from "../../../components/ui/Select";
 
 interface RegisterStep2Props {
   formData: {
@@ -23,55 +24,39 @@ export default function RegisterStep2({
     <div className="space-y-6">
       {/* Continente */}
       <div className="space-y-2">
-        <label
-          htmlFor="continent"
-          className="text-sm font-medium text-stone-800"
-        >
-          Continente
-        </label>
-
-        <select
-          id="continent"
-          value={formData.continent}
-          onChange={(e) =>
-            updateField("continent", e.target.value)
-          }
-          className="h-14 w-full rounded-xl bg-stone-100 px-4 focus:outline-none focus:ring-2 focus:ring-[#99462A]/20"
-        >
-          <option value="">Selecciona un continente</option>
-          <option value="america">América</option>
-          <option value="europe">Europa</option>
-          <option value="asia">Asia</option>
-          <option value="africa">África</option>
-          <option value="oceania">Oceanía</option>
-        </select>
+        <Select
+        id="continent"
+        label="Continente"
+        value={formData.continent}
+        onChange={(e) => updateField("continent", e.target.value)}
+        options={[
+          { value: "", label: "Selecciona un continente" },
+          { value: "america", label: "América" },
+          { value: "europe", label: "Europa" },
+          { value: "asia", label: "Asia" },
+          { value: "africa", label: "África" },
+          { value: "oceania", label: "Oceanía" },
+        ]}
+      />
       </div>
 
       {/* País */}
       <div className="space-y-2">
-        <label
-          htmlFor="country"
-          className="text-sm font-medium text-stone-800"
-        >
-          País
-        </label>
-
-        <select
-          id="country"
-          value={formData.country}
-          onChange={(e) =>
-            updateField("country", e.target.value)
-          }
-          className="h-14 w-full rounded-xl bg-stone-100 px-4 focus:outline-none focus:ring-2 focus:ring-[#99462A]/20"
-        >
-          <option value="">Selecciona un país</option>
-          <option value="ar">Argentina</option>
-          <option value="uy">Uruguay</option>
-          <option value="cl">Chile</option>
-          <option value="co">Colombia</option>
-          <option value="mx">México</option>
-          <option value="es">España</option>
-        </select>
+        <Select
+        id="country"
+        label="País"
+        value={formData.country}
+        onChange={(e) => updateField("country", e.target.value)}
+        options={[
+          { value: "", label: "Selecciona un país" },
+          { value: "ar", label: "Argentina" },
+          { value: "uy", label: "Uruguay" },
+          { value: "cl", label: "Chile" },
+          { value: "co", label: "Colombia" },
+          { value: "mx", label: "México" },
+          { value: "es", label: "España" },
+        ]}
+      />
       </div>
 
       {/* Provincia / Ciudad */}
@@ -99,7 +84,7 @@ export default function RegisterStep2({
 
       {/* WhatsApp */}
       <div className="space-y-2">
-        <label className="text-sm font-medium text-stone-800">
+        <label htmlFor="whatsapp" className="text-sm font-medium text-stone-800">
           WhatsApp
         </label>
 

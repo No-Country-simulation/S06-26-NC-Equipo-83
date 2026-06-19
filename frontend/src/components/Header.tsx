@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Bell, Settings, User, LogOut, X } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 export const Header: React.FC = () => {
     const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
@@ -53,7 +54,9 @@ export const Header: React.FC = () => {
 
             {/* Sección del Logo (Envoltura semántica para la identidad del sitio) */}
             <div className="flex items-center">
-                <img src="/Logo.png" alt="BiT App Logo" className="w-12 h-12 object-contain" />
+                <Link to='/dashboard'>
+                    <img src="/Logo.png" alt="BiT App Logo" className="w-12 h-12 object-contain" />
+                </Link>
             </div>
 
             {/* <nav> indica que este bloque contiene elementos de navegación y acciones de usuario */}

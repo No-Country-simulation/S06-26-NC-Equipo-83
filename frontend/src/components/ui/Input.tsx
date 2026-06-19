@@ -1,9 +1,16 @@
 import type { InputHTMLAttributes } from 'react';
+import { User, Mail, Lock, Calendar } from 'lucide-react';
 
+const iconMap = {
+  person: User,
+  mail: Mail,
+  lock: Lock,
+  calendar_today: Calendar,
+};
 interface InputProps
   extends InputHTMLAttributes<HTMLInputElement> {
   label: string;
-  icon?: string;
+  icon?: keyof typeof iconMap; // Puede ser 'person' | 'mail' | 'lock' | 'calendar_today'
 }
 
 export default function Input({
@@ -12,6 +19,7 @@ export default function Input({
   id,
   ...props
 }: InputProps) {
+  const IconComponent = icon ? iconMap[icon] : null;
   return (
     <div className="space-y-2">
       <label
@@ -22,19 +30,15 @@ export default function Input({
       </label>
 
       <div className="relative">
-        {icon && (
-          <span
-            className="
-              material-symbols-outlined
+        {IconComponent && (
+          <div className="material-symbols-outlined
               absolute
               left-4
               top-1/2
               -translate-y-1/2
-              text-stone-400
-            "
-          >
-            {icon}
-          </span>
+              text-[#99462A]">
+            <IconComponent size={20} strokeWidth={2} />
+          </div>
         )}
 
         <input
@@ -50,7 +54,8 @@ export default function Input({
             px-4
             text-sm
             transition
-            placeholder:text-stone-400
+            text-stone-700
+            placeholder:text-stone-500
             focus:border-[#99462A]
             focus:outline-none
             focus:ring-2

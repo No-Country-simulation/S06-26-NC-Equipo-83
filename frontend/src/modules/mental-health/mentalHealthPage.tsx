@@ -26,7 +26,7 @@ export const MentalHealthPage: React.FC = () => {
     ];
 
     return (
-        <main className="min-h-screen bg-[#FDFBF7] py-6 px-4 font-sans antialiased text-gray-800 sm:px-6 md:py-10 lg:px-8">
+        <main className="min-h-screen py-6 px-4 font-sans antialiased text-gray-800 sm:px-6 md:py-10 lg:px-8">
             <div className="max-w-[1024px] mx-auto space-y-10">
 
                 {/* ================= INTRODUCCIÓN / CABECERA ================= */}
@@ -86,7 +86,7 @@ export const MentalHealthPage: React.FC = () => {
                     </div>
 
                     {/* Tarjeta de Apoyo en Crisis */}
-                    <div className="bg-[#FAF4EE] rounded-2xl border border-orange-100 p-6 flex flex-col justify-between space-y-4">
+                    <div className="bg-[#853F22]/5 rounded-2xl border border-[#853F22]/10 p-6 flex flex-col justify-between space-y-4">
                         <div className="space-y-2">
                             <div className="flex items-center gap-2 text-[#A04E2D]">
                                 <HeartHandshake className="w-5 h-5 flex-shrink-0" />

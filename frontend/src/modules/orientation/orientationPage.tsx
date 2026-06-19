@@ -18,11 +18,11 @@ export const OrientationPage: React.FC = () => {
     };
 
     return (
-        <main className="min-h-screen bg-[#FDFBF7] py-6 px-4 font-sans antialiased text-gray-800 sm:px-6 md:py-10 lg:px-8">
+        <main className="min-h-screen py-6 px-4 font-sans antialiased text-gray-800 sm:px-6 md:py-10 lg:px-8">
             <div className="max-w-[1024px] mx-auto space-y-8 md:space-y-12">
 
                 {/* ================= SECCIÓN 1: BANNER DE PORCENTAJE (DINÁMICO) ================= */}
-                <section className="bg-[#FAF6F0] rounded-2xl border border-gray-200/60 p-6 md:p-8 shadow-sm flex flex-col md:flex-row items-center gap-6 md:gap-8">
+                <section className="bg-[#853F22]/5 rounded-2xl border border-[#853F22]/10 p-6 md:p-8 shadow-sm flex flex-col md:flex-row items-center gap-6 md:gap-8">
 
                     {/* Gráfico circular de progreso (SVG Semántico usando el gap_porcentual) */}
                     <div className="relative flex-shrink-0 w-32 h-32 md:w-36 md:h-36 flex items-center justify-center">

@@ -47,7 +47,7 @@ export const DashboardPage: React.FC = () => {
     };
 
     return (
-        <main className="min-h-screen bg-[#FDFBF7] py-6 px-4 font-sans antialiased text-gray-800 sm:px-6 md:py-10 lg:px-8">
+        <main className="min-h-screen py-6 px-4 font-sans antialiased text-gray-800 sm:px-6 md:py-10 lg:px-8">
             <div className="max-w-[1024px] mx-auto space-y-8">
 
                 {/* ================= SALUDO DE BIENVENIDA ================= */}
@@ -66,9 +66,9 @@ export const DashboardPage: React.FC = () => {
                     {/* TARJETA IZQUIERDA: CONTROL DE ESTADO DE ÁNIMO */}
                     <article className="bg-white rounded-2xl border border-gray-200/60 p-6 shadow-sm space-y-6 min-h-[400px] flex flex-col justify-between">
                         <div className="space-y-4">
-                            <div className="flex items-center gap-2 text-gray-800">
+                            <div className="flex items-center gap-2">
                                 <Smile className="w-5 h-5 text-[#A04E2D]" />
-                                <h2 className="font-bold text-lg tracking-tight">¿Cómo estás hoy?</h2>
+                                <h2 className="font-bold text-lg text-gray-900 tracking-tight">¿Cómo estás hoy?</h2>
                             </div>
 
                             {/* Grid adaptativo para los 7 elementos */}
@@ -169,7 +169,7 @@ export const DashboardPage: React.FC = () => {
 
                 {/* ================= SECCIÓN DINÁMICA: RECOMENDACIONES DE LA IA ================= */}
                 {isSubmitted && aiResponse && (
-                    <section className="bg-gradient-to-br from-[#FAF6F0] to-[#F5ECE2] rounded-2xl border border-orange-100 p-6 shadow-sm space-y-4 animate-fadeIn">
+                    <section className="bg-[#A04E2D]/5 from-[#FAF6F0] to-[#F5ECE2] rounded-2xl border border-[#A04E2D]/10 p-6 shadow-sm space-y-4 animate-fadeIn">
                         <div className="flex items-center gap-2 text-[#853F22]">
                             <Brain className="w-5 h-5" />
                             <h3 className="font-extrabold text-base md:text-lg tracking-tight">

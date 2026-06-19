@@ -1,4 +1,5 @@
 import Input from '../../../components/ui/Input';
+import Select from "../../../components/ui/Select";
 
 interface RegisterStep1Props {
   formData: {
@@ -80,57 +81,19 @@ export default function RegisterStep1({
         />
 
         <div className="space-y-2">
-          <label
-            htmlFor="gender"
-            className="text-sm font-medium text-stone-800"
-          >
-            Género
-          </label>
-
-          <select
-            id="gender"
-            value={formData.gender}
-            onChange={(e) =>
-              updateField(
-                'gender',
-                e.target.value
-              )
-            }
-            className="
-              h-14
-              w-full
-              rounded-xl
-              border
-              border-transparent
-              bg-stone-100
-              px-4
-              text-sm
-              focus:border-[#99462A]
-              focus:outline-none
-              focus:ring-2
-              focus:ring-[#99462A]/20
-            "
-          >
-            <option value="">
-              Seleccionar
-            </option>
-
-            <option value="female">
-              Femenino
-            </option>
-
-            <option value="male">
-              Masculino
-            </option>
-
-            <option value="non-binary">
-              No binario
-            </option>
-
-            <option value="other">
-              Otro / Prefiero no decir
-            </option>
-          </select>
+          <Select
+          id="gender"
+          label="Género"
+          value={formData.gender}
+          onChange={(e) => updateField('gender', e.target.value)}
+          options={[
+            { value: '', label: 'Seleccionar' },
+            { value: 'female', label: 'Femenino' },
+            { value: 'male', label: 'Masculino' },
+            { value: 'non-binary', label: 'No binario' },
+            { value: 'other', label: 'Otro / Prefiero no decir' },
+          ]}
+        />
         </div>
       </div>
     </div>

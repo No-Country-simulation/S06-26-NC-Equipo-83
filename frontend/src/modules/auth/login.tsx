@@ -1,173 +1,184 @@
 // modules/auth/Login.tsx
 
-import { useState } from "react";
-import { Eye, EyeOff, Mail, Lock } from "lucide-react";
+import { useState, type FormEvent } from "react";
+import { Eye, EyeOff } from "lucide-react"; // Añadimos Mail y Lock para los íconos
 import { Link } from "react-router-dom";
+import Input from "../../components/ui/Input";
+import logoApp from "../../assets/Logo.png";
 
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleSubmit = (e: FormEvent) => {
+    e.preventDefault();
+    console.log({ email, password });
+    // Aquí irá tu conexión al backend o simulación
+  };
 
   return (
-    <main className="min-h-screen bg-background">
-      <section className="mx-auto flex min-h-screen w-full max-w-7xl overflow-hidden bg-white lg:my-6 lg:rounded-3xl lg:shadow-xl">
-        <div className="flex min-h-screen flex-col md:flex-row">   
-            <aside className="relative hidden overflow-hidden md:flex md:w-1/2">
-              <img
-                src="/heroLogin.png"
-                alt="Espacio de trabajo colaborativo"
-                className="h-full w-full object-cover"
+    // 1. FIJAMOS LA PANTALLA COMPLETA Y ELIMINAMOS SCROLL EXTERNO
+    <main className="h-screen w-full bg-background flex items-center justify-center overflow-hidden lg:p-6">
+
+      {/* 2. TARJETA CONTENEDORA CON ALTURA CONTROLADA */}
+      <section className="w-full max-w-6xl h-full md:h-[85vh] md:max-h-[750px] bg-white overflow-hidden shadow-2xl flex flex-col md:flex-row lg:rounded-3xl">
+
+        {/* Lado Izquierdo: Imagen Hero Fija */}
+        <aside className="relative hidden md:flex md:w-1/2 h-full">
+          <img
+            src="/heroLogin.png"
+            alt="Espacio de trabajo colaborativo"
+            className="absolute inset-0 h-full w-full object-cover"
+          />
+          {/* Mantenemos el overlay con el color corporativo */}
+          <div className="absolute inset-0 bg-primary/15 bg-black/30" />
+
+          <div className="relative z-10 flex flex-col justify-end p-12 text-white h-full w-full bg-gradient-to-t from-black/60 to-transparent">
+            <h1 className="mb-4 text-4xl font-extrabold tracking-tight">
+              Bienvenido de nuevo
+            </h1>
+            <p className="text-base text-stone-200">
+              Un espacio diseñado para impulsar tu crecimiento profesional y tu bienestar.
+            </p>
+          </div>
+        </aside>
+
+        <section className="w-full md:w-1/2 h-full flex flex-col bg-white overflow-y-auto">
+          {/* Contenedor de contenido: Centrado pero elástico y con ancho máximo controlado */}
+          <div className="flex-1 flex flex-col justify-center items-stretch mx-auto w-full max-w-md p-6 sm:p-10 md:p-12">
+
+            {/* Logo de la App (Grande y con presencia) */}
+            <div className="mb-6 flex justify-center flex-shrink-0 h-16">
+              <Link to="/" className="h-full">
+                <img
+                  src={logoApp}
+                  alt="BiT App Logo"
+                  className="h-full w-auto object-contain block"
+                />
+              </Link>
+            </div>
+
+            {/* Encabezado */}
+            <div className="text-center mb-8">
+              <h2 className="text-3xl font-bold text-stone-900 tracking-tight">Iniciar sesión</h2>
+              <p className="mt-2 text-sm text-stone-500">Ingresa tus credenciales para continuar.</p>
+            </div>
+
+            {/* Formulario */}
+            <form onSubmit={handleSubmit} className="space-y-5 w-full">
+              <Input
+                id="email"
+                label="Correo electrónico"
+                type="email"
+                placeholder="nombre@ejemplo.com"
+                icon="mail"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
               />
 
-              <div className="absolute inset-0 bg-primary/15" />
-
-              <div className="absolute bottom-16 left-16 max-w-md text-white">
-                <h1 className="mb-4 text-5xl font-bold text-white">
-                  Bienvenido de nuevo
-                </h1>
-
-                <p className="text-lg">
-                  Un espacio diseñado para impulsar tu crecimiento profesional y tu
-                  bienestar.
-                </p>
-              </div>
-            </aside>
-
-            
-            <section className="flex w-full items-center justify-center px-5 py-10 md:w-1/2">
-              <div className="w-full max-w-lg">
-                <div className="mb-4 text-center justify-between">
-                  <h1 className="text-3xl font-bold">
-                    Iniciar sesión
-                  </h1>
-
-                  <p className="mt-2 text-muted-foreground">
-                    Ingresa tus credenciales para continuar.
-                  </p>
-                </div>
-
-                <form className="space-y-5">
-                  {/* Email */}
-                  <div>
-                    <label
-                      htmlFor="email"
-                      className="mb-2 block text-sm font-medium"
-                    >
-                      Correo electrónico
-                    </label>
-
-                    <div className="relative">
-                      <Mail
-                        size={18}
-                        className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
-                      />
-
-                      <input
-                        id="email"
-                        type="email"
-                        placeholder="ejemplo@correo.com"
-                        className="h-14 w-full rounded-xl border border-gray-200 bg-gray-50 pl-11 pr-4 outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
-                      />
-                    </div>
-                  </div>
-
-                  {/* Password */}
-                  <div>
-                    <div className="mb-2 flex items-center justify-between">
-                      <label
-                        htmlFor="password"
-                        className="text-sm font-medium"
-                      >
-                        Contraseña
-                      </label>
-
-                      <Link
-                        to="/forgot-password"
-                        className="text-sm text-primary hover:underline"
-                      >
-                        ¿Olvidaste tu contraseña?
-                      </Link>
-                    </div>
-
-                    <div className="relative">
-                      <Lock
-                        size={18}
-                        className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
-                      />
-
-                      <input
-                        id="password"
-                        type={showPassword ? "text" : "password"}
-                        placeholder="••••••••"
-                        className="h-14 w-full rounded-xl border border-gray-200 bg-gray-50 pl-11 pr-12 outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
-                      />
-
-                      <button
-                        type="button"
-                        onClick={() =>
-                          setShowPassword(!showPassword)
-                        }
-                        className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 transition hover:text-gray-700"
-                        aria-label={
-                          showPassword
-                            ? "Ocultar contraseña"
-                            : "Mostrar contraseña"
-                        }
-                      >
-                        {showPassword ? (
-                          <EyeOff size={20} />
-                        ) : (
-                          <Eye size={20} />
-                        )}
-                      </button>
-                    </div>
-                  </div>
-
-                  <button
-                    type="submit"
-                    className="h-14 w-full rounded-full bg-primary font-semibold text-white transition hover:opacity-90 active:scale-[0.98]"
-                  >
-                    Iniciar sesión
-                  </button>
-                </form>
-
-                {/* Separador */}
-                <div className="my-8 flex items-center">
-                  <div className="h-px flex-1 bg-gray-200" />
-                  <span className="mx-4 text-sm text-gray-500">
-                    o accede con
-                  </span>
-                  <div className="h-px flex-1 bg-gray-200" />
-                </div>
-
-                {/* Login social */}
-                <div className="grid grid-cols-2 gap-3">
-                  <button
+              <div className="relative">
+                <Input
+                  id="password"
+                  label="Contraseña"
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Escribe tu contraseña"
+                  icon="lock"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                />
+                <button
                     type="button"
-                    className="flex h-14 items-center justify-center rounded-xl border border-gray-200 bg-white transition hover:bg-gray-50"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-[#99462A] hover:text-stone-600 z-10"
+                    aria-label={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
                   >
-                    Google
+                    {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                   </button>
-
-                  <button
-                    type="button"
-                    className="flex h-14 items-center justify-center rounded-xl border border-gray-200 bg-white transition hover:bg-gray-50"
-                  >
-                    LinkedIn
-                  </button>
-                </div>
-
-                <p className="mt-10 text-center text-sm text-gray-600">
-                  ¿No tienes una cuenta?{" "}
+                <div className="flex justify-end mt-2">
                   <Link
-                    to="/register"
-                    className="font-semibold text-primary hover:underline"
+                    to="/forgot-password"
+                    className="text-sm font-medium text-[#99462A] hover:underline"
                   >
-                    Crear una cuenta
+                    ¿Olvidaste tu contraseña?
                   </Link>
-                </p>
+                </div>
               </div>
-            </section>
-        </div>
+
+              {/* Botón Entrar */}
+              <button
+                type="submit"
+                className="w-full py-3 px-4 bg-[#99462A] hover:bg-[#823a22] text-white font-semibold rounded-xl transition-colors shadow-md mt-2"
+              >
+                Entrar
+              </button>
+
+              {/* Separador */}
+              <div className="relative flex py-2 items-center">
+                <div className="flex-grow border-t border-stone-200"></div>
+                <span className="flex-shrink mx-4 text-xs text-stone-400 font-medium tracking-wider uppercase">
+                  O continuar con
+                </span>
+                <div className="flex-grow border-t border-stone-200"></div>
+              </div>
+
+              {/* Botones Sociales (Monocromáticos con el estilo de la App) */}
+              <div className="grid grid-cols-2 gap-3">
+                <button
+                  type="button"
+                  className="flex items-center justify-center gap-2 py-2.5 px-4 border border-stone-200 rounded-xl hover:bg-stone-50 text-stone-700 font-medium text-sm transition-colors"
+                >
+                  <svg className="h-5 w-5" viewBox="0 0 24 24">
+                    <path
+                      fill="currentColor"
+                      d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+                    />
+                    <path
+                      fill="currentColor"
+                      d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                    />
+                    <path
+                      fill="currentColor"
+                      d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"
+                    />
+                    <path
+                      fill="currentColor"
+                      d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"
+                    />
+                  </svg>
+                  <span>Google</span>
+                </button>
+
+                <button
+                  type="button"
+                  className="flex items-center justify-center gap-2 py-2.5 px-4 border border-stone-200 rounded-xl hover:bg-stone-50 text-stone-700 font-medium text-sm transition-colors"
+                >
+                  <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.32 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.79M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z" />
+                  </svg>
+                  <span>LinkedIn</span>
+                </button>
+              </div>
+            </form>
+
+            {/* Footer (Crear una cuenta) con espacio de respiro asegurado */}
+            <div className="mt-10 text-center flex-shrink-0 pb-2">
+              <p className="text-sm text-stone-600">
+                ¿No tienes una cuenta?{" "}
+                <Link
+                  to="/register"
+                  className="text-[#99462A] font-semibold hover:underline"
+                >
+                  Crear una cuenta
+                </Link>
+              </p>
+            </div>
+
+          </div>
+        </section>
+
       </section>
     </main>
   );
