@@ -36,7 +36,7 @@ export default function Login() {
             <section className="flex w-full items-center justify-center px-5 py-10 md:w-1/2">
               <div className="w-full max-w-lg">
                 <div className="mb-4 text-center justify-between">
-                  <h1 className="text-3xl font-bold">
+                  <h1 className="text-3xl font-bold text-stone-900">
                     Iniciar sesión
                   </h1>
 
