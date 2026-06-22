@@ -19,7 +19,7 @@ export default function Login() {
 
   return (
     // 1. FIJAMOS LA PANTALLA COMPLETA Y ELIMINAMOS SCROLL EXTERNO
-    <main className="h-screen w-full bg-background flex items-center justify-center overflow-hidden lg:p-6">
+    <main className="min-h-screen overflow-y-auto h-screen w-full bg-background flex items-center justify-center overflow-hidden lg:p-6">
 
       {/* 2. TARJETA CONTENEDORA CON ALTURA CONTROLADA */}
       <section className="w-full max-w-6xl h-full md:h-[85vh] md:max-h-[750px] bg-white overflow-hidden shadow-2xl flex flex-col md:flex-row lg:rounded-3xl">
