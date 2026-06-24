@@ -1,5 +1,4 @@
 from datetime import datetime
-from uuid import UUID
 
 from pydantic import Field
 from sqlmodel import SQLModel
@@ -8,7 +7,6 @@ from app.enums.mood import Mood
 
 
 class SaludRequest(SQLModel):
-    usuario_id: UUID
     humor: Mood
     nota_semanal: int = Field(ge=1, le=10)
     contexto: str | None = None

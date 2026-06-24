@@ -1,4 +1,6 @@
 from datetime import datetime, timezone
+from uuid import UUID
+
 from fastapi import HTTPException, status
 from sqlmodel import Session
 
@@ -37,7 +39,7 @@ class SaludService:
         self.session = session
         self.ia_agent = IAAgent()
 
-    async def procesar_checkin(self, request: SaludRequest) -> SaludResponse:
+    async def procesar_checkin(self, request: SaludRequest, user_id: UUID) -> SaludResponse:
         """Procesa el check-in emocional diario del usuario.
 
         Flujo:
@@ -49,7 +51,7 @@ class SaludService:
         # ------------------------------------------------------------------
         # PASO 1: Validar existencia del usuario
         # ------------------------------------------------------------------
-        usuario = get_user_by_id(self.session, request.usuario_id)
+        usuario = get_user_by_id(self.session, user_id)
         if not usuario:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
@@ -58,25 +60,23 @@ class SaludService:
 
         # ------------------------------------------------------------------
         # PASO 2: EVALUACIÓN DE CRISIS (MATEMÁTICA, SIN IA)
-        # Este if DEBE ser lo primero. Si invertís el orden, rompés
-        # la regla de negocio más importante del proyecto.
         # ------------------------------------------------------------------
         if request.nota_semanal < 4:
-            return self._responder_crisis(request)
+            return self._responder_crisis(request, user_id)
 
         # ------------------------------------------------------------------
         # PASO 3: BIENESTAR — solo para notas >= 4
         # ------------------------------------------------------------------
-        return await self._responder_bienestar(request)
+        return await self._responder_bienestar(request, user_id)
 
-    def _responder_crisis(self, request: SaludRequest) -> SaludResponse:
+    def _responder_crisis(self, request: SaludRequest, user_id: UUID) -> SaludResponse:
         """Protocolo de crisis: mensaje fijo, derivación al CVV.
 
         La IA NO se consulta. La respuesta es determinista.
         El check-in se guarda en DB con derivate_cvv=True.
         """
         log = MentalHealthLog(
-            user_id=request.usuario_id,
+            user_id=user_id,
             mood=request.humor,
             weekly_score=request.nota_semanal,
             context=request.contexto,
@@ -98,7 +98,7 @@ class SaludService:
         )
 
     async def _responder_bienestar(
-        self, request: SaludRequest
+        self, request: SaludRequest, user_id: UUID
     ) -> SaludResponse:
         """Llama al agente de IA para generar una respuesta empática.
 
@@ -112,7 +112,7 @@ class SaludService:
         )
 
         log = MentalHealthLog(
-            user_id=request.usuario_id,
+            user_id=user_id,
             mood=request.humor,
             weekly_score=request.nota_semanal,
             context=request.contexto,

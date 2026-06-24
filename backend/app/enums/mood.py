@@ -7,3 +7,6 @@ class Mood(str, Enum):
     SAD = "sad"
     ANXIOUS = "anxious"
     OVERWHELMED = "overwhelmed"
+    STRESSED = "stressed"
+    ANGRY = "angry"
+    DEPRESSED = "depressed"

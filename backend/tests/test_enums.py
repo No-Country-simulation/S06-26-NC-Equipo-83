@@ -41,7 +41,10 @@ def test_mood_members():
     assert "sad" in values
     assert "anxious" in values
     assert "overwhelmed" in values
-    assert len(values) == 5
+    assert "stressed" in values
+    assert "angry" in values
+    assert "depressed" in values
+    assert len(values) == 8
 
 
 def test_mood_is_str_enum():
