@@ -1,4 +1,4 @@
-import Input from '../../../components/ui/Input';
+import Input from "../../../components/ui/Input";
 import Select from "../../../components/ui/Select";
 
 interface RegisterStep1Props {
@@ -8,11 +8,9 @@ interface RegisterStep1Props {
     password: string;
     birthDate: string;
     gender: string;
+    educationLevel: string;
   };
-  updateField: (
-    field: string,
-    value: string
-  ) => void;
+  updateField: (field: string, value: string) => void;
 }
 
 export default function RegisterStep1({
@@ -27,12 +25,7 @@ export default function RegisterStep1({
         icon="person"
         placeholder="Ej. Ana García"
         value={formData.fullName}
-        onChange={(e) =>
-          updateField(
-            'fullName',
-            e.target.value
-          )
-        }
+        onChange={(e) => updateField("fullName", e.target.value)}
       />
 
       <Input
@@ -42,12 +35,7 @@ export default function RegisterStep1({
         icon="mail"
         placeholder="nombre@ejemplo.com"
         value={formData.email}
-        onChange={(e) =>
-          updateField(
-            'email',
-            e.target.value
-          )
-        }
+        onChange={(e) => updateField("email", e.target.value)}
       />
 
       <Input
@@ -57,12 +45,7 @@ export default function RegisterStep1({
         icon="lock"
         placeholder="Mínimo 8 caracteres"
         value={formData.password}
-        onChange={(e) =>
-          updateField(
-            'password',
-            e.target.value
-          )
-        }
+        onChange={(e) => updateField("password", e.target.value)}
       />
 
       <div className="grid gap-6 md:grid-cols-2">
@@ -72,29 +55,51 @@ export default function RegisterStep1({
           label="Fecha de nacimiento"
           icon="calendar_today"
           value={formData.birthDate}
-          onChange={(e) =>
-            updateField(
-              'birthDate',
-              e.target.value
-            )
-          }
+          onChange={(e) => updateField("birthDate", e.target.value)}
         />
 
         <div className="space-y-2">
           <Select
-          id="gender"
-          label="Género"
-          value={formData.gender}
-          onChange={(e) => updateField('gender', e.target.value)}
+            id="gender"
+            label="Género"
+            value={formData.gender}
+            onChange={(e) => updateField("gender", e.target.value)}
+            options={[
+              { value: "", label: "Seleccionar" },
+              { value: "female", label: "Femenino" },
+              { value: "male", label: "Masculino" },
+              { value: "non-binary", label: "No binario" },
+              {
+                value: "other",
+                label: "Otro / Prefiero no decir",
+              },
+            ]}
+          />
+        </div>
+      </div>
+
+      <div className="space-y-2">
+        <Select
+          id="educationLevel"
+          label="Nivel educativo"
+          value={formData.educationLevel}
+          onChange={(e) =>
+            updateField("educationLevel", e.target.value)
+          }
           options={[
-            { value: '', label: 'Seleccionar' },
-            { value: 'female', label: 'Femenino' },
-            { value: 'male', label: 'Masculino' },
-            { value: 'non-binary', label: 'No binario' },
-            { value: 'other', label: 'Otro / Prefiero no decir' },
+            { value: "", label: "Seleccionar" },
+            { value: "secundario", label: "Secundario" },
+            {
+              value: "terciario",
+              label: "Terciario / Técnico",
+            },
+            { value: "universitario", label: "Universitario" },
+            {
+              value: "posgrado",
+              label: "Posgrado / Máster",
+            },
           ]}
         />
-        </div>
       </div>
     </div>
   );

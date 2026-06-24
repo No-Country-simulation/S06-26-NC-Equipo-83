@@ -9,6 +9,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.routers import auth
 from app.routers import salud
+from app.routers import orientar
 
 # ---------------------------------------------------------------------------
 # Application metadata
@@ -26,7 +27,11 @@ app = FastAPI(
 # ---------------------------------------------------------------------------
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # TODO: restringir en producción
+    allow_origins=[
+        "http://localhost:5173",
+        "http://localhost:5174",
+        "http://localhost:5175",
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -34,6 +39,7 @@ app.add_middleware(
 # Montar routers
 app.include_router(auth.router)
 app.include_router(salud.router)
+app.include_router(orientar.router)
 
 
 # ---------------------------------------------------------------------------

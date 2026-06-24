@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Bell, Settings, User, LogOut, X } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuthStore } from '../store/useAuthStore';
 
 export const Header: React.FC = () => {
     const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
@@ -25,15 +26,17 @@ export const Header: React.FC = () => {
         return () => document.removeEventListener('mousedown', handleClickOutside);
     }, []);
 
-    const handleNotificationsClick = () => console.log('Abrir modal de notificaciones');
-    const handleSettingsClick = () => console.log('Navegar a editar perfil');
+    const navigate = useNavigate();
+    const logout = useAuthStore((s) => s.logout);
+    const handleSettingsClick = () => navigate('/profile');
     const handleViewProfile = () => {
         setIsProfileMenuOpen(false);
-        console.log('Navegar a ver perfil');
+        navigate('/profile');
     };
     const handleLogout = () => {
         setIsProfileMenuOpen(false);
-        console.log('Cerrar sesión');
+        logout();
+        navigate('/login', { replace: true });
     };
 
     //abrir/cerrar modal de notificaciones

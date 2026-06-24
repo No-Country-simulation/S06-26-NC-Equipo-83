@@ -154,5 +154,17 @@ class IAAgent:
                 "mensaje": "No cargues todo solo. Pedir ayuda también es valentía.",
                 "accion": "Elegí UNA sola tarea, la más chica, y hacela. El resto puede esperar.",
             },
+            "stressed": {
+                "mensaje": "El estrés es la respuesta del cuerpo ante la exigencia. Lo que sentís es válido, y también es temporal.",
+                "accion": "Probá la técnica 5-4-3-2-1: nombrá 5 cosas que ves, 4 que tocás, 3 que escuchás, 2 que olés y 1 que saboreás.",
+            },
+            "angry": {
+                "mensaje": "El enojo es energía — no lo reprimas, pero tampoco dejes que te controle. Esa intensidad, bien canalizada, puede mover montañas.",
+                "accion": "Escribí todo lo que te enoja en un papel, sin filtro. Después rompelo en pedacitos. Libera tensión acumulada.",
+            },
+            "depressed": {
+                "mensaje": "Hoy no voy a llenarte de frases motivacionales. Solo quiero que sepas que tu dolor es real y no estás exagerando. El simple hecho de haberte levantado hoy ya es una victoria.",
+                "accion": "Llamá al CVV — Centro de Valorización de la Vida: 188. Es gratuito, confidencial y disponible 24 horas. No estás solo en esto.",
+            },
         }
         return respuestas.get(humor, respuestas["sad"])

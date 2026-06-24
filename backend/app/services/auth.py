@@ -23,19 +23,19 @@ class AuthService:
         """
         self.session = session
 
-    def register(self, user_data: UserCreate) -> User:
-        """Registra un nuevo usuario.
+    def register(self, user_data: UserCreate) -> dict:
+        """Registra un nuevo usuario y devuelve token + datos.
 
         Flujo:
         1. Verifica que el email no exista → 409 si ya está registrado.
         2. Hashea la contraseña — NUNCA se guarda en texto plano.
         3. Crea el usuario en la base de datos.
+        4. Genera JWT para que la sesión quede iniciada automáticamente.
 
         IMPORTANTE: UserCreate (schema) tiene 'password'.
         User (modelo de DB) tiene 'hashed_password'.
         Son campos distintos. No los confundas.
         """
-        # Paso 1: validar email único
         existing_user = get_user_by_email(self.session, user_data.email)
         if existing_user:
             raise HTTPException(
@@ -43,18 +43,18 @@ class AuthService:
                 detail="El email ya está registrado.",
             )
 
-        # Paso 2: crear modelo User a partir del schema UserCreate
-        # user_data.model_dump() convierte el schema a un diccionario
         user_dict = user_data.model_dump()
-        # Reemplazamos 'password' por 'hashed_password' con el hash
         user_dict["hashed_password"] = hash_password(user_dict.pop("password"))
 
         db_user = User(**user_dict)
-        # **user_dict es "desempaquetado de diccionario":
-        # User(email=..., full_name=..., hashed_password=...)
+        created_user = create_user(self.session, db_user)
 
-        # Paso 3: persistir en DB
-        return create_user(self.session, db_user)
+        token = create_access_token(data={"sub": str(created_user.id)})
+        return {
+            "access_token": token,
+            "token_type": "bearer",
+            "user": created_user,
+        }
 
     def login(self, email: str, password: str) -> dict[str, str]:
         """Autentica a un usuario y devuelve un token JWT.

@@ -1,7 +1,14 @@
 from datetime import datetime, timedelta, timezone
+from uuid import UUID
+
+from fastapi import Depends, HTTPException, status
+from fastapi.security import OAuth2PasswordBearer
 from passlib.context import CryptContext
 from jose import jwt, JWTError
+from sqlmodel import Session
+
 from app.core.config import settings
+from app.db.session import get_session
 
 
 # ---------------------------------------------------------------------------
@@ -64,3 +71,49 @@ def decode_access_token(token: str) -> dict:
         return jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256"])
     except JWTError:
         raise ValueError("Token inválido o expirado")
+
+
+# ---------------------------------------------------------------------------
+# Esquema OAuth2 — le dice a FastAPI de dónde sacar el token
+# ---------------------------------------------------------------------------
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
+
+
+def get_current_user(
+    token: str = Depends(oauth2_scheme),
+    session: Session = Depends(get_session),
+) -> "User":
+    """Valida el JWT y devuelve el usuario autenticado.
+
+    Flujo:
+    1. Extrae el token del header Authorization: Bearer <token>
+    2. Lo decodifica con decode_access_token()
+    3. Extrae el user_id del campo "sub" del payload
+    4. Busca al usuario en la DB
+    5. Si algo falla → 401
+
+    Usala como parámetro en cualquier endpoint protegido:
+        def mi_endpoint(current_user: User = Depends(get_current_user)):
+    """
+    credentials_exception = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="No se pudieron validar las credenciales.",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
+
+    try:
+        payload = decode_access_token(token)
+        user_id_str: str | None = payload.get("sub")
+        if user_id_str is None:
+            raise credentials_exception
+    except (ValueError, JWTError):
+        raise credentials_exception
+
+    # Lazy imports para evitar imports circulares
+    from app.repositories.user import get_user_by_id
+
+    user = get_user_by_id(session, UUID(user_id_str))
+    if user is None:
+        raise credentials_exception
+
+    return user

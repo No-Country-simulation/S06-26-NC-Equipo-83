@@ -59,3 +59,9 @@ class UserLogin(SQLModel):
 class TokenResponse(SQLModel):
     access_token: str
     token_type: str = "bearer"
+
+
+class RegisterResponse(SQLModel):
+    access_token: str
+    token_type: str = "bearer"
+    user: UserResponse

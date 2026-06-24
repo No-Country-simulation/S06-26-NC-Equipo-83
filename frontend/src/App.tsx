@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Toaster } from "react-hot-toast";
 import { AuthProvider } from "./context/authContext";
 import Login from "./modules/auth/login";
 import Register from "./modules/auth/register";
@@ -9,15 +10,12 @@ export default function App() {
     <AuthProvider>
       <BrowserRouter>
         <Routes>
-          {/* MUNDO PÚBLICO: Envolvemos las vistas con AuthLayout */}
           <Route path="/login" element={<Login />} />
-          
           <Route path="/register" element={<Register />} />
-
-          {/* MUNDO PRIVADO: Tu layout que ya tiene la lógica de protección */}
           <Route path="/*" element={<Layout />} />
         </Routes>
       </BrowserRouter>
+      <Toaster />
     </AuthProvider>
   );
 }

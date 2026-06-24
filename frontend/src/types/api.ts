@@ -22,6 +22,9 @@ export const Mood = {
   SAD: "sad",
   ANXIOUS: "anxious",
   OVERWHELMED: "overwhelmed",
+  STRESSED: "stressed",
+  ANGRY: "angry",
+  DEPRESSED: "depressed",
 } as const
 export type Mood = (typeof Mood)[keyof typeof Mood]
 
@@ -59,10 +62,9 @@ export interface OrientarResponse {
 }
 
 export interface SaludRequest {
-  usuario_id: string
   humor: Mood
   nota_semanal: number
-  contexto?: string
+  contexto?: string | null
 }
 
 export interface SaludResponse {
@@ -72,6 +74,12 @@ export interface SaludResponse {
   nota_actual: number
   alerta: boolean
   created_at: string
+}
+
+export interface RegisterResponse {
+  access_token: string
+  token_type: string
+  user: User
 }
 
 export interface UserCreateRequest {

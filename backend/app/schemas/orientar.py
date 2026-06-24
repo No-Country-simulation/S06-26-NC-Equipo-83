@@ -1,11 +1,9 @@
-from uuid import UUID
 from typing import List
 
 from sqlmodel import SQLModel
 
 
 class OrientarRequest(SQLModel):
-    usuario_id: UUID
     perfil: str
     nivel: str
     region: str

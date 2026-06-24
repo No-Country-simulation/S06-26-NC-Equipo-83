@@ -23,6 +23,7 @@ class MentalHealthLog(SQLModel, table=True):
     )
 
     # Datos enviados por el usuario
+    # Almacena el valor del enum (ej: "depressed"), no el nombre (DEPRESSED)
     mood: Mood = Field(nullable=False)
 
     weekly_score: int = Field(

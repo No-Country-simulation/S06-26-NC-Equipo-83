@@ -50,7 +50,7 @@ export default function Input({
             rounded-xl
             border
             border-transparent
-            bg-stone-100
+            bg-slate-100
             px-4
             text-sm
             transition
