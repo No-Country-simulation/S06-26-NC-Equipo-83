@@ -111,20 +111,19 @@ Backend API
 
 ## Stack Tecnológico
 
-![discord](https://www.readmecodegen.com/api/social-icon?name=discord&size=96)
-![github](https://www.readmecodegen.com/api/social-icon?name=github&size=96)
-![javascript](https://www.readmecodegen.com/api/social-icon?name=javascript&size=96)
-![typescript](https://www.readmecodegen.com/api/social-icon?name=typescript&size=96)
-![python](https://www.readmecodegen.com/api/social-icon?name=python&size=96)
-![css3](https://www.readmecodegen.com/api/social-icon?name=css3&size=96)
-![nodejs](https://www.readmecodegen.com/api/social-icon?name=nodejs&size=96)
-![react](https://www.readmecodegen.com/api/social-icon?name=react&size=96)
-![nextjs](https://www.readmecodegen.com/api/social-icon?name=nextjs&size=96)
-![tailwindcss](https://www.readmecodegen.com/api/social-icon?name=tailwindcss&size=96)
-![postgresql](https://www.readmecodegen.com/api/social-icon?name=postgresql&size=96)
----
+| Capa | Tecnología | Icono |
+|------|-----------|-------|
+| **Frontend** | React.js + Vite + TypeScript | ![react](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB) ![vite](https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white) ![typescript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white) |
+| **Estilos** | TailwindCSS | ![tailwind](https://img.shields.io/badge/Tailwind_CSS-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white) |
+| **Backend** | Python + FastAPI | ![python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white) ![fastapi](https://img.shields.io/badge/FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white) |
+| **Base de Datos** | Supabase (PostgreSQL) | ![supabase](https://img.shields.io/badge/Supabase-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white) ![postgresql](https://img.shields.io/badge/PostgreSQL-4169E1?style=for-the-badge&logo=postgresql&logoColor=white) |
+| **IA** | OpenAI / Azure OpenAI | ![openai](https://img.shields.io/badge/OpenAI-412991?style=for-the-badge&logo=openai&logoColor=white) |
+| **Auth** | JWT + Supabase Auth | ![jwt](https://img.shields.io/badge/JWT-000000?style=for-the-badge&logo=jsonwebtokens&logoColor=white) |
+| **Deploy** | Railway / Render | ![railway](https://img.shields.io/badge/Railway-0B0D0E?style=for-the-badge&logo=railway&logoColor=white) |
+| **Control de Versiones** | Git + GitHub | ![git](https://img.shields.io/badge/Git-F05032?style=for-the-badge&logo=git&logoColor=white) ![github](https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white) |
+| **Comunicación** | Discord | ![discord](https://img.shields.io/badge/Discord-5865F2?style=for-the-badge&logo=discord&logoColor=white) |
 
-## Estrategia Git
+---## Estrategia Git
 
 ### Ramas principales
 
@@ -207,31 +206,62 @@ Endpoint de salud mental. Procesa el check-in emocional y sugiere acciones.
 
 ## Equipo
 
-| | Rol | Nombre | Contacto |
-|---|------|--------|----------|
-| <img src="https://via.placeholder.com/48x48/1a73e8/ffffff?text=PM" width="48" style="border-radius:50%"> | **Project Manager** | Orlando Cardenas Villegas | [LinkedIn](https://www.linkedin.com/in/orlandocardenasvillegas/) |
-| <img src="https://via.placeholder.com/48x48/ea4335/ffffff?text=BD" width="48" style="border-radius:50%"> | **Backend Developer** | Dante Escalona Bustos | [LinkedIn](https://www.linkedin.com/in/DanteJac) |
-| <img src="https://via.placeholder.com/48x48/ea4335/ffffff?text=BD" width="48" style="border-radius:50%"> | **Backend Developer** | Matias Solanes | [LinkedIn](https://www.linkedin.com/in/matias-solanes/) |
-| <img src="https://via.placeholder.com/48x48/fbbc04/ffffff?text=FS" width="48" style="border-radius:50%"> | **Full Stack Developer** | Luis Feliz | [LinkedIn](https://www.linkedin.com/in/luis-antonio-feliz/) |
-| <img src="https://via.placeholder.com/48x48/fbbc04/ffffff?text=FS" width="48" style="border-radius:50%"> | **Full Stack Developer** | Hugo Ariel Seijo | [LinkedIn](https://www.linkedin.com/in/arielseijo/) |
+| Foto | Rol | Nombre | Contacto |
+|------|-----|--------|----------|
+| <img src="https://unavatar.io/linkedin/in/orlandocardenasvillegas" width="48" height="48" style="border-radius:50%"> | **Project Manager** | Orlando Cardenas Villegas | [LinkedIn](https://www.linkedin.com/in/orlandocardenasvillegas/) |
+| <img src="https://unavatar.io/linkedin/in/DanteJac" width="48" height="48" style="border-radius:50%"> | **Backend Developer** | Dante Escalona Bustos | [LinkedIn](https://www.linkedin.com/in/DanteJac) |
+| <img src="https://unavatar.io/linkedin/in/matias-solanes" width="48" height="48" style="border-radius:50%"> | **Backend Developer** | Matias Solanes | [LinkedIn](https://www.linkedin.com/in/matias-solanes/) |
+| <img src="https://unavatar.io/linkedin/in/luis-antonio-feliz" width="48" height="48" style="border-radius:50%"> | **Full Stack Developer** | Luis Feliz | [LinkedIn](https://www.linkedin.com/in/luis-antonio-feliz/) |
+| <img src="https://unavatar.io/linkedin/in/arielseijo" width="48" height="48" style="border-radius:50%"> | **Full Stack Developer** | Hugo Ariel Seijo | [LinkedIn](https://www.linkedin.com/in/arielseijo/) |
 
 ---
 
 ## Instalación
 
+### 1. Clonar el repositorio
+
 ```bash
-# Clonar el repositorio
 git clone https://github.com/No-Country-simulation/S06-26-NC-Equipo-83
-
-# Ingresar al proyecto
-cd 
-
-# Instalar dependencias
-
-
-# Ejecutar entorno local
-
+cd S06-26-NC-Equipo-83
 ```
+
+### 2. Backend (Python + FastAPI)
+
+```bash
+cd backend
+python -m venv venv
+
+# Windows
+venv\Scripts\activate
+# macOS / Linux
+# source venv/bin/activate
+
+pip install -r requirements.txt
+cp .env.example .env
+uvicorn app.main:app --reload
+```
+
+Backend: http://localhost:8000
+Swagger: http://localhost:8000/docs
+
+### 3. Frontend (React + Vite)
+
+```bash
+cd frontend
+npm install
+cp .env.example .env
+npm run dev
+```
+
+Frontend: http://localhost:5173
+
+### 4. Verificar
+
+```bash
+curl http://localhost:8000/health
+```
+
+Respuesta esperada: {"status": "ok"}
 
 ---
 
@@ -253,5 +283,3 @@ La documentación técnica se encuentra en la carpeta [`/docs`](Docs/):
   <p><strong>App BiT</strong> — Hackathon / No Country</p>
   <p>Proyecto desarrollado con fines educativos y de innovación tecnológica.</p>
 </div>
-
-ejemplo
