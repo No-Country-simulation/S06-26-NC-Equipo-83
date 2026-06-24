@@ -42,8 +42,15 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   register: async (userData) => {
     set({ isLoading: true, error: null });
     try {
-      await authService.register(userData);
-      set({ isLoading: false });
+      const response = await authService.register(userData);
+      const token = response.access_token;
+      localStorage.setItem("token", token);
+      set({
+        token,
+        user: response.user,
+        isAuthenticated: true,
+        isLoading: false,
+      });
     } catch (err: any) {
       set({ isLoading: false, error: extractErrorMessage(err) });
       throw err;
