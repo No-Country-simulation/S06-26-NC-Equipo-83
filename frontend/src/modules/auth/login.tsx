@@ -1,54 +1,70 @@
-// modules/auth/Login.tsx
-
 import { useState, type FormEvent } from "react";
-import { Eye, EyeOff } from "lucide-react"; // Añadimos Mail y Lock para los íconos
-import { Link } from "react-router-dom";
+import { Eye, EyeOff, Loader2 } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
 import Input from "../../components/ui/Input";
 import logoApp from "../../assets/Logo.png";
+import { useAuthStore } from "../../store/useAuthStore";
 
 export default function Login() {
+  const navigate = useNavigate();
+  const loginAction = useAuthStore((s) => s.login);
+  const storeError = useAuthStore((s) => s.error);
+  const clearError = useAuthStore((s) => s.clearError);
+
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [localError, setLocalError] = useState<string | null>(null);
 
-  const handleSubmit = (e: FormEvent) => {
+  const errorMessage = localError || storeError;
+
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    console.log({ email, password });
-    // Aquí irá tu conexión al backend o simulación
+    setLocalError(null);
+    clearError();
+
+    if (!email.trim()) {
+      setLocalError("El email es obligatorio.");
+      return;
+    }
+    if (password.length < 8) {
+      setLocalError("La contraseña debe tener al menos 8 caracteres.");
+      return;
+    }
+
+    setIsSubmitting(true);
+    try {
+      await loginAction(email, password);
+      navigate("/dashboard", { replace: true });
+    } catch {
+      setIsSubmitting(false);
+    }
   };
 
   return (
-    // 1. FIJAMOS LA PANTALLA COMPLETA Y ELIMINAMOS SCROLL EXTERNO
     <main className="min-h-screen overflow-y-auto h-screen w-full bg-background flex items-center justify-center overflow-hidden lg:p-6">
-
-      {/* 2. TARJETA CONTENEDORA CON ALTURA CONTROLADA */}
       <section className="w-full max-w-6xl h-full md:h-[85vh] md:max-h-[750px] bg-white overflow-hidden shadow-2xl flex flex-col md:flex-row lg:rounded-3xl">
-
-        {/* Lado Izquierdo: Imagen Hero Fija */}
         <aside className="relative hidden md:flex md:w-1/2 h-full">
           <img
             src="/heroLogin.png"
             alt="Espacio de trabajo colaborativo"
             className="absolute inset-0 h-full w-full object-cover"
           />
-          {/* Mantenemos el overlay con el color corporativo */}
           <div className="absolute inset-0 bg-primary/15 bg-black/30" />
-
           <div className="relative z-10 flex flex-col justify-end p-12 text-white h-full w-full bg-gradient-to-t from-black/60 to-transparent">
             <h1 className="mb-4 text-4xl font-extrabold tracking-tight">
               Bienvenido de nuevo
             </h1>
             <p className="text-base text-stone-200">
-              Un espacio diseñado para impulsar tu crecimiento profesional y tu bienestar.
+              Un espacio diseñado para impulsar tu crecimiento profesional y tu
+              bienestar.
             </p>
           </div>
         </aside>
 
         <section className="w-full md:w-1/2 h-full flex flex-col bg-white overflow-y-auto">
-          {/* Contenedor de contenido: Centrado pero elástico y con ancho máximo controlado */}
           <div className="flex-1 flex flex-col justify-center items-stretch mx-auto w-full max-w-md p-6 sm:p-10 md:p-12">
-
-            {/* Logo de la App (Grande y con presencia) */}
             <div className="mb-6 flex justify-center flex-shrink-0 h-16">
               <Link to="/" className="h-full">
                 <img
@@ -59,13 +75,21 @@ export default function Login() {
               </Link>
             </div>
 
-            {/* Encabezado */}
             <div className="text-center mb-8">
-              <h2 className="text-3xl font-bold text-stone-900 tracking-tight">Iniciar sesión</h2>
-              <p className="mt-2 text-sm text-stone-500">Ingresa tus credenciales para continuar.</p>
+              <h2 className="text-3xl font-bold text-stone-900 tracking-tight">
+                Iniciar sesión
+              </h2>
+              <p className="mt-2 text-sm text-stone-500">
+                Ingresa tus credenciales para continuar.
+              </p>
             </div>
 
-            {/* Formulario */}
+            {errorMessage && (
+              <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-xl text-sm text-red-700 font-medium">
+                {errorMessage}
+              </div>
+            )}
+
             <form onSubmit={handleSubmit} className="space-y-5 w-full">
               <Input
                 id="email"
@@ -90,13 +114,21 @@ export default function Login() {
                   required
                 />
                 <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-4 top-1/2 -translate-y-1/2 text-[#99462A] hover:text-stone-600 z-10"
-                    aria-label={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
-                  >
-                    {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-                  </button>
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-[#99462A] hover:text-stone-600 z-10"
+                  aria-label={
+                    showPassword
+                      ? "Ocultar contraseña"
+                      : "Mostrar contraseña"
+                  }
+                >
+                  {showPassword ? (
+                    <EyeOff size={20} />
+                  ) : (
+                    <Eye size={20} />
+                  )}
+                </button>
                 <div className="flex justify-end mt-2">
                   <Link
                     to="/forgot-password"
@@ -107,15 +139,21 @@ export default function Login() {
                 </div>
               </div>
 
-              {/* Botón Entrar */}
               <button
                 type="submit"
-                className="w-full py-3 px-4 bg-[#99462A] hover:bg-[#823a22] text-white font-semibold rounded-xl transition-colors shadow-md mt-2"
+                disabled={isSubmitting}
+                className="w-full py-3 px-4 bg-[#99462A] hover:bg-[#823a22] text-white font-semibold rounded-xl transition-colors shadow-md mt-2 disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2"
               >
-                Entrar
+                {isSubmitting ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    Iniciando sesión...
+                  </>
+                ) : (
+                  "Entrar"
+                )}
               </button>
 
-              {/* Separador */}
               <div className="relative flex py-2 items-center">
                 <div className="flex-grow border-t border-stone-200"></div>
                 <span className="flex-shrink mx-4 text-xs text-stone-400 font-medium tracking-wider uppercase">
@@ -124,7 +162,6 @@ export default function Login() {
                 <div className="flex-grow border-t border-stone-200"></div>
               </div>
 
-              {/* Botones Sociales (Monocromáticos con el estilo de la App) */}
               <div className="grid grid-cols-2 gap-3">
                 <button
                   type="button"
@@ -155,7 +192,11 @@ export default function Login() {
                   type="button"
                   className="flex items-center justify-center gap-2 py-2.5 px-4 border border-stone-200 rounded-xl hover:bg-stone-50 text-stone-700 font-medium text-sm transition-colors"
                 >
-                  <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
+                  <svg
+                    className="h-5 w-5"
+                    fill="currentColor"
+                    viewBox="0 0 24 24"
+                  >
                     <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.32 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.79M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z" />
                   </svg>
                   <span>LinkedIn</span>
@@ -163,7 +204,6 @@ export default function Login() {
               </div>
             </form>
 
-            {/* Footer (Crear una cuenta) con espacio de respiro asegurado */}
             <div className="mt-10 text-center flex-shrink-0 pb-2">
               <p className="text-sm text-stone-600">
                 ¿No tienes una cuenta?{" "}
@@ -175,10 +215,8 @@ export default function Login() {
                 </Link>
               </p>
             </div>
-
           </div>
         </section>
-
       </section>
     </main>
   );
