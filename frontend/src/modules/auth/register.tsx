@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -59,6 +59,11 @@ export default function Register() {
 
   const [step, setStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const formContentRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    formContentRef.current?.scrollTo(0, 0);
+  }, [step]);
 
   const form = useForm<RegisterFormData>({
     resolver: zodResolver(fullSchema),
@@ -183,7 +188,10 @@ export default function Register() {
             </div>
           )}
 
-          <div className="flex-1 overflow-y-auto pr-2 min-h-0 space-y-4 scrollbar-thin">
+          <div
+            ref={formContentRef}
+            className="flex-1 overflow-y-auto pr-2 min-h-0 space-y-4 scrollbar-thin"
+          >
             {step === 1 && (
               <RegisterStep1
                 register={register}
