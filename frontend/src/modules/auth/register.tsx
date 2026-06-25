@@ -197,9 +197,10 @@ export default function Register() {
 
           <div
             ref={formContentRef}
-            className="flex-1 overflow-y-auto pr-2 min-h-0 space-y-4 scrollbar-thin"
+            className="flex-1 overflow-y-auto pr-2 min-h-0 scrollbar-thin"
           >
-            {step === 1 && (
+            {/* Siempre montados para preservar estado interno de los componentes */}
+            <div className={step !== 1 ? "hidden" : "space-y-4"}>
               <RegisterStep1
                 register={register}
                 trigger={trigger}
@@ -209,15 +210,17 @@ export default function Register() {
                 birthDate={birthDate}
                 setValue={setValue}
               />
-            )}
-            {step === 2 && <RegisterStep2 form={form} />}
-            {step === 3 && (
+            </div>
+            <div className={step !== 2 ? "hidden" : "space-y-4"}>
+              <RegisterStep2 form={form} />
+            </div>
+            <div className={step !== 3 ? "hidden" : "space-y-4"}>
               <RegisterStep3
                 register={register}
                 trigger={trigger}
                 errors={errors}
               />
-            )}
+            </div>
           </div>
 
           {/* ── Botones de navegación ────────────────────────────────── */}
