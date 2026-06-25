@@ -3,6 +3,7 @@ import type { RegisterFormData } from "../../../lib/validations";
 import Input from "../../../components/ui/Input";
 import Select from "../../../components/ui/Select";
 import DateInput from "../../../components/ui/DateInput";
+import { authService } from "../../../services/authService";
 
 const REQ_MIN_8 = /^.{8,}$/;
 const REQ_UPPER = /[A-Z]/;
@@ -66,7 +67,19 @@ export default function RegisterStep1({
         icon="mail"
         placeholder="nombre@ejemplo.com"
         required
-        {...register("email", { onBlur: () => trigger("email") })}
+        {...register("email", {
+          onBlur: () => trigger("email"),
+          validate: async (value) => {
+            if (!value) return true;
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) return true;
+            try {
+              const taken = await authService.checkEmail(value);
+              return taken ? "Este email ya está registrado" : true;
+            } catch {
+              return true;
+            }
+          },
+        })}
         error={errors.email?.message}
       />
 

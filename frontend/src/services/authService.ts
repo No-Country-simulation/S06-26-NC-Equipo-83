@@ -20,6 +20,14 @@ export const authService = {
     return data;
   },
 
+  async checkEmail(email: string): Promise<boolean> {
+    const { data } = await api.get<{ registered: boolean }>(
+      "/auth/check-email",
+      { params: { email } },
+    );
+    return data.registered;
+  },
+
   async getMe(): Promise<User> {
     const { data } = await api.get<User>("/auth/me");
     return data;

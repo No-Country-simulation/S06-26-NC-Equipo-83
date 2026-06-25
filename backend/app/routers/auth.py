@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Depends, Query, status
 from sqlmodel import Session
 
 from app.db.session import get_session
@@ -6,6 +6,7 @@ from app.core.security import get_current_user
 from app.models.user import User
 from app.schemas.user import UserCreate, UserResponse, TokenResponse, RegisterResponse, UserLogin
 from app.services.auth import AuthService
+from app.repositories.user import get_user_by_email
 
 # Crear un router con prefijo y tag para Swagger
 router = APIRouter(prefix="/auth", tags=["auth"])
@@ -40,6 +41,23 @@ def login(credentials: UserLogin, session: Session = Depends(get_session)):
     """
     service = AuthService(session)
     return service.login(credentials.email, credentials.password)
+
+
+@router.get(
+    "/check-email",
+    summary="Verificar si un email ya está registrado",
+)
+def check_email(
+    email: str = Query(..., description="Email a verificar"),
+    session: Session = Depends(get_session),
+):
+    """Devuelve si el email ya está registrado en el sistema.
+
+    El frontend usa este endpoint para validación en tiempo real
+    durante el formulario de registro.
+    """
+    user = get_user_by_email(session, email)
+    return {"registered": user is not None}
 
 
 @router.get(
