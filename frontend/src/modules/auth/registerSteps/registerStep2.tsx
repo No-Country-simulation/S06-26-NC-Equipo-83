@@ -90,6 +90,14 @@ export default function RegisterStep2({ form }: RegisterStep2Props) {
     }
   }, [countryCode]);
 
+  // ── Ciudad: debounce del filtro para no filtrar en cada tecla ────
+  const [citySearch, setCitySearch] = useState("");
+  const cityTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+
+  useEffect(() => {
+    return () => clearTimeout(cityTimer.current);
+  }, []);
+
   // ── Ciudades: carga asíncrona desde GeoNames ──────────────────────
   const [cities, setCities] = useState<CityOption[]>([]);
   const [citiesLoading, setCitiesLoading] = useState(false);
@@ -305,6 +313,20 @@ export default function RegisterStep2({ form }: RegisterStep2Props) {
                 isDisabled={!stateCode}
                 isLoading={citiesLoading}
                 options={cities.map(cvt)}
+                filterOption={(option) => {
+                  if (citySearch.length < 2) return false;
+                  return option.label.toLowerCase().includes(citySearch);
+                }}
+                onInputChange={(val, { action }) => {
+                  if (action === "input-change") {
+                    clearTimeout(cityTimer.current);
+                    cityTimer.current = setTimeout(
+                      () => setCitySearch(val.toLowerCase()),
+                      300,
+                    );
+                  }
+                  return val;
+                }}
                 value={
                   field.value
                     ? cities
