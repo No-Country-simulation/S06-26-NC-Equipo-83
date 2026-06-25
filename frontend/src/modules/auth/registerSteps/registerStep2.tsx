@@ -23,6 +23,8 @@ interface Option {
 
 // ── Estilos de react-select con colores de marca ───────────────────────
 
+const brandColor = "#99462A";
+
 const selectStyles: StylesConfig<Option, false> = {
   control: (base) => ({
     ...base,
@@ -35,8 +37,8 @@ const selectStyles: StylesConfig<Option, false> = {
   }),
   option: (base, state) => ({
     ...base,
-    backgroundColor: state.isFocused ? "rgba(95, 39, 205, 0.1)" : "white",
-    color: state.isFocused ? "#5F27CD" : "#292524",
+    backgroundColor: state.isFocused ? "rgba(153, 70, 42, 0.1)" : "white",
+    color: state.isFocused ? brandColor : "#292524",
     cursor: "pointer",
     fontSize: "0.875rem",
     padding: "0.625rem 0.75rem",
