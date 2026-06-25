@@ -27,11 +27,21 @@ export function mapRegisterFormToApi(formData: RegisterFormData): UserCreateRequ
     birth_date: formData.birthDate,
     gender: formData.gender,
     education_level: formData.educationLevel,
-    continent: formData.continent,
-    country: formData.country,
-    state: formData.state,
-    city: formData.city,
-    whatsapp: `${formData.phoneCode}${formData.whatsapp}`,
+
+    continent_code: formData.continentCode,
+    continent_name: formData.continentName,
+    country_code: formData.countryCode,
+    country_name: formData.countryName,
+    state_code: formData.stateCode,
+    state_name: formData.stateName,
+    city_name: formData.cityName,
+    whatsapp_e164: formData.whatsapp,
+
+    language_code:
+      typeof navigator !== "undefined" && navigator.language.startsWith("pt")
+        ? "pt"
+        : "es",
+
     professional_level:
       EXPERIENCE_LEVEL_MAP[formData.experienceLevel] || "junior",
     tech_area: formData.technologyArea,
