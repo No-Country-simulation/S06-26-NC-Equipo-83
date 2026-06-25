@@ -28,7 +28,17 @@ export const UserProfilePage: React.FC = () => {
   const [saveMessage, setSaveMessage] = useState<string | null>(null);
 
   const [formData, setFormData] = useState({
-    full_name: user?.full_name || "", email: user?.email || "", whatsapp: user?.whatsapp || "", birth_date: user?.birth_date || "", continent: user?.continent || "", country: user?.country || "", city: user?.city || "", education_level: user?.education_level || "", professional_level: user?.professional_level || "", tech_area: user?.tech_area || "", career_objective: user?.career_objective || "",
+    full_name: user?.full_name || "",
+    email: user?.email || "",
+    whatsapp_e164: user?.whatsapp_e164 || "",
+    birth_date: user?.birth_date || "",
+    continent_name: user?.continent_name || "",
+    country_name: user?.country_name || "",
+    city_name: user?.city_name || "",
+    education_level: user?.education_level || "",
+    professional_level: user?.professional_level || "",
+    tech_area: user?.tech_area || "",
+    career_objective: user?.career_objective || "",
   });
 
   if (!user) return <main className="min-h-screen flex items-center justify-center"><Loader2 className="w-8 h-8 animate-spin text-[#A04E2D]" /></main>;
@@ -70,13 +80,13 @@ export const UserProfilePage: React.FC = () => {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <InputField label="Nombre completo" value={formData.full_name} field="full_name" isEditing={isEditing} onChange={setFormData} />
               <InputField label="Correo electrónico" value={formData.email} field="email" isEditing={false} onChange={setFormData} />
-              <InputField label="WhatsApp" value={formData.whatsapp} field="whatsapp" isEditing={isEditing} onChange={setFormData} />
+              <InputField label="WhatsApp" value={formData.whatsapp_e164} field="whatsapp_e164" isEditing={isEditing} onChange={setFormData} />
               <div className="space-y-1"><label className="text-xs font-semibold text-gray-600">Fecha de nacimiento</label><div className="relative"><input type={isEditing ? "date" : "text"} readOnly={!isEditing} value={formData.birth_date?.split("T")[0] || ""} onChange={(e) => setFormData((prev) => ({ ...prev, birth_date: e.target.value }))} className="w-full px-4 py-2.5 bg-[#F4F1EC]/60 rounded-xl text-sm font-medium text-gray-800 outline-none" />{!isEditing && <Calendar className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 h-4 w-4" />}</div></div>
             </div>
           </section>
           <section className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
             <header className="flex items-center gap-2.5 border-b border-gray-100 pb-3 mb-5"><MapPin className="text-[#A04E2D] h-5 w-5" /><h2 className="text-base font-bold text-gray-900">Ubicación</h2></header>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4"><InputField label="Continente" value={formData.continent} field="continent" isEditing={isEditing} onChange={setFormData} /><InputField label="País" value={formData.country} field="country" isEditing={isEditing} onChange={setFormData} /><InputField label="Ciudad" value={formData.city} field="city" isEditing={isEditing} onChange={setFormData} /></div>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4"><InputField label="Continente" value={formData.continent_name} field="continent_name" isEditing={isEditing} onChange={setFormData} /><InputField label="País" value={formData.country_name} field="country_name" isEditing={isEditing} onChange={setFormData} /><InputField label="Ciudad" value={formData.city_name} field="city_name" isEditing={isEditing} onChange={setFormData} /></div>
           </section>
           <section className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
             <header className="flex items-center gap-2.5 border-b border-gray-100 pb-3 mb-5"><Briefcase className="text-[#A04E2D] h-5 w-5" /><h2 className="text-base font-bold text-gray-900">Perfil Profesional</h2></header>

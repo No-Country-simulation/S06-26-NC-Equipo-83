@@ -38,7 +38,7 @@ export const DashboardPage: React.FC = () => {
       fetchAnalysis({
         perfil: user.tech_area || "frontend",
         nivel: user.professional_level,
-        region: user.country || "LATAM",
+        region: user.country_name || "LATAM",
         idioma: "es",
         lat: 0,
         lng: 0,
