@@ -32,18 +32,54 @@ export const registerStep1Schema = z.object({
     .min(8, "La contraseña debe tener al menos 8 caracteres")
     .regex(/[A-Z]/, "Debe contener al menos una mayúscula")
     .regex(/[0-9]/, "Debe contener al menos un número"),
-  birthDate: z.string().min(1, "La fecha de nacimiento es obligatoria"),
+  confirmPassword: z.string().min(1, "Confirmá tu contraseña"),
+  birthDate: z
+    .string()
+    .min(1, "La fecha de nacimiento es obligatoria")
+    .refine(
+      (val) => !isNaN(Date.parse(val)) && /^\d{4}-\d{2}-\d{2}$/.test(val),
+      { message: "Fecha inválida — usá el formato YYYY-MM-DD" },
+    )
+    .refine((val) => new Date(val) <= new Date(), {
+      message: "La fecha no puede ser futura",
+    })
+    .refine(
+      (val) => {
+        const birth = new Date(val);
+        const today = new Date();
+        let age = today.getFullYear() - birth.getFullYear();
+        const m = today.getMonth() - birth.getMonth();
+        if (m < 0 || (m === 0 && today.getDate() < birth.getDate())) age--;
+        return age >= 16;
+      },
+      { message: "Debés tener al menos 16 años" },
+    )
+    .refine(
+      (val) => {
+        const birth = new Date(val);
+        const today = new Date();
+        let age = today.getFullYear() - birth.getFullYear();
+        const m = today.getMonth() - birth.getMonth();
+        if (m < 0 || (m === 0 && today.getDate() < birth.getDate())) age--;
+        return age <= 120;
+      },
+      { message: "La fecha de nacimiento no es válida" },
+    ),
   gender: z.string().min(1, "Seleccioná una opción"),
   educationLevel: z.string().min(1, "Seleccioná tu nivel educativo"),
 });
 
 export const registerStep2Schema = z.object({
-  continent: z.string().min(1, "Seleccioná un continente"),
-  country: z.string().min(1, "Seleccioná un país"),
-  state: z.string().min(1, "La provincia es obligatoria"),
-  city: z.string().min(1, "La ciudad es obligatoria"),
-  phoneCode: z.string().min(1, "Seleccioná un código"),
-  whatsapp: z.string().min(6, "Número de WhatsApp inválido"),
+  continentCode: z.string().length(2, "Seleccioná un continente"),
+  continentName: z.string().min(1),
+  countryCode: z.string().length(2, "Seleccioná un país"),
+  countryName: z.string().min(1),
+  stateCode: z.string().min(1, "Seleccioná una provincia/estado"),
+  stateName: z.string().min(1),
+  cityName: z.string().min(1, "Seleccioná una ciudad"),
+  whatsapp: z
+    .string()
+    .regex(/^\+[1-9]\d{6,14}$/, "Ingresá un número de WhatsApp válido (ej: +549112345678)"),
 });
 
 export const registerStep3Schema = z.object({

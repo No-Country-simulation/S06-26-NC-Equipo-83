@@ -1,22 +1,53 @@
+import type { UseFormRegister, UseFormTrigger, FieldErrors, UseFormSetValue } from "react-hook-form";
+import type { RegisterFormData } from "../../../lib/validations";
 import Input from "../../../components/ui/Input";
 import Select from "../../../components/ui/Select";
+import DateInput from "../../../components/ui/DateInput";
+import { authService } from "../../../services/authService";
+
+const REQ_MIN_8 = /^.{8,}$/;
+const REQ_UPPER = /[A-Z]/;
+const REQ_NUMBER = /[0-9]/;
+
+function computeDateRange() {
+  const today = new Date();
+  const y = today.getFullYear();
+  const m = String(today.getMonth() + 1).padStart(2, "0");
+  const d = String(today.getDate()).padStart(2, "0");
+  return {
+    min: `${y - 120}-${m}-${d}`,
+    max: `${y - 16}-${m}-${d}`,
+  };
+}
 
 interface RegisterStep1Props {
-  formData: {
-    fullName: string;
-    email: string;
-    password: string;
-    birthDate: string;
-    gender: string;
-    educationLevel: string;
-  };
-  updateField: (field: string, value: string) => void;
+  register: UseFormRegister<RegisterFormData>;
+  trigger: UseFormTrigger<RegisterFormData>;
+  errors: FieldErrors<RegisterFormData>;
+  password: string;
+  confirmPassword: string;
+  birthDate: string;
+  setValue: UseFormSetValue<RegisterFormData>;
+}
+
+function ReqLine({ met, label }: { met: boolean; label: string }) {
+  return (
+    <span className={`text-xs ${met ? "text-[#99462A]" : "text-stone-400"}`}>
+      {met ? "\u2713" : "\u25CB"} {label}
+    </span>
+  );
 }
 
 export default function RegisterStep1({
-  formData,
-  updateField,
+  register,
+  trigger,
+  errors,
+  password,
+  confirmPassword,
+  birthDate,
+  setValue,
 }: RegisterStep1Props) {
+  const { min: birthMin, max: birthMax } = computeDateRange();
   return (
     <div className="space-y-6">
       <Input
@@ -24,8 +55,9 @@ export default function RegisterStep1({
         label="Nombre completo"
         icon="person"
         placeholder="Ej. Ana García"
-        value={formData.fullName}
-        onChange={(e) => updateField("fullName", e.target.value)}
+        required
+        {...register("fullName", { onBlur: () => trigger("fullName") })}
+        error={errors.fullName?.message}
       />
 
       <Input
@@ -34,73 +66,108 @@ export default function RegisterStep1({
         label="Correo electrónico"
         icon="mail"
         placeholder="nombre@ejemplo.com"
-        value={formData.email}
-        onChange={(e) => updateField("email", e.target.value)}
+        required
+        {...register("email", {
+          onBlur: () => trigger("email"),
+          validate: async (value) => {
+            if (!value) return true;
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) return true;
+            try {
+              const taken = await authService.checkEmail(value);
+              return taken ? "Este email ya está registrado" : true;
+            } catch {
+              return true;
+            }
+          },
+        })}
+        error={errors.email?.message}
       />
 
-      <Input
-        id="password"
-        type="password"
-        label="Contraseña"
-        icon="lock"
-        placeholder="Mínimo 8 caracteres"
-        value={formData.password}
-        onChange={(e) => updateField("password", e.target.value)}
-      />
-
-      <div className="grid gap-6 md:grid-cols-2">
+      <div>
         <Input
-          id="birthDate"
-          type="date"
-          label="Fecha de nacimiento"
-          icon="calendar_today"
-          value={formData.birthDate}
-          onChange={(e) => updateField("birthDate", e.target.value)}
+          id="password"
+          type="password"
+          label="Contraseña"
+          icon="lock"
+          placeholder="Mínimo 8 caracteres"
+          showPasswordToggle
+          required
+          {...register("password", { onBlur: () => trigger("password") })}
+          error={errors.password?.message}
         />
 
-        <div className="space-y-2">
-          <Select
-            id="gender"
-            label="Género"
-            value={formData.gender}
-            onChange={(e) => updateField("gender", e.target.value)}
-            options={[
-              { value: "", label: "Seleccionar" },
-              { value: "female", label: "Femenino" },
-              { value: "male", label: "Masculino" },
-              { value: "non-binary", label: "No binario" },
-              {
-                value: "other",
-                label: "Otro / Prefiero no decir",
-              },
-            ]}
-          />
+        <div className="flex flex-wrap gap-x-4 gap-y-1 mt-2">
+          <ReqLine met={REQ_MIN_8.test(password ?? "")} label="Mínimo 8 caracteres" />
+          <ReqLine met={REQ_UPPER.test(password ?? "")} label="Al menos 1 mayúscula" />
+          <ReqLine met={REQ_NUMBER.test(password ?? "")} label="Al menos 1 número" />
         </div>
       </div>
 
-      <div className="space-y-2">
+      <Input
+        id="confirmPassword"
+        type="password"
+        label="Confirmar contraseña"
+        icon="lock"
+        placeholder="Repetí tu contraseña"
+        showPasswordToggle
+        required
+        {...register("confirmPassword", { onBlur: () => trigger("confirmPassword") })}
+        error={
+          password && confirmPassword && password === confirmPassword
+            ? undefined
+            : errors.confirmPassword?.message
+        }
+      />
+
+      {password && confirmPassword && password === confirmPassword && (
+        <p className="text-xs text-green-600 font-medium flex items-center gap-1">
+          {"\u2713"} Las contraseñas coinciden
+        </p>
+      )}
+
+      <div className="grid gap-6 md:grid-cols-2">
+        <DateInput
+          id="birthDate"
+          label="Fecha de nacimiento"
+          required
+          min={birthMin}
+          max={birthMax}
+          value={birthDate}
+          error={errors.birthDate?.message}
+          onChange={(val) => setValue("birthDate", val, { shouldValidate: true })}
+          onBlur={() => trigger("birthDate")}
+        />
+
         <Select
-          id="educationLevel"
-          label="Nivel educativo"
-          value={formData.educationLevel}
-          onChange={(e) =>
-            updateField("educationLevel", e.target.value)
-          }
+          id="gender"
+          label="Género"
+          required
+          {...register("gender", { onChange: () => trigger("gender") })}
+          error={errors.gender?.message}
           options={[
             { value: "", label: "Seleccionar" },
-            { value: "secundario", label: "Secundario" },
-            {
-              value: "terciario",
-              label: "Terciario / Técnico",
-            },
-            { value: "universitario", label: "Universitario" },
-            {
-              value: "posgrado",
-              label: "Posgrado / Máster",
-            },
+            { value: "female", label: "Femenino" },
+            { value: "male", label: "Masculino" },
+            { value: "non-binary", label: "No binario" },
+            { value: "other", label: "Otro / Prefiero no decir" },
           ]}
         />
       </div>
+
+      <Select
+        id="educationLevel"
+        label="Nivel educativo"
+        required
+        {...register("educationLevel")}
+        error={errors.educationLevel?.message}
+        options={[
+          { value: "", label: "Seleccionar" },
+          { value: "secundario", label: "Secundario" },
+          { value: "terciario", label: "Terciario / Técnico" },
+          { value: "universitario", label: "Universitario" },
+          { value: "posgrado", label: "Posgrado / Máster" },
+        ]}
+      />
     </div>
   );
 }

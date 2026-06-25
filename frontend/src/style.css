@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 :root {
   --text: #6b6375;
   --text-h: #08060d;
@@ -31,10 +35,6 @@
 }
 
 @media (prefers-color-scheme: dark) {
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
 :root {
     --text: #9ca3af;
     --text-h: #f3f4f6;
@@ -297,4 +297,27 @@ code {
     right: 0;
     border-right-color: var(--border);
   }
+}
+
+/* ── Scrollbar ──────────────────────────────────────────────────── */
+.scrollbar-thin {
+  scrollbar-width: thin;
+  scrollbar-color: #d6d3d1 transparent;
+}
+
+.scrollbar-thin::-webkit-scrollbar {
+  width: 6px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background-color: #d6d3d1;
+  border-radius: 3px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb:hover {
+  background-color: #a8a29e;
 }

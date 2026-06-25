@@ -15,6 +15,12 @@ pydantic==2.10.4
 pydantic-settings==2.7.0
 email-validator==2.3.0
 
+# Geographic validation (ISO 3166-1 / 3166-2 cross-reference)
+pycountry==24.6.1
+
+# Phone validation (E.164 — Google libphonenumber)
+phonenumbers==8.13.48
+
 # Authentication (JWT)
 python-jose[cryptography]==3.3.0
 passlib[bcrypt]==1.7.4

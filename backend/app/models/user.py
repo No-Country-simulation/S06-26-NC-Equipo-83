@@ -1,11 +1,25 @@
 from datetime import datetime, timezone, date
 from uuid import UUID, uuid4
-from typing import List
+from typing import List, Optional
+import phonenumbers
 
+from pydantic import field_validator
 from sqlmodel import SQLModel, Field, Relationship
 
 from app.enums.professional_level import ProfessionalLevel
 from app.enums.career_objective import CareerObjective
+
+
+# ---------------------------------------------------------------------------
+# Constantes de continente — mapeo código → nombre
+# ---------------------------------------------------------------------------
+CONTINENT_BY_CODE: dict[str, str] = {
+    "AM": "América",
+    "EU": "Europa",
+    "AF": "África",
+    "AS": "Asia",
+    "OC": "Oceanía",
+}
 
 
 class User(SQLModel, table=True):
@@ -14,69 +28,84 @@ class User(SQLModel, table=True):
     id: UUID = Field(
         default_factory=uuid4,
         primary_key=True,
-        index=True
-    )
-
-    # Datos Personales
-    email: str = Field(
-        unique=True,
         index=True,
-        nullable=False
     )
 
+    # ── Datos Personales ──────────────────────────────────────────────────
+
+    email: str = Field(unique=True, index=True, nullable=False)
     hashed_password: str = Field(nullable=False)
-
     full_name: str = Field(nullable=False)
-
     birth_date: date = Field(nullable=False)
-
     gender: str = Field(nullable=False)
-
     education_level: str = Field(nullable=False)
 
-    continent: str = Field(nullable=False)
+    # ── Datos Geográficos (código ISO + nombre legible) ───────────────────
 
-    country: str = Field(
-        nullable=False,
-        index=True
-    )
+    continent_code: str = Field(max_length=2, nullable=False)
+    continent_name: str = Field(nullable=False)
+    country_code: str = Field(max_length=2, nullable=False, index=True)
+    country_name: str = Field(nullable=False)
+    state_code: str = Field(nullable=False)
+    state_name: str = Field(nullable=False)
+    city_name: str = Field(nullable=False, index=True)
 
-    state: str = Field(nullable=False)
+    # ── WhatsApp validado en E.164 ───────────────────────────────────────
 
-    city: str = Field(
-        nullable=False,
-        index=True
-    )
+    whatsapp_e164: str = Field(nullable=False)
 
-    whatsapp: str = Field(nullable=False)
+    # ── Idioma (es para español, pt para portugués) ──────────────────────
 
-    # Datos Profesionales
+    language_code: str = Field(default="es", max_length=2, nullable=False)
+
+    # ── Datos Profesionales ──────────────────────────────────────────────
+
     professional_level: ProfessionalLevel = Field(
         nullable=False,
-        index=True
+        index=True,
     )
+    tech_area: str = Field(nullable=False, index=True)
+    career_objective: CareerObjective = Field(nullable=False)
 
-    tech_area: str = Field(
-        nullable=False,
-        index=True
-    )
+    # ── Auditoría ────────────────────────────────────────────────────────
 
-    career_objective: CareerObjective = Field(
-        nullable=False
-    )
-
-    # Auditoría
     created_at: datetime = Field(
         default_factory=lambda: datetime.now(timezone.utc),
-        nullable=False
+        nullable=False,
     )
-
     updated_at: datetime = Field(
         default_factory=lambda: datetime.now(timezone.utc),
-        nullable=False
+        nullable=False,
     )
 
-    # Relaciones
+    # ── Relaciones ───────────────────────────────────────────────────────
+
     mental_health_logs: List["MentalHealthLog"] = Relationship(
-        back_populates="user"
+        back_populates="user",
     )
+
+    # ── Validadores Pydantic ─────────────────────────────────────────────
+
+    @field_validator("whatsapp_e164")
+    @classmethod
+    def validate_e164(cls, v: str) -> str:
+        """Valida E.164 estricto usando Google libphonenumber (pypi: phonenumbers).
+
+        Corre durante la construcción del modelo (antes de tocar la DB).
+        Si falla, FastAPI devuelve automáticamente 422.
+        """
+        try:
+            parsed = phonenumbers.parse(v, None)
+        except phonenumbers.NumberParseException:
+            raise ValueError(
+                f"No se pudo interpretar '{v}' como número telefónico internacional."
+            )
+
+        if not phonenumbers.is_valid_number(parsed):
+            raise ValueError(
+                f"El número '{v}' no es válido según el plan de numeración internacional."
+            )
+
+        # Reformatear a E.164 canónico (ej: +5491161234567)
+        e164 = phonenumbers.format_number(parsed, phonenumbers.PhoneNumberFormat.E164)
+        return e164
