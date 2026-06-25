@@ -77,7 +77,9 @@ export const registerStep2Schema = z.object({
   stateCode: z.string().min(1, "Seleccioná una provincia/estado"),
   stateName: z.string().min(1),
   cityName: z.string().min(1, "Seleccioná una ciudad"),
-  whatsapp: z.string().min(1, "Ingresá tu número de WhatsApp"),
+  whatsapp: z
+    .string()
+    .regex(/^\+[1-9]\d{6,14}$/, "Ingresá un número de WhatsApp válido (ej: +549112345678)"),
 });
 
 export const registerStep3Schema = z.object({
