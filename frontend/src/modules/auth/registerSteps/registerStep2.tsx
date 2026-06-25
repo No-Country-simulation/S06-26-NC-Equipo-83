@@ -24,6 +24,10 @@ interface Option {
 // ── Estilos de react-select con colores de marca ───────────────────────
 
 const brandColor = "#99462A";
+const SELECT_MENU_PROPS = {
+  menuPosition: "fixed" as const,
+  maxMenuHeight: 200,
+};
 
 const selectStyles: StylesConfig<Option, false> = {
   control: (base) => ({
@@ -137,10 +141,11 @@ export default function RegisterStep2({ form }: RegisterStep2Props) {
           name="continentCode"
           control={control}
           render={({ field }) => (
-            <Select<Option, false>
-              inputId="continent-select"
-              options={CONTINENTS.map((c) => ({ value: c.code, label: c.name }))}
-              value={
+              <Select<Option, false>
+                inputId="continent-select"
+                {...SELECT_MENU_PROPS}
+                options={CONTINENTS.map((c) => ({ value: c.code, label: c.name }))}
+                value={
                 field.value
                   ? CONTINENTS.filter((c) => c.code === field.value).map(
                       (c) => ({ value: c.code, label: c.name }),
@@ -193,8 +198,9 @@ export default function RegisterStep2({ form }: RegisterStep2Props) {
           control={control}
           render={({ field }) => (
             <Select<Option, false>
-              inputId="country-select"
-              isDisabled={!continentCode}
+                inputId="country-select"
+                {...SELECT_MENU_PROPS}
+                isDisabled={!continentCode}
               options={countries.map(cvt)}
               value={
                 field.value
@@ -254,6 +260,7 @@ export default function RegisterStep2({ form }: RegisterStep2Props) {
             render={({ field }) => (
               <Select<Option, false>
                 inputId="state-select"
+                {...SELECT_MENU_PROPS}
                 isDisabled={!countryCode}
                 options={states.map(cvt)}
                 value={
@@ -310,6 +317,7 @@ export default function RegisterStep2({ form }: RegisterStep2Props) {
             render={({ field }) => (
               <CreatableSelect<Option, false>
                 inputId="city-select"
+                {...SELECT_MENU_PROPS}
                 isDisabled={!stateCode}
                 isLoading={citiesLoading}
                 options={cities.map(cvt)}
