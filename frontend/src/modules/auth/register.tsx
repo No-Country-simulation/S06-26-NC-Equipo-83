@@ -58,8 +58,13 @@ export default function Register() {
   const clearError = useAuthStore((s) => s.clearError);
 
   const [step, setStep] = useState(1);
+  const [isValidating, setIsValidating] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const formContentRef = useRef<HTMLDivElement>(null);
+
+  // Ref sincronizada en cada render para evitar closures stale
+  const stepRef = useRef(step);
+  stepRef.current = step;
 
   useEffect(() => {
     formContentRef.current?.scrollTo(0, 0);
@@ -107,8 +112,10 @@ export default function Register() {
 
   const nextStep = async () => {
     clearError();
-    const fields = stepFields[step];
+    setIsValidating(true);
+    const fields = stepFields[stepRef.current];
     const valid = await trigger(fields);
+    setIsValidating(false);
     if (valid) {
       setStep((s) => Math.min(s + 1, 3));
       return;
@@ -230,7 +237,7 @@ export default function Register() {
               <Button
                 type="button"
                 onClick={step === 3 ? handleSubmit(onSubmit) : nextStep}
-                disabled={isSubmitting}
+                disabled={isValidating || isSubmitting}
                 className={`h-12 py-2 rounded-xl font-semibold text-sm shadow-md transition-all ${
                   step > 1 ? "w-2/3" : "w-full"
                 } disabled:opacity-70 disabled:cursor-not-allowed`}
@@ -239,6 +246,11 @@ export default function Register() {
                   <span className="flex items-center justify-center gap-2">
                     <Loader2 className="w-4 h-4 animate-spin" />
                     Creando cuenta...
+                  </span>
+                ) : isValidating ? (
+                  <span className="flex items-center justify-center gap-2">
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    Verificando...
                   </span>
                 ) : step === 3 ? (
                   "Finalizar registro"
