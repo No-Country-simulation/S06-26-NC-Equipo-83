@@ -158,7 +158,7 @@ export default function RegisterStep1({
         id="educationLevel"
         label="Nivel educativo"
         required
-        {...register("educationLevel", { onChange: () => trigger("educationLevel") })}
+        {...register("educationLevel")}
         error={errors.educationLevel?.message}
         options={[
           { value: "", label: "Seleccionar" },
