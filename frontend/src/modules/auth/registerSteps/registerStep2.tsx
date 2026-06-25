@@ -1,7 +1,9 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Controller, type UseFormReturn } from "react-hook-form";
 import Select, { type SingleValue, type StylesConfig } from "react-select";
+import CreatableSelect from "react-select/creatable";
 import { PhoneInput } from "react-international-phone";
+import type { PhoneInputRefType } from "react-international-phone";
 import "react-international-phone/style.css";
 import type { RegisterFormData } from "../../../lib/validations";
 import { CONTINENTS } from "../../../lib/continents";
@@ -77,6 +79,15 @@ export default function RegisterStep2({ form }: RegisterStep2Props) {
   const countries = continentCode ? getCountriesByContinent(continentCode) : [];
   const states = countryCode ? getStatesByCountry(countryCode) : [];
 
+  // ── Teléfono: bandera sincronizada con el país geográfico ────────
+  const phoneInputRef = useRef<PhoneInputRefType>(null);
+
+  useEffect(() => {
+    if (countryCode) {
+      phoneInputRef.current?.setCountry(countryCode.toLowerCase());
+    }
+  }, [countryCode]);
+
   // ── Ciudades: carga asíncrona desde GeoNames ──────────────────────
   const [cities, setCities] = useState<CityOption[]>([]);
   const [citiesLoading, setCitiesLoading] = useState(false);
@@ -110,7 +121,7 @@ export default function RegisterStep2({ form }: RegisterStep2Props) {
           htmlFor="continent-select"
           className="block text-sm font-medium text-stone-800 mb-1.5"
         >
-          Continente
+            Continente <span className="text-red-500">*</span>
         </label>
         <Controller
           name="continentCode"
@@ -165,7 +176,7 @@ export default function RegisterStep2({ form }: RegisterStep2Props) {
           htmlFor="country-select"
           className="block text-sm font-medium text-stone-800 mb-1.5"
         >
-          País
+            País <span className="text-red-500">*</span>
         </label>
         <Controller
           name="countryCode"
@@ -225,7 +236,7 @@ export default function RegisterStep2({ form }: RegisterStep2Props) {
             htmlFor="state-select"
             className="block text-sm font-medium text-stone-800 mb-1.5"
           >
-            Provincia / Estado
+            Provincia / Estado <span className="text-red-500">*</span>
           </label>
           <Controller
             name="stateCode"
@@ -281,13 +292,13 @@ export default function RegisterStep2({ form }: RegisterStep2Props) {
             htmlFor="city-select"
             className="block text-sm font-medium text-stone-800 mb-1.5"
           >
-            Ciudad
+            Ciudad <span className="text-red-500">*</span>
           </label>
           <Controller
             name="cityName"
             control={control}
             render={({ field }) => (
-              <Select<Option, false>
+              <CreatableSelect<Option, false>
                 inputId="city-select"
                 isDisabled={!stateCode}
                 isLoading={citiesLoading}
@@ -296,7 +307,10 @@ export default function RegisterStep2({ form }: RegisterStep2Props) {
                   field.value
                     ? cities
                         .filter((c) => c.name === field.value)
-                        .map(cvt)
+                        .map(cvt)[0] ?? {
+                        value: field.value,
+                        label: field.value,
+                      }
                     : null
                 }
                 onChange={(opt: SingleValue<Option>) => {
@@ -309,13 +323,18 @@ export default function RegisterStep2({ form }: RegisterStep2Props) {
                   citiesLoading
                     ? "Cargando ciudades..."
                     : stateCode
-                      ? "Seleccioná una ciudad"
+                      ? "Seleccioná o escribí tu ciudad"
                       : "Elegí una provincia primero"
                 }
                 styles={selectStyles}
                 isClearable
                 noOptionsMessage={() =>
-                  citiesLoading ? "Cargando..." : "Sin resultados"
+                  citiesLoading
+                    ? "Cargando..."
+                    : "Escribí el nombre de tu ciudad"
+                }
+                formatCreateLabel={(input) =>
+                  `Usar "${input}"`
                 }
               />
             )}
@@ -331,13 +350,14 @@ export default function RegisterStep2({ form }: RegisterStep2Props) {
       {/* ── WhatsApp ─────────────────────────────────────────────────── */}
       <div>
         <label className="block text-sm font-medium text-stone-800 mb-1.5">
-          WhatsApp
+          WhatsApp <span className="text-red-500">*</span>
         </label>
         <Controller
           name="whatsapp"
           control={control}
           render={({ field }) => (
             <PhoneInput
+              ref={phoneInputRef}
               defaultCountry="ar"
               value={field.value}
               onChange={(phone: string) => field.onChange(phone)}
@@ -355,6 +375,7 @@ export default function RegisterStep2({ form }: RegisterStep2Props) {
                   borderRadius: "0.75rem 0 0 0.75rem",
                   border: "none",
                   backgroundColor: "#f5f5f4",
+                  paddingLeft: "0.75rem",
                 },
                 dropdownStyleProps: {
                   style: { borderRadius: "0.75rem" },

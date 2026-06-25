@@ -92,10 +92,13 @@ export default function Register() {
     trigger,
     watch,
     setFocus,
+    setValue,
     formState: { errors },
   } = form;
 
   const password = watch("password");
+  const confirmPassword = watch("confirmPassword");
+  const birthDate = watch("birthDate");
 
   const nextStep = async () => {
     clearError();
@@ -152,7 +155,7 @@ export default function Register() {
 
         {/* ── Formulario ────────────────────────────────────────────── */}
         <section className="w-full md:w-1/2 flex flex-col h-full p-6 sm:p-10 md:p-12 overflow-hidden">
-          <div className="flex-shrink-0 space-y-4 mb-4">
+          <div className="flex-shrink-0 space-y-[10px] mb-2">
             <div className="flex items-center justify-between md:hidden">
               <Link to="/" className="flex items-center">
                 <img
@@ -165,16 +168,13 @@ export default function Register() {
                 Paso {step}/3
               </span>
             </div>
+            <h1 className="m-0 text-xl sm:text-2xl font-extrabold text-stone-900 tracking-tight text-center">
+              Crear cuenta
+            </h1>
             <ProgressBar step={step} total={3} />
-
-            <header>
-              <h1 className="text-2xl sm:text-3xl font-extrabold text-stone-900 tracking-tight">
-                Crear cuenta
-              </h1>
-              <p className="mt-1 text-sm text-stone-500">
-                Ingresa tus datos para empezar tu experiencia personalizada.
-              </p>
-            </header>
+            <p className="m-0 text-sm text-stone-500 text-center">
+              Ingresa tus datos para empezar tu experiencia personalizada.
+            </p>
           </div>
 
           {storeError && (
@@ -190,6 +190,9 @@ export default function Register() {
                 trigger={trigger}
                 errors={errors}
                 password={password}
+                confirmPassword={confirmPassword}
+                birthDate={birthDate}
+                setValue={setValue}
               />
             )}
             {step === 2 && <RegisterStep2 form={form} />}
@@ -203,14 +206,14 @@ export default function Register() {
           </div>
 
           {/* ── Botones de navegación ────────────────────────────────── */}
-          <div className="flex-shrink-0 pt-4 mt-4 border-t border-stone-100 bg-white">
+          <div className="flex-shrink-0 pt-3 mt-3 border-t border-stone-100 bg-white">
             <div className="flex gap-3">
               {step > 1 && (
                 <Button
                   type="button"
                   variant="secondary"
                   onClick={previousStep}
-                  className="w-1/3 border border-[#99462A] bg-white text-[#99462A] hover:bg-stone-50 rounded-xl py-3 font-semibold text-sm transition-all"
+                  className="w-1/3 h-12 border border-[#99462A] bg-white text-[#99462A] hover:bg-stone-50 rounded-xl py-2 font-semibold text-sm transition-all"
                 >
                   Volver
                 </Button>
@@ -220,7 +223,7 @@ export default function Register() {
                 type="button"
                 onClick={step === 3 ? handleSubmit(onSubmit) : nextStep}
                 disabled={isSubmitting}
-                className={`py-3 rounded-xl font-semibold text-sm shadow-md transition-all ${
+                className={`h-12 py-2 rounded-xl font-semibold text-sm shadow-md transition-all ${
                   step > 1 ? "w-2/3" : "w-full"
                 } disabled:opacity-70 disabled:cursor-not-allowed`}
               >
@@ -237,8 +240,8 @@ export default function Register() {
               </Button>
             </div>
 
-            <p className="text-center text-sm text-stone-500 mt-3">
-              ¿Ya tienes una cuenta?{" "}
+            <p className="text-center text-xs text-stone-500 mt-2">
+              ¿Ya tenés una cuenta?{" "}
               <Link
                 to="/login"
                 className="font-bold text-[#99462A] hover:underline"

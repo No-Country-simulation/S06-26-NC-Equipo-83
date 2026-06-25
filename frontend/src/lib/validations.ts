@@ -50,9 +50,9 @@ export const registerStep1Schema = z.object({
         let age = today.getFullYear() - birth.getFullYear();
         const m = today.getMonth() - birth.getMonth();
         if (m < 0 || (m === 0 && today.getDate() < birth.getDate())) age--;
-        return age >= 13;
+        return age >= 16;
       },
-      { message: "Debés tener al menos 13 años" },
+      { message: "Debés tener al menos 16 años" },
     )
     .refine(
       (val) => {

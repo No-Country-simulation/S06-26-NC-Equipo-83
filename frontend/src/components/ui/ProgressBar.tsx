@@ -10,7 +10,7 @@ export default function ProgressBar({
   const percentage = (step / total) * 100;
 
   return (
-    <div className="mb-8">
+    <div>
       <div className="h-3 overflow-hidden rounded-full bg-stone-200">
         <div
           className="h-full bg-green-700 transition-all duration-300"

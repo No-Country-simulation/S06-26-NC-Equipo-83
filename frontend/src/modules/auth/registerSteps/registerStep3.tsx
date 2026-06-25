@@ -1,30 +1,26 @@
+import type { UseFormRegister, UseFormTrigger, FieldErrors } from "react-hook-form";
+import type { RegisterFormData } from "../../../lib/validations";
 import Select from "../../../components/ui/Select";
 
 interface RegisterStep3Props {
-  formData: {
-    experienceLevel: string;
-    technologyArea: string;
-    currentGoal: string;
-  };
-  updateField: (
-    field: string,
-    value: string
-  ) => void;
+  register: UseFormRegister<RegisterFormData>;
+  trigger: UseFormTrigger<RegisterFormData>;
+  errors: FieldErrors<RegisterFormData>;
 }
 
 export default function RegisterStep3({
-  formData,
-  updateField,
+  register,
+  trigger,
+  errors,
 }: RegisterStep3Props) {
   return (
     <div className="space-y-6">
-      {/* Nivel de experiencia */}
-      <div className="space-y-2">
-        <Select
+      <Select
         id="experienceLevel"
         label="Nivel de experiencia"
-        value={formData.experienceLevel}
-        onChange={(e) => updateField("experienceLevel", e.target.value)}
+        required
+        {...register("experienceLevel", { onChange: () => trigger("experienceLevel") })}
+        error={errors.experienceLevel?.message}
         options={[
           { value: "", label: "Selecciona una opción" },
           { value: "student", label: "Estudiante" },
@@ -33,15 +29,13 @@ export default function RegisterStep3({
           { value: "senior", label: "Senior" },
         ]}
       />
-      </div>
 
-      {/* Área de interés */}
-      <div className="space-y-2">
-        <Select
+      <Select
         id="technologyArea"
         label="Área de interés"
-        value={formData.technologyArea}
-        onChange={(e) => updateField("technologyArea", e.target.value)}
+        required
+        {...register("technologyArea", { onChange: () => trigger("technologyArea") })}
+        error={errors.technologyArea?.message}
         options={[
           { value: "", label: "Selecciona un área" },
           { value: "frontend", label: "Frontend" },
@@ -53,15 +47,13 @@ export default function RegisterStep3({
           { value: "ux", label: "UX/UI" },
         ]}
       />
-      </div>
 
-      {/* Objetivo actual */}
-      <div className="space-y-2">
-        <Select
+      <Select
         id="currentGoal"
         label="¿Qué buscas hoy?"
-        value={formData.currentGoal}
-        onChange={(e) => updateField("currentGoal", e.target.value)}
+        required
+        {...register("currentGoal", { onChange: () => trigger("currentGoal") })}
+        error={errors.currentGoal?.message}
         options={[
           { value: "", label: "Selecciona una opción" },
           { value: "first-job", label: "Conseguir mi primer empleo IT" },
@@ -70,7 +62,6 @@ export default function RegisterStep3({
           { value: "mentoring", label: "Ser mentor o ayudar a otros" },
         ]}
       />
-      </div>
 
       <div className="rounded-xl bg-stone-100 p-4 text-sm text-stone-600">
         Tus respuestas nos ayudarán a personalizar recomendaciones,
