@@ -17,11 +17,16 @@ class UserCreate(SQLModel):
     gender: str
     education_level: str
 
-    continent: str
-    country: str
-    state: str
-    city: str
-    whatsapp: str
+    continent_code: str
+    continent_name: str
+    country_code: str
+    country_name: str
+    state_code: str
+    state_name: str
+    city_name: str
+    whatsapp_e164: str
+
+    language_code: str = "es"
 
     professional_level: ProfessionalLevel
     tech_area: str
@@ -32,17 +37,21 @@ class UserResponse(SQLModel):
     id: UUID
 
     email: EmailStr
-
     full_name: str
     birth_date: date
     gender: str
     education_level: str
 
-    continent: str
-    country: str
-    state: str
-    city: str
-    whatsapp: str
+    continent_code: str
+    continent_name: str
+    country_code: str
+    country_name: str
+    state_code: str
+    state_name: str
+    city_name: str
+    whatsapp_e164: str
+
+    language_code: str
 
     professional_level: ProfessionalLevel
     tech_area: str

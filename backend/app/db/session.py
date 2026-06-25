@@ -16,8 +16,6 @@ import app.models.mental_health  # noqa: F401 — registra MentalHealthLog
 # La conexión real se abre cuando se ejecuta la primera query.
 # ---------------------------------------------------------------------------
 engine = create_engine(settings.DATABASE_URL, echo=False)
-# echo=True muestra cada query SQL en la consola. Útil para debugear.
-# echo=False lo oculta. Mejor para producción.
 
 
 # ---------------------------------------------------------------------------
@@ -36,9 +34,18 @@ def get_session():
 # create_db_and_tables — crea las tablas en PostgreSQL
 # Busca TODAS las clases SQLModel con table=True (User, MentalHealthLog)
 # y las materializa como tablas reales.
-# Solo se ejecuta UNA vez al iniciar la app.
-# NO borra datos existentes si las tablas ya fueron creadas.
+#
+# drop_all=True solo se usa para migraciones de esquema manuales (one-shot).
+# NO dejar drop_all=True en producción. Ejecutar una vez y revertir:
+#   python -c "from app.db.session import create_db_and_tables; create_db_and_tables(drop_all=True)"
 # ---------------------------------------------------------------------------
-def create_db_and_tables():
-    """Crea todas las tablas definidas en app/models/ en PostgreSQL."""
+def create_db_and_tables(drop_all: bool = False):
+    """Crea todas las tablas definidas en app/models/ en PostgreSQL.
+
+    Args:
+        drop_all: Si True, elimina todas las tablas antes de recrearlas.
+                  SOLO para migraciones de esquema one-shot. Default False.
+    """
+    if drop_all:
+        SQLModel.metadata.drop_all(engine)
     SQLModel.metadata.create_all(engine)
