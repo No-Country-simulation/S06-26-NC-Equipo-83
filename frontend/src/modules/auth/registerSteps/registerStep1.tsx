@@ -99,7 +99,11 @@ export default function RegisterStep1({
         showPasswordToggle
         required
         {...register("confirmPassword", { onBlur: () => trigger("confirmPassword") })}
-        error={errors.confirmPassword?.message}
+        error={
+          password && confirmPassword && password === confirmPassword
+            ? undefined
+            : errors.confirmPassword?.message
+        }
       />
 
       {password && confirmPassword && password === confirmPassword && (

@@ -148,12 +148,12 @@ export default function RegisterStep2({ form }: RegisterStep2Props) {
                   setValue("continentCode", "", { shouldValidate: true });
                   setValue("continentName", "");
                 }
-                // Cascada: limpiar país, estado, ciudad
-                setValue("countryCode", "", { shouldValidate: true });
+                // Cascada: limpiar país, estado, ciudad sin validar
+                setValue("countryCode", "", { shouldValidate: false });
                 setValue("countryName", "");
-                setValue("stateCode", "", { shouldValidate: true });
+                setValue("stateCode", "", { shouldValidate: false });
                 setValue("stateName", "");
-                setValue("cityName", "", { shouldValidate: true });
+                setValue("cityName", "", { shouldValidate: false });
               }}
               onBlur={field.onBlur}
               placeholder="Seleccioná un continente"
@@ -204,10 +204,10 @@ export default function RegisterStep2({ form }: RegisterStep2Props) {
                   setValue("countryCode", "", { shouldValidate: true });
                   setValue("countryName", "");
                 }
-                // Cascada: limpiar estado, ciudad
-                setValue("stateCode", "", { shouldValidate: true });
+                // Cascada: limpiar estado, ciudad sin validar
+                setValue("stateCode", "", { shouldValidate: false });
                 setValue("stateName", "");
-                setValue("cityName", "", { shouldValidate: true });
+                setValue("cityName", "", { shouldValidate: false });
               }}
               onBlur={field.onBlur}
               placeholder={
@@ -229,7 +229,7 @@ export default function RegisterStep2({ form }: RegisterStep2Props) {
       </div>
 
       {/* ── Provincia/Estado + Ciudad ────────────────────────────────── */}
-      <div className="grid gap-6 md:grid-cols-2">
+      <div className="space-y-6">
         {/* Provincia / Estado */}
         <div>
           <label
@@ -264,8 +264,8 @@ export default function RegisterStep2({ form }: RegisterStep2Props) {
                     setValue("stateCode", "", { shouldValidate: true });
                     setValue("stateName", "");
                   }
-                  // Cascada: limpiar ciudad
-                  setValue("cityName", "", { shouldValidate: true });
+                  // Cascada: limpiar ciudad sin validar
+                  setValue("cityName", "", { shouldValidate: false });
                 }}
                 onBlur={field.onBlur}
                 placeholder={
