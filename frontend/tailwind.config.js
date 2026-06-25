@@ -5,7 +5,16 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        brand: {
+          primary:  "#5F27CD",   // Violeta Intenso
+          cta:      "#FF8C00",   // Naranja Enérgico
+          trust:    "#00A8A8",   // Turquesa
+          surface:  "#FAFAFA",   // Off-white
+        },
+      },
+    },
   },
   plugins: [],
 };
