@@ -1,5 +1,7 @@
-import { useRef } from "react";
+import { forwardRef } from "react";
+import DatePicker from "react-datepicker";
 import { Calendar } from "lucide-react";
+import "react-datepicker/dist/react-datepicker.css";
 
 interface DateInputProps {
   id: string;
@@ -13,6 +15,59 @@ interface DateInputProps {
   onBlur?: () => void;
 }
 
+function toDate(iso?: string): Date | null {
+  return iso ? new Date(iso + "T00:00:00") : null;
+}
+
+function toIso(d: Date | null): string {
+  if (!d || isNaN(d.getTime())) return "";
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${y}-${m}-${day}`;
+}
+
+// ── Input estilizado que muestra la fecha seleccionada ───────────
+const DateDisplayInput = forwardRef<
+  HTMLInputElement,
+  { value?: string; onClick?: () => void; error?: string }
+>(({ value, onClick, error }, ref) => (
+  <div className="relative">
+    <div className="absolute left-4 top-1/2 -translate-y-1/2 text-[#99462A] pointer-events-none">
+      <Calendar size={20} strokeWidth={2} />
+    </div>
+    <input
+      ref={ref}
+      type="text"
+      readOnly
+      value={value ?? ""}
+      placeholder="Seleccioná una fecha"
+      onClick={onClick}
+      className={`
+        h-14
+        w-full
+        rounded-xl
+        border
+        border-transparent
+        bg-slate-100
+        pl-12
+        pr-4
+        text-sm
+        transition
+        text-stone-700
+        cursor-pointer
+        focus:border-[#99462A]
+        focus:outline-none
+        focus:ring-2
+        focus:ring-[#99462A]/20
+        ${error ? "border-red-400 focus:border-red-500 focus:ring-red-500/20" : ""}
+      `}
+    />
+  </div>
+));
+DateDisplayInput.displayName = "DateDisplayInput";
+
+// ── Componente principal ─────────────────────────────────────────
 export default function DateInput({
   id,
   label,
@@ -24,8 +79,6 @@ export default function DateInput({
   onChange,
   onBlur,
 }: DateInputProps) {
-  const inputRef = useRef<HTMLInputElement>(null);
-
   return (
     <div className="space-y-2">
       <label htmlFor={id} className="text-sm font-medium text-stone-800">
@@ -34,43 +87,25 @@ export default function DateInput({
       </label>
 
       <div className="relative">
-        <div
-          className="absolute left-4 top-1/2 -translate-y-1/2 text-[#99462A] cursor-pointer z-10"
-          onClick={() => {
-            inputRef.current?.focus();
-            inputRef.current?.showPicker();
+        <DatePicker
+          selected={toDate(value)}
+          onChange={(date: Date | null) => {
+            onChange?.(toIso(date));
           }}
-        >
-          <Calendar size={20} strokeWidth={2} />
-        </div>
-
-        <input
-          ref={inputRef}
-          id={id}
-          type="date"
-          value={value}
-          min={min}
-          max={max}
-          onChange={(e) => onChange?.(e.target.value)}
-          onBlur={onBlur}
-          className={`
-            h-14
-            w-full
-            rounded-xl
-            border
-            border-transparent
-            bg-slate-100
-            pl-12
-            pr-4
-            text-sm
-            transition
-            text-stone-700
-            focus:border-[#99462A]
-            focus:outline-none
-            focus:ring-2
-            focus:ring-[#99462A]/20
-            ${error ? "border-red-400 focus:border-red-500 focus:ring-red-500/20" : ""}
-          `}
+          onCalendarClose={onBlur}
+          minDate={toDate(min) ?? undefined}
+          maxDate={toDate(max) ?? undefined}
+          dateFormat="dd/MM/yyyy"
+          showYearDropdown
+          showMonthDropdown
+          scrollableYearDropdown
+          yearDropdownItemNumber={120}
+          customInput={<DateDisplayInput error={error} />}
+          calendarClassName="rounded-xl shadow-lg border border-stone-200"
+          wrapperClassName="w-full"
+          popperProps={{
+            strategy: "fixed",
+          }}
         />
       </div>
 
