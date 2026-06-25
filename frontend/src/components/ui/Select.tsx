@@ -36,6 +36,9 @@ const Select = forwardRef<HTMLSelectElement, SelectProps>(
             px-4
             text-sm
             text-stone-700
+            autofill:bg-stone-100
+            autofill:shadow-[inset_0_0_0px_1000px_#f5f5f4]
+            autofill:[-webkit-text-fill-color:#292524]
             focus:border-[#99462A]
             focus:outline-none
             focus:ring-2

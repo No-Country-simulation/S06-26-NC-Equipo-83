@@ -83,6 +83,9 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
               transition
               text-stone-700
               placeholder:text-stone-500
+              autofill:bg-slate-100
+              autofill:shadow-[inset_0_0_0px_1000px_#f1f5f9]
+              autofill:[-webkit-text-fill-color:#292524]
               focus:border-[#99462A]
               focus:outline-none
               focus:ring-2
