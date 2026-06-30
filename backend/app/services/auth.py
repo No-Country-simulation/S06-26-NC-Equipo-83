@@ -30,6 +30,10 @@ class AuthService:
         3. Hashea la contraseña.
         4. Crea el usuario en la base de datos (field_validator de E.164 corre acá).
         5. Genera JWT para login automático.
+
+        NOTA: professional_level no se deriva automáticamente. El registro
+        no asigna valor; queda como None hasta que el usuario lo configure
+        explícitamente desde su perfil.
         """
         existing_user = get_user_by_email(self.session, user_data.email)
         if existing_user:
