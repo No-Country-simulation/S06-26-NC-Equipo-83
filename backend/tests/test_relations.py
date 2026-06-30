@@ -9,21 +9,34 @@ from app.models.mental_health import MentalHealthLog
 
 def test_create_user(session):
     user = User(
-        email="relations@test.com",
-        hashed_password="hashed",
-        full_name="Relations Test",
-        birth_date=date(1995, 6, 15),
-        gender="female",
-        education_level="university",
-        continent="South America",
-        country="Argentina",
-        state="Buenos Aires",
-        city="San Justo",
-        whatsapp="+549111111112",
-        professional_level="junior",
-        tech_area="backend",
-        career_objective="find_job",
-    )
+    email="relations@test.com",
+    hashed_password="hashed",
+    full_name="Relations Test",
+    birth_date=date(1995, 6, 15),
+    gender="female",
+    education_level="university",
+
+    continent_code="AM",
+    continent_name="América",
+
+    country_code="AR",
+    country_name="Argentina",
+
+    state_code="B",
+    state_name="Buenos Aires",
+
+    city_name="San Justo",
+
+    whatsapp_e164="+549111111112",
+
+    language_code="es",
+
+    current_situation="looking_for_job",
+
+    professional_level="junior",
+    tech_area="backend",
+    career_objective="find_job",
+)
     session.add(user)
     session.commit()
     session.refresh(user)
@@ -35,21 +48,34 @@ def test_create_user(session):
 
 def test_create_mental_health_log_linked_to_user(session):
     user = User(
-        email="log@test.com",
-        hashed_password="hashed",
-        full_name="Log Test",
-        birth_date=date(1990, 3, 10),
-        gender="male",
-        education_level="university",
-        continent="South America",
-        country="Argentina",
-        state="Buenos Aires",
-        city="San Justo",
-        whatsapp="+549111111113",
-        professional_level="semi_senior",
-        tech_area="frontend",
-        career_objective="change_job",
-    )
+    email="log@test.com",
+    hashed_password="hashed",
+    full_name="Relations Test",
+    birth_date=date(1995, 6, 15),
+    gender="female",
+    education_level="university",
+
+    continent_code="AM",
+    continent_name="América",
+
+    country_code="AR",
+    country_name="Argentina",
+
+    state_code="B",
+    state_name="Buenos Aires",
+
+    city_name="San Justo",
+
+    whatsapp_e164="+549111111112",
+
+    language_code="es",
+
+    current_situation="looking_for_job",
+
+    professional_level="junior",
+    tech_area="backend",
+    career_objective="find_job",
+)
     session.add(user)
     session.commit()
     session.refresh(user)
@@ -75,21 +101,34 @@ def test_create_mental_health_log_linked_to_user(session):
 
 def test_user_mental_health_logs_relationship(session):
     user = User(
-        email="rel@test.com",
-        hashed_password="hashed",
-        full_name="Rel Test",
-        birth_date=date(1992, 8, 20),
-        gender="female",
-        education_level="university",
-        continent="South America",
-        country="Argentina",
-        state="Buenos Aires",
-        city="San Justo",
-        whatsapp="+549111111114",
-        professional_level="senior",
-        tech_area="data",
-        career_objective="study",
-    )
+    email="rel@test.com",
+    hashed_password="hashed",
+    full_name="Relations Test",
+    birth_date=date(1995, 6, 15),
+    gender="female",
+    education_level="university",
+
+    continent_code="AM",
+    continent_name="América",
+
+    country_code="AR",
+    country_name="Argentina",
+
+    state_code="B",
+    state_name="Buenos Aires",
+
+    city_name="San Justo",
+
+    whatsapp_e164="+549111111112",
+
+    language_code="es",
+
+    current_situation="looking_for_job",
+
+    professional_level="junior",
+    tech_area="backend",
+    career_objective="find_job",
+)
     session.add(user)
     session.commit()
     session.refresh(user)
@@ -139,21 +178,34 @@ def test_foreign_key_enforces_user_exists(session):
 
 def test_derivar_cvv_triggered(session):
     user = User(
-        email="cvv@test.com",
-        hashed_password="hashed",
-        full_name="CVV Test",
-        birth_date=date(1988, 1, 1),
-        gender="male",
-        education_level="university",
-        continent="South America",
-        country="Argentina",
-        state="Buenos Aires",
-        city="San Justo",
-        whatsapp="+549111111115",
-        professional_level="junior",
-        tech_area="backend",
-        career_objective="find_job",
-    )
+    email="cvv@test.com",
+    hashed_password="hashed",
+    full_name="Relations Test",
+    birth_date=date(1995, 6, 15),
+    gender="female",
+    education_level="university",
+
+    continent_code="AM",
+    continent_name="América",
+
+    country_code="AR",
+    country_name="Argentina",
+
+    state_code="B",
+    state_name="Buenos Aires",
+
+    city_name="San Justo",
+
+    whatsapp_e164="+549111111112",
+
+    language_code="es",
+
+    current_situation="looking_for_job",
+
+    professional_level="junior",
+    tech_area="backend",
+    career_objective="find_job",
+)
     session.add(user)
     session.commit()
     session.refresh(user)
