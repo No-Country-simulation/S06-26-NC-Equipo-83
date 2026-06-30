@@ -21,11 +21,14 @@ def test_user_has_required_attributes():
     assert hasattr(User, "birth_date")
     assert hasattr(User, "gender")
     assert hasattr(User, "education_level")
-    assert hasattr(User, "continent")
-    assert hasattr(User, "country")
-    assert hasattr(User, "state")
-    assert hasattr(User, "city")
-    assert hasattr(User, "whatsapp")
+    assert hasattr(User, "continent_code")
+    assert hasattr(User, "continent_name")
+    assert hasattr(User, "country_code")
+    assert hasattr(User, "country_name")
+    assert hasattr(User, "state_code")
+    assert hasattr(User, "state_name")
+    assert hasattr(User, "city_name")
+    assert hasattr(User, "whatsapp_e164")
     assert hasattr(User, "professional_level")
     assert hasattr(User, "tech_area")
     assert hasattr(User, "career_objective")
@@ -69,6 +72,8 @@ def test_user_instantiates_with_minimal_fields():
         state="Buenos Aires",
         city="San Justo",
         whatsapp="+549111111111",
+        current_situation="student",
+        interest_areas=["frontend"],
         professional_level="junior",
         tech_area="backend",
         career_objective="find_job",

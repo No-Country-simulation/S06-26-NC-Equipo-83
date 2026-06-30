@@ -18,11 +18,14 @@ def test_users_table_columns(engine):
     assert "birth_date" in columns
     assert "gender" in columns
     assert "education_level" in columns
-    assert "continent" in columns
-    assert "country" in columns
-    assert "state" in columns
-    assert "city" in columns
-    assert "whatsapp" in columns
+    assert "continent_code" in columns
+    assert "continent_name" in columns
+    assert "country_code" in columns
+    assert "country_name" in columns
+    assert "state_code" in columns
+    assert "state_name" in columns
+    assert "city_name" in columns
+    assert "whatsapp_e164" in columns
     assert "professional_level" in columns
     assert "tech_area" in columns
     assert "career_objective" in columns

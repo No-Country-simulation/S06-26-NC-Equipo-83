@@ -13,11 +13,22 @@ def test_user_create_instantiates_with_all_fields():
         birth_date=date(2002, 1, 1),
         gender="male",
         education_level="university",
-        continent="South America",
-        country="Argentina",
-        state="Buenos Aires",
-        city="San Justo",
-        whatsapp="+549111111111",
+
+        continent_code="AM",
+        continent_name="América",
+
+        country_code="AR",
+        country_name="Argentina",
+
+        state_code="B",
+        state_name="Buenos Aires",
+
+        city_name="San Justo",
+        whatsapp_e164="+549111111111",
+
+        language_code="es",
+        current_situation="looking_for_job",
+
         professional_level=ProfessionalLevel.JUNIOR,
         tech_area="backend",
         career_objective=CareerObjective.FIND_JOB,
@@ -28,11 +39,21 @@ def test_user_create_instantiates_with_all_fields():
     assert instance.birth_date == date(2002, 1, 1)
     assert instance.gender == "male"
     assert instance.education_level == "university"
-    assert instance.continent == "South America"
-    assert instance.country == "Argentina"
-    assert instance.state == "Buenos Aires"
-    assert instance.city == "San Justo"
-    assert instance.whatsapp == "+549111111111"
+
+    assert instance.continent_code == "AM"
+    assert instance.continent_name == "América"
+
+    assert instance.country_code == "AR"
+    assert instance.country_name == "Argentina"
+
+    assert instance.state_code == "B"
+    assert instance.state_name == "Buenos Aires"
+
+    assert instance.city_name == "San Justo"
+    assert instance.whatsapp_e164 == "+549111111111"
+
+    assert instance.current_situation == "looking_for_job"
+
     assert instance.professional_level == ProfessionalLevel.JUNIOR
     assert instance.tech_area == "backend"
     assert instance.career_objective == CareerObjective.FIND_JOB
@@ -46,11 +67,22 @@ def test_user_create_accepts_string_enums():
         birth_date=date(1999, 12, 31),
         gender="female",
         education_level="highschool",
-        continent="North America",
-        country="Mexico",
-        state="CDMX",
-        city="Mexico City",
-        whatsapp="+521111111111",
+
+        continent_code="AM",
+        continent_name="América",
+
+        country_code="MX",
+        country_name="México",
+
+        state_code="CMX",
+        state_name="Ciudad de México",
+
+        city_name="Mexico City",
+        whatsapp_e164="+521111111111",
+
+        language_code="es",
+        current_situation="looking_for_job",
+
         professional_level="senior",
         tech_area="qa",
         career_objective="study",
@@ -68,11 +100,22 @@ def test_user_create_password_not_in_model_dump():
         birth_date=date(1995, 6, 15),
         gender="male",
         education_level="university",
-        continent="Europe",
-        country="Spain",
-        state="Madrid",
-        city="Madrid",
-        whatsapp="+34111111111",
+
+        continent_code="EU",
+        continent_name="Europa",
+
+        country_code="ES",
+        country_name="España",
+
+        state_code="MD",
+        state_name="Madrid",
+
+        city_name="Madrid",
+        whatsapp_e164="+34111111111",
+
+        language_code="es",
+        current_situation="looking_for_job",
+
         professional_level=ProfessionalLevel.SEMI_SENIOR,
         tech_area="devops",
         career_objective=CareerObjective.CHANGE_JOB,

@@ -6,12 +6,12 @@ from sqlmodel import SQLModel
 
 from app.enums.career_objective import CareerObjective
 from app.enums.professional_level import ProfessionalLevel
+from typing import Optional, List
 
 
 class UserCreate(SQLModel):
     email: EmailStr
     password: str
-
     full_name: str
     birth_date: date
     gender: str
@@ -28,9 +28,19 @@ class UserCreate(SQLModel):
 
     language_code: str = "es"
 
-    professional_level: ProfessionalLevel
-    tech_area: str
-    career_objective: CareerObjective
+    # ── Nuevos campos profesionales ────────────────────────────────────
+    current_situation: str
+    work_sector: Optional[str] = None
+    seniority: Optional[str] = None
+    interest_areas: list[str] = []
+    current_search: Optional[str] = None
+    known_technologies: list[dict] = []
+    bio: Optional[str] = None
+
+    # ── Campos legacy (nullable — ya no se usan en registro) ───────────
+    professional_level: Optional[ProfessionalLevel] = None
+    tech_area: Optional[str] = None
+    career_objective: Optional[CareerObjective] = None
 
 
 class UserResponse(SQLModel):

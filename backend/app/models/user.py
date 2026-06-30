@@ -8,6 +8,7 @@ from sqlmodel import SQLModel, Field, Relationship
 
 from app.enums.professional_level import ProfessionalLevel
 from app.enums.career_objective import CareerObjective
+from sqlalchemy import Column, String, JSON as SAJSON
 
 
 # ---------------------------------------------------------------------------
@@ -58,14 +59,34 @@ class User(SQLModel, table=True):
 
     language_code: str = Field(default="es", max_length=2, nullable=False)
 
-    # ── Datos Profesionales ──────────────────────────────────────────────
+        # ── Datos Profesionales ──────────────────────────────────────────────
 
-    professional_level: ProfessionalLevel = Field(
-        nullable=False,
+    current_situation: str = Field(nullable=False)
+
+    work_sector: Optional[str] = Field(default=None)
+    seniority: Optional[str] = Field(default=None)
+
+    interest_areas: list[str] = Field(
+        default=[],
+        sa_column=Column(SAJSON),
+    )
+    current_search: Optional[str] = Field(default=None)
+
+    known_technologies: list[dict] = Field(
+        default=[],
+        sa_column=Column(SAJSON),
+    )
+
+    bio: Optional[str] = Field(default=None, max_length=500)
+
+    # ── Campos legacy (nullable — ya no se usan en registro) ─────────────
+
+    professional_level: Optional[ProfessionalLevel] = Field(
+        default=None,
         index=True,
     )
-    tech_area: str = Field(nullable=False, index=True)
-    career_objective: CareerObjective = Field(nullable=False)
+    tech_area: Optional[str] = Field(default=None, index=True)
+    career_objective: Optional[CareerObjective] = Field(default=None)
 
     # ── Auditoría ────────────────────────────────────────────────────────
 
