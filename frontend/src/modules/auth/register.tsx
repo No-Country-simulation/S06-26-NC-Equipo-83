@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader2 } from "lucide-react";
+import { Layout, Loader2 } from "lucide-react";
 
 import Button from "../../components/ui/Button";
 import ProgressBar from "../../components/ui/ProgressBar";
@@ -144,6 +144,7 @@ export default function Register() {
   };
 
   return (
+    
     <main className="h-screen w-full bg-background flex items-center justify-center overflow-hidden lg:p-6">
       <section className="w-full max-w-6xl h-full md:h-[85vh] md:max-h-[750px] bg-white overflow-hidden shadow-2xl flex flex-col md:flex-row lg:rounded-3xl">
         {/* ── Aside con imagen ──────────────────────────────────────── */}

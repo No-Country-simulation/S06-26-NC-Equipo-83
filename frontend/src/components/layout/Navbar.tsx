@@ -12,13 +12,13 @@ export default function Navbar() {
         </Link>
 
         <nav className="hidden items-center gap-8 md:flex">
-          <a href="#servicios" className="hover:text-[#99462A]">
+          <Link to="/" className="hover:text-[#99462A]">
             Servicios
-          </a>
+          </Link>
 
-          <a href="#como-funciona" className="hover:text-[#99462A]">
+          <Link to="/" className="hover:text-[#99462A]">
             Cómo funciona
-          </a>
+          </Link>
 
           <Link
             to="/login"
