@@ -1,4 +1,4 @@
-
+import TestimonialsSection from "../../components/landing/TestimonialsSection"
 import HeroSection from "../../components/landing/HeroSection";
 import ProblemSection from "../../components/landing/ProblemSection";
 import HowItWorksSection from "../../components/landing/HowItWorksSection";
@@ -16,6 +16,7 @@ export default function Landing() {
       <HowItWorksSection />
       <ServicesSection />
       <AiSection />
+      <TestimonialsSection />
       <CTASection />
 
     </>

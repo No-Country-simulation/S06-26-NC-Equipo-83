@@ -156,7 +156,7 @@ export default function Register() {
           />
           <div className="absolute inset-0 bg-black/40" />
           <div className="relative z-10 flex flex-col justify-end p-12 text-white h-full w-full bg-gradient-to-t from-black/60 to-transparent">
-            <h1 className="mb-4 text-4xl font-extrabold tracking-tight">
+            <h1 className="mb-4 text-4xl font-extrabold tracking-tight text-white">
               Comienza tu viaje en BiT
             </h1>
             <p className="text-base text-stone-200">
