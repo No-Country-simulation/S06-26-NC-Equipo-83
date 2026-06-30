@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader2 } from "lucide-react";
+import { Layout, Loader2 } from "lucide-react";
 
 import Button from "../../components/ui/Button";
 import ProgressBar from "../../components/ui/ProgressBar";
@@ -144,6 +144,7 @@ export default function Register() {
   };
 
   return (
+    
     <main className="h-screen w-full bg-background flex items-center justify-center overflow-hidden lg:p-6">
       <section className="w-full max-w-6xl h-full md:h-[85vh] md:max-h-[750px] bg-white overflow-hidden shadow-2xl flex flex-col md:flex-row lg:rounded-3xl">
         {/* ── Aside con imagen ──────────────────────────────────────── */}
@@ -155,7 +156,7 @@ export default function Register() {
           />
           <div className="absolute inset-0 bg-black/40" />
           <div className="relative z-10 flex flex-col justify-end p-12 text-white h-full w-full bg-gradient-to-t from-black/60 to-transparent">
-            <h1 className="mb-4 text-4xl font-extrabold tracking-tight">
+            <h1 className="mb-4 text-4xl font-extrabold tracking-tight text-white">
               Comienza tu viaje en BiT
             </h1>
             <p className="text-base text-stone-200">
