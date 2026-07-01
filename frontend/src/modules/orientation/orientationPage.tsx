@@ -14,7 +14,7 @@ export const OrientationPage: React.FC = () => {
     if (user && !data) {
       fetchAnalysis({
         perfil: user.tech_area || "frontend",
-        nivel: user.professional_level,
+        nivel: user.professional_level || "junior",
         region: user.country_name || "LATAM",
         idioma: "es",
         lat: 0,
