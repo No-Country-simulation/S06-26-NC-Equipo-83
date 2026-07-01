@@ -83,9 +83,18 @@ export const registerStep2Schema = z.object({
 });
 
 export const registerStep3Schema = z.object({
-  experienceLevel: z.string().min(1, "Seleccioná tu nivel"),
-  technologyArea: z.string().min(1, "Seleccioná un área"),
-  currentGoal: z.string().min(1, "Seleccioná un objetivo"),
+  currentSituation: z.string().min(1, "Seleccioná tu situación actual"),
+  workSector: z.string().optional(),
+  seniority: z.string().optional(),
+  interestAreas: z
+    .array(z.string())
+    .min(1, "Seleccioná al menos un área de interés"),
+  currentSearch: z.string().min(1, "Seleccioná qué estás buscando"),
+  knownTechnologies: z
+    .array(z.object({ name: z.string(), is_custom: z.boolean() }))
+    .optional()
+    .default([]),
+  bio: z.string().max(500, "Máximo 500 caracteres").optional().default(""),
 });
 
 export type RegisterFormData = z.infer<typeof registerStep1Schema> &

@@ -42,10 +42,19 @@ export function mapRegisterFormToApi(formData: RegisterFormData): UserCreateRequ
         ? "pt"
         : "es",
 
-    professional_level:
-      EXPERIENCE_LEVEL_MAP[formData.experienceLevel] || "junior",
-    tech_area: formData.technologyArea,
-    career_objective:
-      CURRENT_GOAL_MAP[formData.currentGoal] || "define_path",
+     current_situation: formData.currentSituation,
+    work_sector: formData.currentSituation === "employed" && formData.workSector
+      ? formData.workSector : null,
+    seniority: formData.currentSituation === "employed" && formData.seniority
+      ? formData.seniority : null,
+    interest_areas: formData.interestAreas,
+    current_search: formData.currentSearch || null,
+    known_technologies: formData.knownTechnologies,
+    bio: formData.bio || null,
+
+    // Legacy — no se envían
+    professional_level: null,
+    tech_area: null,
+    career_objective: null,
   };
 }

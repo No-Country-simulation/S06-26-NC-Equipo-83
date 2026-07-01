@@ -28,6 +28,11 @@ export const Mood = {
 } as const;
 export type Mood = (typeof Mood)[keyof typeof Mood];
 
+export interface KnownTechnology {
+  name: string;
+  is_custom: boolean;
+}
+
 // ── User ───────────────────────────────────────────────────────────────────
 
 export interface User {
@@ -49,9 +54,19 @@ export interface User {
 
   language_code: string;
 
-  professional_level: ProfessionalLevel;
-  tech_area: string;
-  career_objective: CareerObjective;
+  // ── Step 3 v3 — nuevos campos ──────────────────────────────────────────
+  current_situation: string;
+  work_sector?: string | null;
+  seniority?: string | null;
+  interest_areas: string[];
+  current_search?: string | null;
+  known_technologies: KnownTechnology[];
+  bio?: string | null;
+
+  // ── Legacy (nullable para nuevos usuarios) ─────────────────────────────
+  professional_level?: ProfessionalLevel | null;
+  tech_area?: string | null;
+  career_objective?: CareerObjective | null;
 
   created_at: string;
 }
@@ -77,9 +92,19 @@ export interface UserCreateRequest {
 
   language_code: string;
 
-  professional_level: ProfessionalLevel;
-  tech_area: string;
-  career_objective: CareerObjective;
+  // ── Step 3 v3 — nuevos campos ──────────────────────────────────────────
+  current_situation: string;
+  work_sector?: string | null;
+  seniority?: string | null;
+  interest_areas: string[];
+  current_search?: string | null;
+  known_technologies: KnownTechnology[];
+  bio?: string | null;
+
+  // ── Legacy ─────────────────────────────────────────────────────────────
+  professional_level?: ProfessionalLevel | null;
+  tech_area?: string | null;
+  career_objective?: CareerObjective | null;
 }
 
 export interface RegisterResponse {
