@@ -63,9 +63,19 @@ class UserResponse(SQLModel):
 
     language_code: str
 
-    professional_level: ProfessionalLevel
-    tech_area: str
-    career_objective: CareerObjective
+    # ── Step 3 v3 — nuevos campos ─────────────────────────────────────
+    current_situation: str
+    work_sector: Optional[str] = None
+    seniority: Optional[str] = None
+    interest_areas: list[str] = []
+    current_search: Optional[str] = None
+    known_technologies: list[dict] = []
+    bio: Optional[str] = None
+
+    # ── Legacy (nullable para usuarios nuevos) ────────────────────────
+    professional_level: Optional[ProfessionalLevel] = None
+    tech_area: Optional[str] = None
+    career_objective: Optional[CareerObjective] = None
 
     created_at: datetime
 

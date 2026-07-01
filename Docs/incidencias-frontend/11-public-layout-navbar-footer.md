@@ -1,0 +1,183 @@
+## INCIDENCIA 11 — PublicLayout: Navbar y Footer en landing, login y register
+
+## Resumen
+
+Esta incidencia crea un layout compartido para las rutas públicas de la aplicación. Actualmente el Navbar y Footer de la landing solo se renderizan en la ruta `/` (directamente en `Landing.tsx`), mientras que `/login` y `/register` son páginas autónomas sin ningún header ni footer. Se creará un componente `PublicLayout` que envuelva las tres rutas usando el patrón `<Outlet />` de React Router, de la misma forma que ya existe `Layout.tsx` para la app autenticada. Esto unifica la experiencia visual, elimina código duplicado, y prepara el terreno para futuras páginas públicas (FAQ, contacto, etc.).
+
+**Rama:** `incidencia/11-public-layout-navbar-footer`
+**Duración estimada:** 2-3 horas.
+**Depende de:** Nada.
+**Asignada a:** 1 dev frontend.
+
+### ¿Qué vas a aprender de React en esta incidencia?
+
+| Concepto | ¿Qué es? |
+|----------|----------|
+| `Layout` + `<Outlet />` | Cómo crear un layout compartido en React Router v7 sin anidar páginas |
+| `Route` sin `path` | Ruta "layout" que envuelve hijas sin agregar segmento a la URL |
+| `flex-1` + `min-h-screen` | Cómo hacer que el contenido ocupe el espacio restante entre navbar y footer |
+
+### Pre-lectura (10 min)
+
+| Archivo | ¿Por qué? |
+|---------|-----------|
+| `frontend/src/App.tsx` | Vas a agrupar las rutas públicas dentro del PublicLayout |
+| `frontend/src/components/Layout.tsx` | Referencia de cómo ya funciona el layout autenticado con Header + BottomNavbar |
+| `frontend/src/components/layout/Navbar.tsx` | Se mueve del Landing al PublicLayout |
+| `frontend/src/components/layout/Footer.tsx` | Se mueve del Landing al PublicLayout |
+| `frontend/src/modules/landing/Landing.tsx` | Vas a sacar Navbar y Footer de acá |
+| `frontend/src/modules/auth/login.tsx` | Cambiar `min-h-screen`/`h-screen` por `flex-1` |
+| `frontend/src/modules/auth/register.tsx` | Ídem login |
+
+### Antes de codear: flujo git
+
+```bash
+git checkout main
+git pull origin main
+git checkout -b incidencia/11-public-layout-navbar-footer
+```
+
+### Paso a paso
+
+#### Archivo 1: `frontend/src/components/PublicLayout.tsx` (CREAR)
+
+```tsx
+import { Outlet } from "react-router-dom";
+import Navbar from "./layout/Navbar";
+import Footer from "./layout/Footer";
+
+export default function PublicLayout() {
+  return (
+    <div className="min-h-screen flex flex-col bg-[#FDFBF7]">
+      <Navbar />
+      <main className="flex-1">
+        <Outlet />
+      </main>
+      <Footer />
+    </div>
+  );
+}
+```
+
+#### Archivo 2: `frontend/src/App.tsx` (MODIFICAR)
+
+Antes:
+```tsx
+<Routes>
+  <Route path="/" element={<Landing />} />
+  <Route path="/login" element={<Login />} />
+  <Route path="/register" element={<Register />} />
+  <Route path="/*" element={<Layout />} />
+</Routes>
+```
+
+Después:
+```tsx
+import PublicLayout from "./components/PublicLayout";
+
+<Routes>
+  <Route element={<PublicLayout />}>
+    <Route path="/" element={<Landing />} />
+    <Route path="/login" element={<Login />} />
+    <Route path="/register" element={<Register />} />
+  </Route>
+  <Route path="/*" element={<Layout />} />
+</Routes>
+```
+
+#### Archivo 3: `frontend/src/modules/landing/Landing.tsx` (MODIFICAR)
+
+Sacar los imports y el uso de `<Navbar />` y `<Footer />`. El componente queda solo con las secciones:
+
+```tsx
+import HeroSection from "../../components/landing/HeroSection";
+import ProblemSection from "../../components/landing/ProblemSection";
+import HowItWorksSection from "../../components/landing/HowItWorksSection";
+import ServicesSection from "../../components/landing/ServicesSection";
+import AiSection from "../../components/landing/AiSection";
+import CTASection from "../../components/landing/CTASection";
+
+export default function Landing() {
+  return (
+    <>
+      <HeroSection />
+      <ProblemSection />
+      <HowItWorksSection />
+      <ServicesSection />
+      <AiSection />
+      <CTASection />
+    </>
+  );
+}
+```
+
+#### Archivo 4: `frontend/src/modules/auth/login.tsx` (MODIFICAR)
+
+El `<main>` externo actualmente usa `min-h-screen overflow-y-auto h-screen`. Como ahora está dentro de un flex container que ya tiene `min-h-screen`, cambiá a `flex-1`:
+
+Antes:
+```tsx
+<main className="min-h-screen overflow-y-auto h-screen w-full bg-background flex items-center justify-center overflow-hidden lg:p-6">
+```
+
+Después:
+```tsx
+<main className="flex-1 w-full bg-background flex items-center justify-center lg:p-6 overflow-hidden">
+```
+
+El `h-screen` y `min-h-screen` sobran porque la altura ahora la da el `flex-1` del PublicLayout. El `overflow-y-auto` se mantiene por si la card necesita scroll en resoluciones pequeñas.
+
+#### Archivo 5: `frontend/src/modules/auth/register.tsx` (MODIFICAR)
+
+Mismo cambio que login. El `<main>` externo:
+
+Antes:
+```tsx
+<main className="h-screen w-full bg-background flex items-center justify-center overflow-hidden lg:p-6">
+```
+
+Después:
+```tsx
+<main className="flex-1 w-full bg-background flex items-center justify-center lg:p-6 overflow-hidden">
+```
+
+### Verificación
+
+```bash
+cd frontend
+npx tsc --noEmit
+# Esperado: 0 errores
+
+npm run dev
+```
+
+**Pruebas manuales en el navegador:**
+
+| Escenario | Qué esperar |
+|-----------|------------|
+| Navegar a `/` | Navbar visible arriba, Footer abajo, landing completa en el medio |
+| Navegar a `/login` | Navbar visible arriba, formulario de login centrado, Footer abajo |
+| Navegar a `/register` | Navbar visible arriba, formulario de registro centrado (3 pasos), Footer abajo |
+| Hacer scroll en landing | Navbar se mantiene sticky arriba |
+| Login desde mobile | Todo el contenido visible sin solapamientos con navbar/footer |
+| Los anchor links del navbar (`#servicios`, `#como-funciona`) en landing | Siguen funcionando |
+| Rutas protegidas (`/dashboard`, `/profile`) | No tienen Navbar/Footer de landing — siguen con Header + BottomNavbar |
+
+### Errores que te vas a encontrar
+
+| Error | Causa | Solución |
+|-------|-------|----------|
+| Login/register se ven comprimidos o con doble scroll | El `h-screen` original compite con el `flex-1` del PublicLayout | Cambiá `h-screen`/`min-h-screen` por `flex-1` |
+| El footer no se pega al fondo en páginas con poco contenido | El main no tiene `flex-1` | Verificá que PublicLayout tenga `flex-col min-h-screen` y main tenga `flex-1` |
+| Los anchor links del navbar no funcionan en login/register | `#servicios` no existe en esas rutas | Es normal — no rompe nada, solo no hacen scroll. Mejora futura. |
+
+### Criterios de aceptación
+
+- [ ] Navbar visible en `/`, `/login` y `/register`
+- [ ] Footer visible en `/`, `/login` y `/register`
+- [ ] Login y register mantienen su layout visual interno (imagen aside + formulario) sin distorsiones
+- [ ] Login y register no tienen doble scroll ni espacios en blanco extra
+- [ ] El Landing funciona igual que antes sin Navbar/Footer inline
+- [ ] Rutas protegidas (`/dashboard`, etc.) no se ven afectadas — siguen con Header + BottomNavbar
+- [ ] `npx tsc --noEmit` compila sin errores
+- [ ] Commit con: `feat(layout): agregar PublicLayout con Navbar y Footer en rutas públicas`

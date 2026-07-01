@@ -67,7 +67,7 @@ function cvt<T extends CountryOption | StateOption | CityOption>(
 // ── Componente ─────────────────────────────────────────────────────────
 
 interface RegisterStep2Props {
-  form: UseFormReturn<RegisterFormData>;
+  form: UseFormReturn<RegisterFormData, any, any>;
 }
 
 export default function RegisterStep2({ form }: RegisterStep2Props) {

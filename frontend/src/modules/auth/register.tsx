@@ -2,10 +2,9 @@ import { useState, useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Layout, Loader2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
 
 import Button from "../../components/ui/Button";
-import ProgressBar from "../../components/ui/ProgressBar";
 
 import RegisterStep1 from "./registerSteps/registerStep1";
 import RegisterStep2 from "./registerSteps/registerStep2";
@@ -48,7 +47,15 @@ const stepFields: Record<number, (keyof RegisterFormData)[]> = {
     "cityName",
     "whatsapp",
   ],
-  3: ["experienceLevel", "technologyArea", "currentGoal"],
+  3: [
+    "currentSituation",
+    "workSector",
+    "seniority",
+    "interestAreas",
+    "currentSearch",
+    "knownTechnologies",
+    "bio",
+  ],
 };
 
 export default function Register() {
@@ -71,7 +78,7 @@ export default function Register() {
   }, [step]);
 
   const form = useForm<RegisterFormData>({
-    resolver: zodResolver(fullSchema),
+    resolver: zodResolver(fullSchema) as any,
     defaultValues: {
       fullName: "",
       email: "",
@@ -90,9 +97,13 @@ export default function Register() {
       cityName: "",
       whatsapp: "",
 
-      experienceLevel: "",
-      technologyArea: "",
-      currentGoal: "",
+      currentSituation: "",
+      workSector: "",
+      seniority: "",
+      interestAreas: [],
+      currentSearch: "",
+      knownTechnologies: [],
+      bio: "",
     },
   });
 
@@ -103,6 +114,7 @@ export default function Register() {
     watch,
     setFocus,
     setValue,
+    setError,
     formState: { errors },
   } = form;
 
@@ -133,6 +145,25 @@ export default function Register() {
 
   const onSubmit = async (data: RegisterFormData) => {
     clearError();
+
+    // Validación condicional: si trabaja → sector y seniority obligatorios
+    if (data.currentSituation === "employed") {
+      let hasError = false;
+      if (!data.workSector) {
+        setError("workSector", {
+          message: "Seleccioná tu sector laboral",
+        });
+        hasError = true;
+      }
+      if (!data.seniority) {
+        setError("seniority", {
+          message: "Seleccioná tu seniority",
+        });
+        hasError = true;
+      }
+      if (hasError) return;
+    }
+
     setIsSubmitting(true);
     try {
       const apiData = mapRegisterFormToApi(data);
@@ -184,7 +215,6 @@ export default function Register() {
             <h1 className="m-0 text-xl sm:text-2xl font-extrabold text-stone-900 tracking-tight text-center">
               Crear cuenta
             </h1>
-            <ProgressBar step={step} total={3} />
             <p className="m-0 text-sm text-stone-500 text-center">
               Ingresa tus datos para empezar tu experiencia personalizada.
             </p>
@@ -216,11 +246,7 @@ export default function Register() {
               <RegisterStep2 form={form} />
             </div>
             <div className={step !== 3 ? "hidden" : "space-y-4"}>
-              <RegisterStep3
-                register={register}
-                trigger={trigger}
-                errors={errors}
-              />
+              <RegisterStep3 form={form} />
             </div>
           </div>
 
