@@ -33,9 +33,20 @@ class OrientarService:
 
         Usa professional_level del modelo User (enum) como fuente de verdad.
         El parámetro 'nivel' del request es la autopercepción del usuario.
+        Este dato puede no ser definido por el usuario al momento de registrarse,
+        por lo tanto se define un valor por defecto 'junior'.
         """
-        nivel_real = user.professional_level.value
-        area = user.tech_area.lower() if user.tech_area else ""
+        nivel_real = (
+            user.professional_level.value
+            if user.professional_level is not None
+            else "junior"
+            )
+        
+        area = ""
+        if user.interest_areas and len(user.interest_areas) > 0:
+            area = user.interest_areas[0].lower()
+        elif user.tech_area:
+            area = user.tech_area.lower()
 
         gap = self._calcular_gap(nivel_real)
 
