@@ -8,7 +8,8 @@ from .user import (
 from .orientar import (
     OrientarRequest,
     OrientarResponse,
-    VacancyResponse,
+    JobMatchDetail,
+    CourseRecommendation,
 )
 
 from .salud import (
@@ -23,7 +24,8 @@ __all__ = [
     "TokenResponse",
     "OrientarRequest",
     "OrientarResponse",
-    "VacancyResponse",
+    "JobMatchDetail",
+    "CourseRecommendation",
     "SaludRequest",
     "SaludResponse",
 ]
