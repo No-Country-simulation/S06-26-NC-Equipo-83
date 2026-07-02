@@ -1,5 +1,5 @@
 import React from 'react';
-import { Home, Compass, Heart, User } from 'lucide-react';
+import { Home, Compass, Heart, User, Handshake } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 
 interface NavItem {
@@ -16,6 +16,7 @@ export const BottomNavbar: React.FC = () => {
         { id: 'inicio', label: 'Inicio', path: '/dashboard', icon: Home },
         { id: 'orientacion', label: 'Orientación', path: '/orientation', icon: Compass },
         { id: 'bienestar', label: 'Bienestar', path: '/mental-health', icon: Heart },
+        { id: 'mentoría', label: 'Mentoría', path: '/mentorship', icon: Handshake },
         { id: 'perfil', label: 'Perfil', path: '/profile', icon: User },
     ];
 

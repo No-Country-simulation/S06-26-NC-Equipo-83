@@ -12,11 +12,14 @@ export default function App() {
     <AuthProvider>
       <BrowserRouter>
         <Routes>
+          {/* Rutas Públicas: Landing es la raíz */}
           <Route element={<Publiclayout />}>
-            <Route path="/" element={<Landing />} />
+            <Route path="/landing" element={<Landing />} /> 
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
           </Route>
+
+          {/* Rutas Privadas: Gestionadas por Layout */}
           <Route path="/*" element={<Layout />} />
         </Routes>
       </BrowserRouter>
