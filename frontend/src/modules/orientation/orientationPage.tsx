@@ -65,7 +65,7 @@ export const OrientationPage: React.FC = () => {
             <span className="absolute text-2xl md:text-3xl font-bold text-gray-800">{Math.round(data.gap_porcentual)}%</span>
           </div>
           <div className="flex-1 text-center md:text-left space-y-3">
-            <h1 className="text-xl md:text-2xl font-bold tracking-tight text-gray-900 leading-tight">Cumples el {Math.round(100 - data.gap_porcentual)}% de los requisitos para {user?.tech_area || "tu área"}</h1>
+            <h1 className="text-xl md:text-2xl font-bold tracking-tight text-gray-900 leading-tight">Cumples el {Math.round(data.gap_porcentual)}% de los requisitos para {user?.tech_area || "tu área"}</h1>
             <p className="text-sm text-gray-600 leading-relaxed max-w-[680px]">Tu perfil está en camino. Te recomendamos enfocarte en las habilidades restantes.</p>
             <div className="flex flex-wrap gap-2 pt-1 justify-center md:justify-start">
               {data.gap_items.slice(0, 2).map((item, idx) => (
@@ -119,7 +119,7 @@ export const OrientationPage: React.FC = () => {
                       <h3 className="font-bold text-sm md:text-base text-gray-800 leading-tight">{vacante.title}</h3>
                       <p className="text-xs font-semibold text-gray-500">{vacante.company} • <span className="font-medium text-gray-400">Remoto</span></p>
                       <div className="flex flex-wrap gap-1.5 pt-1">
-                        <span className="px-2 py-0.5 font-bold text-[10px] rounded-md border bg-emerald-50 text-emerald-700 border-emerald-100">{100 - vacante.match_percentage}% de Match</span>
+                        <span className="px-2 py-0.5 font-bold text-[10px] rounded-md border bg-emerald-50 text-emerald-700 border-emerald-100">{vacante.match_percentage}% de Match</span>
                         <span className="px-2 py-0.5 bg-gray-100 text-gray-500 border border-gray-200/40 font-bold text-[10px] rounded-md">Full-time</span>
                       </div>
                     </div>
