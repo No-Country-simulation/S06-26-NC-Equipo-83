@@ -119,7 +119,7 @@ export const OrientationPage: React.FC = () => {
                       <h3 className="font-bold text-sm md:text-base text-gray-800 leading-tight">{vacante.title}</h3>
                       <p className="text-xs font-semibold text-gray-500">{vacante.company} • <span className="font-medium text-gray-400">Remoto</span></p>
                       <div className="flex flex-wrap gap-1.5 pt-1">
-                        <span className="px-2 py-0.5 font-bold text-[10px] rounded-md border bg-emerald-50 text-emerald-700 border-emerald-100">{vacante.match_percentage}% de Match</span>
+                        <span className="px-2 py-0.5 font-bold text-[10px] rounded-md border bg-emerald-50 text-emerald-700 border-emerald-100">{vacante.gap_porcentual}% de Match</span>
                         <span className="px-2 py-0.5 bg-gray-100 text-gray-500 border border-gray-200/40 font-bold text-[10px] rounded-md">Full-time</span>
                       </div>
                     </div>
