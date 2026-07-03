@@ -14,7 +14,8 @@ export {
 } from "../types/api"
 export type {
   User,
-  VacancyResponse,
+  CourseRecommendation,
+  JobMatchDetail,
   OrientarResponse,
   SaludRequest,
   SaludResponse,
