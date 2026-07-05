@@ -1,139 +1,200 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
+import { motion } from "framer-motion";
 import {
-  Clock, Briefcase, GraduationCap,
-  SlidersHorizontal, Loader2, AlertCircle,
+  Loader2, AlertCircle, GraduationCap, Compass, TrendingUp,
 } from "lucide-react";
 import { useOrientarStore } from "../../store/useOrientarStore";
 import { useAuthStore } from "../../store/useAuthStore";
+import { OrientationJobCard } from "../../components/orientation/OrientationJobCard";
+
+const AREA_LABEL: Record<string, string> = {
+  frontend: "Frontend", backend: "Backend", fullstack: "Full Stack",
+  mobile: "Mobile", ai_ml: "IA / ML", data_science: "Ciencia de datos",
+  devops: "DevOps", cloud: "Cloud", cybersecurity: "Ciberseguridad",
+  qa_testing: "QA / Testing", ux_ui: "UI / UX", product_management: "Product Mgmt",
+  blockchain: "Blockchain", iot: "IoT", game_development: "Game Dev",
+};
+
+function formatInterests(areas: string[]): string {
+  if (areas.length === 0) return "tu area";
+  const labels = areas.map((a) => AREA_LABEL[a] ?? a);
+  if (labels.length === 1) return labels[0];
+  if (labels.length === 2) return `${labels[0]} y ${labels[1]}`;
+  const last = labels.pop();
+  return `${labels.join(", ")} y ${last}`;
+}
 
 export const OrientationPage: React.FC = () => {
   const user = useAuthStore((s) => s.user);
   const { data, isLoading, error, fetchAnalysis } = useOrientarStore();
 
+  // Disparar el fetch cuando el usuario esta cargado
   useEffect(() => {
     if (user && !data) {
+      const primaryArea = user.interest_areas?.[0] || user.tech_area || "frontend";
       fetchAnalysis({
-        perfil: user.tech_area || "frontend",
-        nivel: user.professional_level || "junior",
+        perfil: primaryArea,
+        nivel: user.current_situation || user.professional_level || "junior",
         region: user.country_name || "LATAM",
-        idioma: "es",
+        idioma: user.language_code || "es",
         lat: 0,
         lng: 0,
       });
     }
   }, [user]);
 
+  const firstName = user?.full_name?.split(" ")[0] ?? "";
+
+  // ... estados de loading, error, success ...
   if (isLoading) {
     return (
-      <main className="min-h-screen flex items-center justify-center">
-        <div className="text-center space-y-3">
-          <Loader2 className="w-10 h-10 animate-spin text-[#A04E2D] mx-auto" />
-          <p className="text-sm text-gray-500 font-medium">Analizando tu perfil profesional...</p>
-        </div>
+      <main className="min-h-screen flex items-center justify-center bg-[#FDFBF7]">
+        <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}
+          className="text-center space-y-4">
+          <div className="relative mx-auto w-16 h-16">
+            <div className="absolute inset-0 rounded-2xl bg-[#A04E2D]/10 animate-pulse" />
+            <Compass className="w-16 h-16 text-[#A04E2D]/30 relative z-10" />
+          </div>
+          <Loader2 className="w-6 h-6 animate-spin text-[#A04E2D] mx-auto" />
+          <p className="text-sm text-stone-500 font-medium">Buscando las mejores oportunidades para vos...</p>
+        </motion.div>
       </main>
     );
   }
 
   if (error || !data) {
     return (
-      <main className="min-h-screen flex items-center justify-center">
-        <div className="text-center space-y-3 max-w-md">
-          <AlertCircle className="w-10 h-10 text-red-400 mx-auto" />
-          <p className="text-sm text-red-600 font-medium">{error || "No se pudo cargar el análisis."}</p>
-          <button onClick={() => fetchAnalysis({ perfil: user?.tech_area || "frontend", nivel: user?.professional_level || "junior", region: "LATAM", idioma: "es", lat: 0, lng: 0 })} className="px-4 py-2 bg-[#A04E2D] text-white font-semibold text-sm rounded-xl">Reintentar</button>
-        </div>
+      <main className="min-h-screen flex items-center justify-center bg-[#FDFBF7] px-4">
+        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}
+          className="text-center space-y-4 max-w-md">
+          <div className="mx-auto w-14 h-14 rounded-2xl bg-red-50 flex items-center justify-center">
+            <AlertCircle className="w-7 h-7 text-red-400" />
+          </div>
+          <p className="text-sm text-red-600 font-medium">{error || "No se pudo cargar el analisis."}</p>
+          <button
+            onClick={() => fetchAnalysis({
+              perfil: user?.interest_areas?.[0] || user?.tech_area || "frontend",
+              nivel: user?.current_situation || user?.professional_level || "junior",
+              region: "LATAM", idioma: "es", lat: 0, lng: 0,
+            })}
+            className="inline-flex px-5 py-2.5 bg-[#A04E2D] hover:bg-[#853F22] text-white font-semibold text-sm rounded-xl transition-colors shadow-sm"
+          >
+            Reintentar
+          </button>
+        </motion.div>
       </main>
     );
   }
 
-  const getCourseDetails = (courseString: string) => {
-    if (courseString.includes("Google Cloud") || courseString.includes("GEAR")) return { title: courseString, duration: "12-18 horas", category: "Cloud", bg: "bg-orange-200/40" };
-    if (courseString.includes("Oracle") || courseString.includes("ONE")) return { title: courseString, duration: "20-40 horas", category: "Formación", bg: "bg-yellow-700/20" };
-    return { title: courseString, duration: "Variable", category: "General", bg: "bg-emerald-200/40" };
-  };
+  const jobs = data.vacantes_compatibles;
+
+  // Derivar areas desde las vacantes reales, no desde intereses del usuario
+  const matchedAreas = [...new Set(jobs.map((j) => j.area))];
+  const areaLabel = formatInterests(matchedAreas);
 
   return (
-    <main className="min-h-screen py-6 px-4 font-sans antialiased text-gray-800 sm:px-6 md:py-10 lg:px-8">
-      <div className="max-w-[1024px] mx-auto space-y-8 md:space-y-12">
+    <main className="min-h-screen bg-[#FDFBF7]">
+      {/* === HERO SECTION === */}
+      <section className="relative overflow-hidden bg-gradient-to-br from-[#F5F3EE] via-[#FBF9F4] to-[#FDFBF7] border-b border-stone-200/60">
+        {/* Patron de puntos decorativo sutil */}
+        <div className="absolute inset-0 opacity-[0.03]"
+          style={{
+            backgroundImage: "radial-gradient(circle, #A04E2D 1px, transparent 1px)",
+            backgroundSize: "24px 24px",
+          }} />
 
-        <section className="bg-[#853F22]/5 rounded-2xl border border-[#853F22]/10 p-6 md:p-8 shadow-sm flex flex-col md:flex-row items-center gap-6 md:gap-8">
-          <div className="relative flex-shrink-0 w-32 h-32 md:w-36 md:h-36 flex items-center justify-center">
-            <svg className="w-full h-full transform -rotate-90">
-              <circle cx="50%" cy="50%" r="42%" className="stroke-gray-200 fill-none" strokeWidth="10" />
-              <circle cx="50%" cy="50%" r="42%" className="stroke-[#A04E2D] fill-none" strokeWidth="12" strokeDasharray="264" strokeDashoffset={264 - (264 * Math.round(data.gap_porcentual)) / 100} strokeLinecap="round" />
-            </svg>
-            <span className="absolute text-2xl md:text-3xl font-bold text-gray-800">{Math.round(data.gap_porcentual)}%</span>
-          </div>
-          <div className="flex-1 text-center md:text-left space-y-3">
-            <h1 className="text-xl md:text-2xl font-bold tracking-tight text-gray-900 leading-tight">Cumples el {Math.round(data.gap_porcentual)}% de los requisitos para {user?.tech_area || "tu área"}</h1>
-            <p className="text-sm text-gray-600 leading-relaxed max-w-[680px]">Tu perfil está en camino. Te recomendamos enfocarte en las habilidades restantes.</p>
-            <div className="flex flex-wrap gap-2 pt-1 justify-center md:justify-start">
-              {data.gap_items.slice(0, 2).map((item, idx) => (
-                <span key={idx} className="px-3 py-1 bg-emerald-100/70 text-emerald-800 font-medium text-xs rounded-full border border-emerald-200/40">{item.length > 30 ? item.slice(0, 30) + "..." : item}</span>
-              ))}
-              {data.gap_items.length > 2 && <span className="px-3 py-1 bg-gray-200/60 text-gray-600 font-medium text-xs rounded-full italic">+{data.gap_items.length - 2} brechas</span>}
+        <div className="relative max-w-[800px] mx-auto px-4 sm:px-6 py-10 md:py-14 lg:py-16">
+          <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }} className="space-y-5">
+
+            {/* Eyebrow */}
+            <div className="flex items-center gap-2">
+              <span className="w-8 h-px bg-[#A04E2D]/30" />
+              <span className="text-[10px] font-extrabold text-[#A04E2D] uppercase tracking-[0.2em]">
+                Orientacion profesional
+              </span>
             </div>
-          </div>
-        </section>
 
-        <section className="space-y-4">
-          <div className="flex justify-between items-baseline">
-            <h2 className="text-lg md:text-xl font-bold text-gray-900 tracking-tight">Cierra la brecha del {Math.round(100 - data.gap_porcentual)}%</h2>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
-            {data.trayectoria_sugerida.slice(0, 3).map((item, idx) => {
-              const details = getCourseDetails(item);
-              return (
-                <article key={idx} className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden flex flex-col hover:shadow-md transition-shadow">
-                  <div className={`h-40 ${details.bg} relative flex items-center justify-center p-4`}>
-                    <span className="absolute top-3 right-3 px-2 py-0.5 bg-white/90 backdrop-blur-sm text-[10px] font-bold tracking-wide text-gray-600 rounded-md shadow-sm">{details.category}</span>
-                    <GraduationCap className="w-12 h-12 text-[#A04E2D]/40" />
-                  </div>
-                  <div className="p-4 flex-1 flex flex-col justify-between space-y-4">
-                    <div className="space-y-1.5">
-                      <h3 className="font-bold text-sm md:text-base text-gray-800 line-clamp-2 leading-snug">{details.title}</h3>
-                      <div className="flex items-center gap-1.5 text-xs text-gray-400 font-medium"><Clock className="w-3.5 h-3.5" /><span>{details.duration}</span></div>
-                    </div>
-                    <button className="w-full py-2 bg-[#A04E2D] hover:bg-[#853F22] text-white font-semibold text-xs md:text-sm rounded-xl transition-all shadow-sm">Empezar</button>
-                  </div>
-                </article>
-              );
-            })}
-          </div>
-        </section>
+            {/* Heading */}
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-stone-900 tracking-tight leading-[1.15]">
+              {firstName ? (
+                <>{firstName}, encontramos<br /><span className="text-[#A04E2D]">estas vacantes para vos</span></>
+              ) : (
+                <>Encontramos<br /><span className="text-[#A04E2D]">estas vacantes para vos</span></>
+              )}
+            </h1>
 
-        <section className="space-y-4">
-          <div className="flex justify-between items-center">
-            <h2 className="text-lg md:text-xl font-bold text-gray-900 tracking-tight">Oportunidades compatibles</h2>
-            <div className="flex items-center gap-1.5 text-xs text-gray-500"><span className="font-medium">Filtrar por:</span><button className="flex items-center gap-1 px-2.5 py-1 bg-gray-200/60 font-semibold text-gray-700 rounded-md">Relevancia<SlidersHorizontal className="w-3 h-3" /></button></div>
+            {/* Subtitulo */}
+            <p className="text-base sm:text-lg text-stone-500 leading-relaxed max-w-xl">
+              Seleccionamos estas oportunidades en{" "}
+              <span className="font-bold text-stone-700">{areaLabel}</span>{" "}
+              tras analizar tu perfil, tus tecnologias y tus areas de interes.
+              Cada una incluye un analisis detallado para que sepas exactamente que pasos seguir.
+            </p>
+
+            {/* Stats pill */}
+            {jobs.length > 0 && (
+              <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.3, duration: 0.4 }}
+                className="inline-flex items-center gap-3 px-4 py-2.5 bg-white rounded-2xl border border-stone-200/80 shadow-sm">
+                <div className="flex items-center gap-2 text-sm font-semibold text-stone-700">
+                  <TrendingUp className="w-4 h-4 text-[#A04E2D]" />
+                  {jobs.length} {jobs.length === 1 ? "oportunidad" : "oportunidades"}
+                </div>
+                <span className="w-px h-4 bg-stone-200" />
+                <span className="text-sm font-medium text-stone-400">en {areaLabel}</span>
+              </motion.div>
+            )}
+          </motion.div>
+        </div>
+      </section>
+
+      {/* === JOB CARDS === */}
+      <section className="max-w-[800px] mx-auto px-4 sm:px-6 py-8 md:py-10 space-y-4">
+        {/* Section header */}
+        <div className="space-y-1 pb-1">
+          <div className="flex items-center gap-2">
+            <span className="w-6 h-px bg-[#A04E2D]/30" />
+            <span className="text-[10px] font-extrabold text-[#A04E2D] uppercase tracking-[0.2em]">
+              Recomendaciones para tu perfil
+            </span>
           </div>
-          {data.vacantes_compatibles.length === 0 ? (
-            <div className="bg-white rounded-xl border border-gray-100 p-8 text-center text-gray-400 text-sm">No hay vacantes disponibles para tu área en este momento.</div>
-          ) : (
-            <div className="space-y-3">
-              {data.vacantes_compatibles.map((vacante) => (
-                <article key={vacante.id} className="bg-white rounded-xl border border-gray-100 p-4 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:border-gray-200/80 transition-colors">
-                  <div className="flex items-start gap-3">
-                    <div className="p-3 rounded-xl flex-shrink-0 bg-emerald-50 text-emerald-700"><Briefcase className="w-5 h-5" /></div>
-                    <div className="space-y-1">
-                      <h3 className="font-bold text-sm md:text-base text-gray-800 leading-tight">{vacante.title}</h3>
-                      <p className="text-xs font-semibold text-gray-500">{vacante.company} • <span className="font-medium text-gray-400">Remoto</span></p>
-                      <div className="flex flex-wrap gap-1.5 pt-1">
-                        <span className="px-2 py-0.5 font-bold text-[10px] rounded-md border bg-emerald-50 text-emerald-700 border-emerald-100">{vacante.gap_porcentual}% de Match</span>
-                        <span className="px-2 py-0.5 bg-gray-100 text-gray-500 border border-gray-200/40 font-bold text-[10px] rounded-md">Full-time</span>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="flex sm:flex-col items-end justify-between sm:justify-center gap-2 border-t sm:border-t-0 pt-3 sm:pt-0 border-gray-50">
-                    <span className="text-xs sm:text-sm font-bold text-emerald-700 sm:text-right order-1">Consultar salario</span>
-                    <button className="px-6 py-2 bg-[#3A5343] hover:bg-[#2C3F33] text-white font-bold text-xs md:text-sm rounded-xl transition-all shadow-sm order-2">Postular</button>
-                  </div>
-                </article>
-              ))}
+          <p className="text-xs text-stone-400 pl-8">
+            Ordenadas por menor gap: primero las que estan mas cerca de tu alcance.
+          </p>
+        </div>
+
+        {jobs.length === 0 ? (
+          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}
+            className="bg-white rounded-2xl border border-stone-200 p-10 text-center space-y-3 shadow-sm">
+            <div className="mx-auto w-12 h-12 rounded-2xl bg-stone-100 flex items-center justify-center">
+              <Compass className="w-6 h-6 text-stone-300" />
             </div>
-          )}
-        </section>
-      </div>
+            <p className="text-stone-400 font-medium">No encontramos vacantes en tus areas de interes.</p>
+            <p className="text-sm text-stone-400">Proba ampliando tus areas de interes en tu perfil.</p>
+          </motion.div>
+        ) : (
+          jobs.map((job, i) => <OrientationJobCard key={job.id} job={job} index={i} />)
+        )}
+      </section>
+
+      {/* === MOTIVATIONAL FOOTER === */}
+      <section className="max-w-[800px] mx-auto px-4 sm:px-6 pb-12 md:pb-16">
+        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.5, duration: 0.5 }}
+          className="bg-gradient-to-r from-[#A04E2D]/5 via-[#C87A53]/5 to-amber-100/30 rounded-2xl border border-[#A04E2D]/10 p-5 sm:p-6 flex items-start gap-4">
+          <div className="p-2.5 bg-white rounded-xl text-[#A04E2D] shadow-sm flex-shrink-0">
+            <GraduationCap className="w-5 h-5" />
+          </div>
+          <div className="space-y-1">
+            <p className="text-sm font-bold text-stone-800">Cada curso te transforma.</p>
+            <p className="text-sm text-stone-500 leading-relaxed">
+              Las personas que completan al menos un curso de su plan de aprendizaje tienen 3 veces mas
+              probabilidades de conseguir una entrevista. El primer paso es el que mas te acerca.
+            </p>
+          </div>
+        </motion.div>
+      </section>
     </main>
   );
 };
