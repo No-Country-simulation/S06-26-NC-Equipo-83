@@ -115,19 +115,38 @@ export interface RegisterResponse {
 
 // ── Orientar ──────────────────────────────────────────────────────────────
 
-export interface VacancyResponse {
-  id: string;
-  title: string;
-  company: string;
-  match_percentage: number;
-}
+
 
 export interface OrientarResponse {
   gap_porcentual: number;
   gap_items: string[];
   trayectoria_sugerida: string[];
-  vacantes_compatibles: VacancyResponse[];
+  vacantes_compatibles: JobMatchDetail[];
   confianza: number;
+}
+
+export interface CourseRecommendation {
+  title: string;
+  provider: string;
+  duration: string;
+  url?: string | null;
+}
+
+export interface JobMatchDetail {
+  id: string;
+  title: string;
+  company: string;
+  location: string;
+  description: string;
+  area: string;
+  seniority: string;
+  salary?: string | null;
+  gap_porcentual: number;
+  matched_skills: string[];
+  missing_skills: string[];
+  required_skills: string[];
+  optional_skills: string[];
+  recommended_courses: CourseRecommendation[];
 }
 
 // ── Salud ─────────────────────────────────────────────────────────────────

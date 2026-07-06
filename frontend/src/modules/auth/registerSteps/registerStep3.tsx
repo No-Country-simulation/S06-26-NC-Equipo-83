@@ -13,6 +13,8 @@ import {
   PREDEFINED_TECHNOLOGIES,
 } from "../../../lib/registrationData";
 
+import { SKILL_LABELS } from "../../../lib/skillLabels";
+
 // ── Tipos ───────────────────────────────────────────────────────────────────
 
 interface RegisterStep3Props {
@@ -22,7 +24,10 @@ interface RegisterStep3Props {
 // ── Helpers para KnownTechnology ↔ Option ──────────────────────────────────
 
 function techsToOptions(techs: KnownTechnology[]): Option[] {
-  return techs.map((t) => ({ value: t.name, label: t.name }));
+  return techs.map((t) => ({
+    value: t.name,
+    label: SKILL_LABELS[t.name] ?? t.name,
+  }));
 }
 
 function optionsToTechs(newOpts: Option[], existing: KnownTechnology[]): KnownTechnology[] {
@@ -35,11 +40,14 @@ function optionsToTechs(newOpts: Option[], existing: KnownTechnology[]): KnownTe
 }
 
 function buildTechOptions(selected: KnownTechnology[]): Option[] {
-  const predefined = PREDEFINED_TECHNOLOGIES.map((t) => ({ value: t, label: t }));
+  const predefined = PREDEFINED_TECHNOLOGIES.map((t) => ({
+    value: t,
+    label: SKILL_LABELS[t] ?? t,
+  }));
   const customOpts = selected
     .filter((t) => t.is_custom)
     .filter((t) => !PREDEFINED_TECHNOLOGIES.includes(t.name))
-    .map((t) => ({ value: t.name, label: t.name }));
+    .map((t) => ({ value: t.name, label: t.name })); // custom usa el nombre tal cual
   return [...predefined, ...customOpts];
 }
 

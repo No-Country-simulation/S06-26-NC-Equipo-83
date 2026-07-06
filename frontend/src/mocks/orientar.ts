@@ -2,186 +2,239 @@ import type { OrientarResponse } from "../types/api"
 import { mockUsers } from "./users"
 
 export const mockOrientarResponses: OrientarResponse[] = [
+  // ── Perfil 1 — Frontend Junior ──────────────────────────────────────────
   {
-    gap_porcentual: 72.5,
+    gap_porcentual: 25.0,
     gap_items: [
-      "Falta experiencia con TypeScript en proyectos reales",
-      "Hacen falta conceptos de testing automatizado (Jest, Vitest)",
-      "No tiene portfolio con componentes accesibles (a11y)",
+      "CSS avanzado y diseño responsive",
+      "Next.js para aplicaciones server-side rendering",
+      "Angular y TypeScript para proyectos enterprise",
     ],
     trayectoria_sugerida: [
-      "Curso: JavaScript Avanzado — Programa ONE (Oracle + Alura)",
-      "Curso: React con TypeScript — Cloud Skills Boost (Google Cloud GEAR)",
-      "Práctica: Construir 3 componentes con tests y publicarlos en GitHub Pages",
-      "Mentoría: Agenda una práctica guiada con un mentor Frontend Senior",
+      "Curso: CSS for JS Developers — Josh Comeau",
+      "Curso: Next.js Foundations — Vercel",
+      "Curso: Angular - The Complete Guide — Udemy",
     ],
     vacantes_compatibles: [
       {
-        id: "vac-001",
-        title: "Desarrolladora Frontend Junior",
-        company: "Nubank",
-        match_percentage: 72.5,
-      },
-      {
-        id: "vac-002",
-        title: "React Developer Trainee",
-        company: "Globant",
-        match_percentage: 68.0,
-      },
-      {
-        id: "vac-003",
-        title: "UI Developer",
+        id: "job-fe-01",
+        title: "Desarrollador Frontend React",
         company: "Mercado Libre",
-        match_percentage: 61.2,
+        location: "Remoto - LATAM",
+        description:
+          "Construí la cara visible de la plataforma de e-commerce más grande de LATAM. Trabajamos con React, TypeScript y un design system propio. Buscamos alguien con ganas de crecer en un equipo que mueve millones de usuarios.",
+        area: "frontend",
+        seniority: "semi-senior",
+        salary: "ARS 1.800.000 - 2.500.000",
+        gap_porcentual: 25.0,
+        matched_skills: ["Frontend", "React", "JavaScript"],
+        missing_skills: ["CSS"],
+        required_skills: ["Frontend", "React", "JavaScript", "CSS"],
+        optional_skills: ["TypeScript", "Next.js", "Git", "Testing"],
+        recommended_courses: [
+          {
+            title: "CSS for JS Developers",
+            provider: "Josh Comeau",
+            duration: "20 horas",
+            url: "https://css-for-js.dev/",
+          },
+        ],
+      },
+      {
+        id: "job-fe-02",
+        title: "Desarrollador Next.js",
+        company: "Globant",
+        location: "Remoto - Argentina",
+        description:
+          "Sumate al equipo de frontend que construye experiencias digitales para clientes Fortune 500. Usamos Next.js con App Router, TypeScript y Tailwind. Valoramos la curiosidad y las ganas de aprender sobre los años de experiencia.",
+        area: "frontend",
+        seniority: "junior",
+        salary: "ARS 1.500.000 - 2.200.000",
+        gap_porcentual: 25.0,
+        matched_skills: ["React", "TypeScript", "CSS"],
+        missing_skills: ["Next.js"],
+        required_skills: ["React", "Next.js", "TypeScript", "CSS"],
+        optional_skills: ["JavaScript", "Git", "GraphQL", "Testing"],
+        recommended_courses: [
+          {
+            title: "Next.js Foundations",
+            provider: "Vercel",
+            duration: "8 horas",
+            url: "https://nextjs.org/learn",
+          },
+        ],
+      },
+      {
+        id: "job-fe-03",
+        title: "Desarrollador Angular",
+        company: "Accenture",
+        location: "Remoto - LATAM",
+        description:
+          "Buscamos developers con mentalidad de crecimiento para sumarse a proyectos enterprise de gran escala. Trabajamos con Angular, TypeScript y arquitecturas basadas en micro-frontends. Si tenés bases sólidas de frontend, el resto lo aprendés acá.",
+        area: "frontend",
+        seniority: "trainee",
+        salary: "USD 800 - 1.200",
+        gap_porcentual: 75.0,
+        matched_skills: ["Git"],
+        missing_skills: ["Angular", "TypeScript", "Frontend"],
+        required_skills: ["Angular", "TypeScript", "Frontend", "Git"],
+        optional_skills: ["JavaScript", "CSS", "Testing", "Docker"],
+        recommended_courses: [
+          {
+            title: "Angular - The Complete Guide",
+            provider: "Udemy",
+            duration: "36 horas",
+            url: "https://www.udemy.com/course/the-complete-guide-to-angular-2/",
+          },
+          {
+            title: "TypeScript para Angular Developers",
+            provider: "Platzi",
+            duration: "12 horas",
+            url: "https://platzi.com/cursos/typescript/",
+          },
+        ],
       },
     ],
     confianza: 0.88,
   },
+
+  // ── Perfil 2 — Backend Junior ───────────────────────────────────────────
   {
-    gap_porcentual: 56.0,
+    gap_porcentual: 30.0,
     gap_items: [
-      "No domina Git avanzado (rebase, cherry-pick, hooks)",
-      "Falta experiencia con integración y entrega continua (CI/CD)",
-      "Necesita profundizar en monitoreo y observabilidad",
-      "No tiene certificación en plataforma cloud",
+      "APIs RESTful y diseño de endpoints",
+      "Bases de datos relacionales (SQL, PostgreSQL)",
+      "Python y Django para servicios web",
     ],
     trayectoria_sugerida: [
-      "Curso: Git y GitHub Avanzado — Programa ONE (Oracle + Alura)",
-      "Curso: DevOps Essentials — Cloud Skills Boost (Google Cloud GEAR)",
-      "Curso: Docker y Kubernetes — Programa ONE (Oracle + Alura)",
-      "Certificación: Google Cloud Associate Cloud Engineer",
+      "Curso: Node.js API Masterclass — freeCodeCamp",
+      "Curso: SQL para Backend — Programa ONE (Oracle + Alura)",
+      "Curso: Python Django — Coursera (Universidad de Michigan)",
     ],
     vacantes_compatibles: [
       {
-        id: "vac-004",
-        title: "DevOps Engineer Semi-Senior",
-        company: "ContaAzul",
-        match_percentage: 56.0,
-      },
-      {
-        id: "vac-005",
-        title: "SRE Junior",
-        company: "UOL",
-        match_percentage: 49.5,
-      },
-      {
-        id: "vac-006",
-        title: "Cloud Support Engineer",
-        company: "AWS Latam",
-        match_percentage: 44.8,
-      },
-    ],
-    confianza: 0.79,
-  },
-  {
-    gap_porcentual: 45.3,
-    gap_items: [
-      "Sin experiencia con Python para análisis de datos",
-      "No conoce bibliotecas de manipulación de datos (Pandas, NumPy)",
-      "No tiene proyectos de visualización de datos en portfolio",
-      "Falta dominio de estadística aplicada y probabilidad",
-      "No tiene experiencia con SQL más allá de SELECT básico",
-    ],
-    trayectoria_sugerida: [
-      "Curso: Python para Data Science — Programa ONE (Oracle + Alura)",
-      "Curso: Data Engineering Fundamentals — Cloud Skills Boost (Google Cloud GEAR)",
-      "Curso: BigQuery y SQL Avanzado — Cloud Skills Boost (Google Cloud GEAR)",
-      "Proyecto práctico: Análisis de datos públicos del INE con visualización en Streamlit",
-      "Mentoría: Sesión con Data Scientist para definir ruta de aprendizaje",
-    ],
-    vacantes_compatibles: [
-      {
-        id: "vac-007",
-        title: "Data Analyst Trainee",
+        id: "job-be-01",
+        title: "Desarrollador Backend Node.js",
         company: "Rappi",
-        match_percentage: 45.3,
+        location: "Remoto - LATAM",
+        description:
+          "Formá parte del equipo que construye la infraestructura que soporta millones de pedidos diarios. Trabajamos con Node.js, microservicios y bases de datos a escala. Buscamos personas con buenas bases de JavaScript y ganas de aprender arquitecturas distribuidas.",
+        area: "backend",
+        seniority: "junior",
+        salary: "COP 5.000.000 - 7.500.000",
+        gap_porcentual: 30.0,
+        matched_skills: ["JavaScript", "Node.js"],
+        missing_skills: ["APIs", "REST", "Bases de datos"],
+        required_skills: [
+          "JavaScript",
+          "Node.js",
+          "APIs",
+          "REST",
+          "Bases de datos",
+        ],
+        optional_skills: ["Git", "Docker", "TypeScript", "Linux"],
+        recommended_courses: [
+          {
+            title: "Node.js API Masterclass",
+            provider: "freeCodeCamp",
+            duration: "15 horas",
+            url: "https://www.freecodecamp.org/news/build-a-restful-api-with-node-js/",
+          },
+          {
+            title: "Bases de datos relacionales con PostgreSQL",
+            provider: "Platzi",
+            duration: "8 horas",
+            url: "https://platzi.com/cursos/postgresql/",
+          },
+        ],
       },
       {
-        id: "vac-008",
-        title: "Analista de Datos Junior",
-        company: "Falabella",
-        match_percentage: 40.1,
+        id: "job-be-02",
+        title: "Desarrollador Python/Django",
+        company: "Eventbrite",
+        location: "Remoto - LATAM",
+        description:
+          "Trabajá en la plataforma que conecta millones de personas con eventos alrededor del mundo. Nuestro stack es Python, Django, PostgreSQL y GraphQL. Valoramos la curiosidad técnica y la capacidad de resolver problemas complejos con código limpio.",
+        area: "backend",
+        seniority: "junior",
+        salary: "USD 1.500 - 2.200",
+        gap_porcentual: 40.0,
+        matched_skills: ["JavaScript", "APIs", "REST"],
+        missing_skills: ["Python", "Bases de datos"],
+        required_skills: [
+          "JavaScript",
+          "Python",
+          "APIs",
+          "REST",
+          "Bases de datos",
+        ],
+        optional_skills: ["Django", "Git", "Docker", "GraphQL"],
+        recommended_courses: [
+          {
+            title: "Python para Backend",
+            provider: "Coursera (U. de Michigan)",
+            duration: "30 horas",
+            url: "https://www.coursera.org/specializations/python",
+          },
+          {
+            title: "SQL para Backend",
+            provider: "Programa ONE (Oracle + Alura)",
+            duration: "10 horas",
+            url: "https://www.oracle.com/ar/education/oracle-next-education/",
+          },
+        ],
       },
       {
-        id: "vac-009",
-        title: "Business Intelligence Intern",
-        company: "Banco Itaú",
-        match_percentage: 37.5,
+        id: "job-be-03",
+        title: "Desarrollador Java/Spring",
+        company: "Santander",
+        location: "Remoto - LATAM",
+        description:
+          "Sumate al equipo de ingeniería del banco más grande de LATAM. Construimos servicios bancarios core con Java, Spring Boot, SQL y Kafka. Buscamos talento con ganas de aprender y crecer en un entorno de misión crítica con mentoría dedicada.",
+        area: "backend",
+        seniority: "trainee",
+        salary: "EUR 1.800 - 2.500",
+        gap_porcentual: 80.0,
+        matched_skills: ["JavaScript"],
+        missing_skills: ["Java", "Spring", "SQL", "APIs", "REST"],
+        required_skills: [
+          "Java",
+          "Spring",
+          "SQL",
+          "APIs",
+          "REST",
+          "JavaScript",
+        ],
+        optional_skills: ["Git", "Docker", "Linux", "Kubernetes"],
+        recommended_courses: [
+          {
+            title: "Java para Desarrollo Backend",
+            provider: "Oracle University",
+            duration: "40 horas",
+            url: "https://education.oracle.com/java",
+          },
+          {
+            title: "Spring Boot Basics",
+            provider: "Baeldung",
+            duration: "10 horas",
+            url: "https://www.baeldung.com/spring-boot",
+          },
+          {
+            title: "Fundamentos de SQL",
+            provider: "Khan Academy",
+            duration: "6 horas",
+            url: "https://www.khanacademy.org/computing/computer-programming/sql",
+          },
+        ],
       },
     ],
-    confianza: 0.72,
-  },
-  {
-    gap_porcentual: 80.8,
-    gap_items: [
-      "No tiene experiencia con Jetpack Compose",
-      "Falta conocimiento en arquitectura MVVM para Android",
-    ],
-    trayectoria_sugerida: [
-      "Curso: Kotlin con Jetpack Compose — Programa ONE (Oracle + Alura)",
-      "Curso: Arquitectura Android Moderna — Cloud Skills Boost (Google Cloud GEAR)",
-    ],
-    vacantes_compatibles: [
-      {
-        id: "vac-010",
-        title: "Android Developer Senior",
-        company: "iFood",
-        match_percentage: 80.8,
-      },
-      {
-        id: "vac-011",
-        title: "Mobile Tech Lead",
-        company: "PicPay",
-        match_percentage: 75.3,
-      },
-      {
-        id: "vac-012",
-        title: "Desarrollador Mobile Senior",
-        company: "Nubank",
-        match_percentage: 72.1,
-      },
-    ],
-    confianza: 0.92,
-  },
-  {
-    gap_porcentual: 63.7,
-    gap_items: [
-      "No domina testing automatizado con Cypress o Playwright",
-      "Falta experiencia con pruebas de performance (JMeter, k6)",
-      "No conoce testing de APIs con Postman o Insomnia",
-      "Necesita practicar en entornos ágiles (Scrum, Kanban)",
-    ],
-    trayectoria_sugerida: [
-      "Curso: Testing Automatizado con Cypress — Programa ONE (Oracle + Alura)",
-      "Curso: Performance Testing Fundamentals — Cloud Skills Boost (Google Cloud GEAR)",
-      "Proyecto práctico: Crear suite de tests E2E para una app React open source",
-      "Mentoría: Sombra de QA Senior en ciclo de release real",
-    ],
-    vacantes_compatibles: [
-      {
-        id: "vac-013",
-        title: "QA Analyst Junior",
-        company: "Softtek",
-        match_percentage: 63.7,
-      },
-      {
-        id: "vac-014",
-        title: "Test Automation Engineer",
-        company: "Globant",
-        match_percentage: 58.9,
-      },
-      {
-        id: "vac-015",
-        title: "QA Manual & Automation",
-        company: "Kavak",
-        match_percentage: 54.2,
-      },
-    ],
-    confianza: 0.83,
+    confianza: 0.82,
   },
 ]
 
-export function getOrientarByUserId(userId: string): OrientarResponse | undefined {
+export function getOrientarByUserId(
+  userId: string,
+): OrientarResponse | undefined {
   const index = mockUsers.findIndex((u) => u.id === userId)
   if (index === -1) return undefined
   return mockOrientarResponses[index % mockOrientarResponses.length]

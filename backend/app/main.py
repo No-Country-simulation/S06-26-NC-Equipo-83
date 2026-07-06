@@ -10,8 +10,6 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.routers import auth
 from app.routers import salud
 from app.routers import orientar
-from app.routers import experiencias
-from app.routers import events
 
 # ---------------------------------------------------------------------------
 # Application metadata
@@ -61,3 +59,23 @@ async def health_check() -> dict[str, str]:
         "service": "App BiT — Backend API",
         "version": app.version,
     }
+
+#Handler global de excepcion
+@app.exception_handler(RequestValidationError)
+async def validation_exception_handler(request, exc):
+
+    errors = []
+
+    for error in exc.errors():
+        errors.append({
+            "field": error["loc"][-1],
+            "message": error["msg"]
+        })
+
+    return JSONResponse(
+        status_code=422,
+        content={
+            "success": False,
+            "errors": errors
+        },
+    )

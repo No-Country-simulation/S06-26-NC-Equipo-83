@@ -8,7 +8,7 @@ from app.schemas.user import UserCreate
 def test_user_create_instantiates_with_all_fields():
     instance = UserCreate(
         email="test@example.com",
-        password="123456",
+        password="12345!aA",
         full_name="Ariel Seijo",
         birth_date=date(2002, 1, 1),
         gender="male",
@@ -62,7 +62,7 @@ def test_user_create_instantiates_with_all_fields():
 def test_user_create_accepts_string_enums():
     instance = UserCreate(
         email="string@test.com",
-        password="123456",
+        password="12345!aA",
         full_name="String Enums",
         birth_date=date(1999, 12, 31),
         gender="female",
@@ -95,7 +95,7 @@ def test_user_create_accepts_string_enums():
 def test_user_create_password_not_in_model_dump():
     instance = UserCreate(
         email="modeldump@test.com",
-        password="secret123",
+        password="secret123!aA",
         full_name="Model Dump",
         birth_date=date(1995, 6, 15),
         gender="male",
@@ -123,7 +123,7 @@ def test_user_create_password_not_in_model_dump():
 
     dumped = instance.model_dump()
     assert dumped["email"] == "modeldump@test.com"
-    assert dumped["password"] == "secret123"
+    assert dumped["password"] == "secret123!aA"
     assert dumped["professional_level"] == "semi_senior"
 
 
