@@ -18,34 +18,19 @@ export default function Navbar() {
         initial={{ y: -80, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-        className="mx-auto flex w-full items-center rounded-none bg-white/90 px-4 py-3 shadow-sm backdrop-blur-xl md:w-fit md:gap-12 md:rounded-2xl md:px-8 md:py-4 md:shadow-[0_8px_30px_-4px_rgba(0,0,0,0.1)]"
+        className="mx-auto flex w-full items-center rounded-none bg-white/90 px-4 py-3 shadow-nav-mobile backdrop-blur-xl md:w-fit md:gap-12 md:rounded-2xl md:px-8 md:py-4 md:shadow-nav"
       >
-        {/* Logo */}
         <Link to="/" className="flex items-center gap-3">
-          <img
-            src="/logo-bit.webp"
-            alt="App BiT"
-            className="h-10 w-10 rounded-lg object-contain md:h-12 md:w-12"
-          />
-          <span
-            className="font-display font-extrabold tracking-tight text-[#002F68]"
-            style={{ fontSize: "2rem", lineHeight: 1.1 }}
-          >
-            BiT
-          </span>
+          <img src="/logo-bit.webp" alt="App BiT" className="h-10 w-10 rounded-lg object-contain md:h-12 md:w-12" />
+          <span className="font-display font-extrabold tracking-tight text-text-primary" style={{ fontSize: "2rem", lineHeight: 1.1 }}>BiT</span>
         </Link>
 
-        {/* Spacer */}
         <div className="flex-1 md:hidden" />
 
         {/* Desktop links */}
         <div className="hidden items-center gap-6 md:flex md:gap-8">
           {navLinks.map((link) => (
-            <a
-              key={link.label}
-              href={link.to}
-              className="text-sm font-medium text-[#1E293B] transition-colors hover:text-[#2F75DC]"
-            >
+            <a key={link.label} href={link.to} className="text-sm font-medium text-text-nav transition-colors hover:text-brand">
               {link.label}
             </a>
           ))}
@@ -53,60 +38,37 @@ export default function Navbar() {
 
         {/* Desktop auth */}
         <div className="hidden items-center gap-4 md:flex md:gap-6">
-          <Link
-            to="/login"
-            className="rounded-full bg-white px-6 py-2.5 text-sm font-semibold text-[#2F75DC] shadow-[inset_0_0_0_1px_#2F75DC] transition-all hover:bg-[#2F75DC]/10"
-          >
+          <Link to="/login" className="btn-outline px-6 py-2.5 text-sm">
             Iniciar sesión
           </Link>
-          <Link
-            to="/register"
-            className="rounded-full bg-[#2F75DC] px-6 py-2.5 text-sm font-semibold text-white shadow-ambient transition-all hover:bg-[#004A9E]"
-          >
+          <Link to="/register" className="btn-primary px-6 py-2.5 text-sm shadow-ambient hover:shadow-ambient-lg">
             Comenzar
           </Link>
         </div>
 
         {/* Hamburger */}
-        <button
-          onClick={() => setOpen(!open)}
-          className="ml-4 p-1.5 text-[#002F68] md:hidden"
-          aria-label={open ? "Cerrar menú" : "Abrir menú"}
-        >
+        <button onClick={() => setOpen(!open)} className="ml-4 p-1.5 text-text-primary md:hidden" aria-label={open ? "Cerrar menú" : "Abrir menú"}>
           {open ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
         </button>
       </motion.nav>
 
       {/* Mobile menu */}
       {open && (
-        <div className="bg-white/95 backdrop-blur-xl shadow-sm md:hidden">
+        <div className="bg-white/95 backdrop-blur-xl shadow-nav-mobile md:hidden">
           <div className="flex flex-col gap-1 px-4 pb-5 pt-2">
-              {navLinks.map((link) => (
-                <a
-                  key={link.label}
-                  href={link.to}
-                  onClick={() => setOpen(false)}
-                  className="rounded-lg px-3 py-2.5 text-base font-medium text-[#1E293B] transition-colors hover:bg-[#2F75DC]/10 hover:text-[#2F75DC]"
-                >
-                  {link.label}
-                </a>
-              ))}
-              <div className="mt-3 flex flex-col gap-2 border-t border-stone-100 pt-4">
-                <Link
-                  to="/login"
-                  onClick={() => setOpen(false)}
-                  className="rounded-full bg-white px-6 py-2.5 text-center text-sm font-semibold text-[#2F75DC] shadow-[inset_0_0_0_1px_#2F75DC]"
-                >
-                  Iniciar sesión
-                </Link>
-                <Link
-                  to="/register"
-                  onClick={() => setOpen(false)}
-                  className="rounded-full bg-[#2F75DC] px-6 py-2.5 text-center text-sm font-semibold text-white shadow-ambient"
-                >
-                  Comenzar
-                </Link>
-              </div>
+            {navLinks.map((link) => (
+              <a key={link.label} href={link.to} onClick={() => setOpen(false)} className="rounded-lg px-3 py-2.5 text-base font-medium text-text-nav transition-colors hover:bg-brand/10 hover:text-brand">
+                {link.label}
+              </a>
+            ))}
+            <div className="mt-3 flex flex-col gap-2 border-t border-border-default pt-4">
+              <Link to="/login" onClick={() => setOpen(false)} className="btn-outline px-6 py-2.5 text-center text-sm">
+                Iniciar sesión
+              </Link>
+              <Link to="/register" onClick={() => setOpen(false)} className="btn-primary px-6 py-2.5 text-center text-sm shadow-ambient">
+                Comenzar
+              </Link>
+            </div>
           </div>
         </div>
       )}

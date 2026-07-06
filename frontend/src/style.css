@@ -2,6 +2,156 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ==========================================================================
+   BiT Design System — CSS Custom Properties
+   ========================================================================== */
+:root {
+  /* ── Colores de Marca ─────────────────────────────────────────────── */
+  --color-brand:        #2F75DC;
+  --color-brand-hover:  #004A9E;
+  --color-brand-light:  #C4DDFB;
+
+  /* ── Paleta Principal ──────────────────────────────────────────────── */
+  --color-primary:      #002F68;
+  --color-primary-soft: #EBF3FF;
+
+  --color-secondary:    #7C3AED;
+  --color-secondary-soft: #F5F0FF;
+  --color-secondary-badge: #E5DAFF;
+
+  --color-accent:       #D97706;
+  --color-accent-soft:  #FFFBEB;
+  --color-accent-badge: #FDE68A;
+
+  --color-success:      #006D34;
+  --color-success-soft: #C8EDD5;
+
+  --color-info:         #2F75DC;
+  --color-info-soft:    #C4DDFB;
+
+  --color-rose:         #DB2777;
+  --color-rose-soft:    #FCE7F3;
+
+  /* ── Fondos y Superficies ──────────────────────────────────────────── */
+  --surface-page:       #fffffe;
+  --surface-card:       #ffffff;
+  --surface-navbar:     rgba(255, 255, 255, 0.90);
+  --surface-navbar-mobile: rgba(255, 255, 255, 0.95);
+
+  /* ── Texto ─────────────────────────────────────────────────────────── */
+  --text-primary:       #002F68;
+  --text-body:          #424753;
+  --text-nav:           #1E293B;
+  --text-muted:         #94A3B8;
+  --text-inverse:       #ffffff;
+  --text-link:          #2F75DC;
+  --text-link-hover:    #004A9E;
+
+  /* ── Bordes ────────────────────────────────────────────────────────── */
+  --border-default:     #E8E4DD;
+  --border-light:       rgba(255, 255, 255, 0.15);
+  --border-input:       #c2c6d5;
+
+  /* ── Sombras ───────────────────────────────────────────────────────── */
+  --shadow-card:        0 4px 20px -4px rgba(30, 41, 59, 0.12);
+  --shadow-card-hover:  0 12px 32px -8px rgba(30, 41, 59, 0.18);
+  --shadow-speech:      0 4px 20px -2px rgba(30, 41, 59, 0.15);
+  --shadow-nav:         0 8px 30px -4px rgba(0, 0, 0, 0.10);
+  --shadow-nav-mobile:  0 1px 3px rgba(0, 0, 0, 0.06);
+  --shadow-hero-bird:   0 24px 40px rgba(30, 41, 59, 0.18);
+  --shadow-button-inset: inset 0 0 0 1px var(--color-brand);
+
+  /* ── Tipografía ────────────────────────────────────────────────────── */
+  --font-display:       'Plus Jakarta Sans', system-ui, sans-serif;
+  --font-body:          'Inter', system-ui, sans-serif;
+
+  --leading-tight:      1.1;
+  --leading-snug:       1.375;
+  --leading-normal:     1.5;
+  --leading-relaxed:    1.625;
+
+  --tracking-tight:     -0.02em;
+  --tracking-wide:      0.05em;
+  --tracking-wider:     0.1em;
+
+  /* ── Espaciado ─────────────────────────────────────────────────────── */
+  --space-section:      3rem;
+  --space-section-lg:   5rem;
+  --space-block:        2rem;
+  --space-element:      1.5rem;
+
+  --container-max:      1650px;
+
+  /* ── Z-Index ───────────────────────────────────────────────────────── */
+  --z-base:             0;
+  --z-content:          10;
+  --z-nav:              50;
+  --z-modal:            100;
+
+  /* ── Transiciones ──────────────────────────────────────────────────── */
+  --transition-base:    200ms ease;
+  --transition-slow:    300ms ease;
+}
+
+/* Modo oscuro preparado para futuro */
+[data-theme="dark"] {
+  --surface-page:       #0f172a;
+  --surface-card:       #1e293b;
+  --surface-navbar:     rgba(15, 23, 42, 0.90);
+
+  --text-primary:       #e2e8f0;
+  --text-body:          #94a3b8;
+  --text-nav:           #cbd5e1;
+  --text-muted:         #64748b;
+
+  --border-default:     #334155;
+  --border-input:       #475569;
+
+  --shadow-card:        0 4px 20px -4px rgba(0, 0, 0, 0.3);
+  --shadow-card-hover:  0 12px 32px -8px rgba(0, 0, 0, 0.4);
+  --shadow-speech:      0 4px 20px -2px rgba(0, 0, 0, 0.3);
+
+  --color-primary-soft: #1e3a5f;
+  --color-secondary-soft: #2d1b69;
+  --color-accent-soft:  #422006;
+  --color-success-soft: #052e14;
+  --color-rose-soft:    #4a0e2b;
+}
+
+/* ── Clases utilitarias ────────────────────────────────────────────── */
+.text-brand { color: var(--color-brand); }
+.text-primary { color: var(--text-primary); }
+.text-body { color: var(--text-body); }
+.text-muted { color: var(--text-muted); }
+
+.bg-page { background-color: var(--surface-page); }
+.bg-card { background-color: var(--surface-card); }
+
+.btn-primary {
+  background-color: var(--color-brand);
+  color: var(--text-inverse);
+  font-weight: 600;
+  border-radius: 9999px;
+  transition: all var(--transition-base);
+}
+.btn-primary:hover {
+  background-color: var(--color-brand-hover);
+}
+
+.btn-outline {
+  background-color: var(--surface-card);
+  color: var(--color-brand);
+  font-weight: 600;
+  border-radius: 9999px;
+  box-shadow: var(--shadow-button-inset);
+  transition: all var(--transition-base);
+}
+.btn-outline:hover {
+  background-color: rgba(47, 117, 220, 0.10);
+}
+
+/* ── Existing styles ─────────────────────────────────────────────────── */
+
 :root {
   --text: #6b6375;
   --text-h: #08060d;
