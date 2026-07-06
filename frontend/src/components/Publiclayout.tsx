@@ -4,7 +4,7 @@ import Footer from "./layout/Footer";
 
 export const Publiclayout = () => {
     return (
-        <div className="min-h-screen flex pb-16 flex-col bg-[#FDFBF7] text-slate-800 antialiased">
+        <div className="min-h-screen flex pb-16 flex-col text-on-surface antialiased" style={{ backgroundColor: "#fffffe" }}>
             <Navbar />
             
             <main className="flex-1">
