@@ -10,8 +10,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.routers import auth
 from app.routers import salud
 from app.routers import orientar
-from fastapi.exceptions import RequestValidationError
-from fastapi.responses import JSONResponse
+
 # ---------------------------------------------------------------------------
 # Application metadata
 # ---------------------------------------------------------------------------
@@ -41,6 +40,8 @@ app.add_middleware(
 app.include_router(auth.router)
 app.include_router(salud.router)
 app.include_router(orientar.router)
+app.include_router(experiencias.router)
+app.include_router(events.router)
 
 
 # ---------------------------------------------------------------------------
