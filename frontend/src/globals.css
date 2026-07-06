@@ -1,0 +1,221 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   BiT Design System — CSS Custom Properties
+   Consumible desde cualquier página vía var(--color-primary), etc.
+   ═════════════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* ── Paleta principal ──────────────────────────────────────────── */
+  --color-primary:            #2F75DC;
+  --color-primary-hover:      #004A9E;
+  --color-primary-light:      #C4DDFB;
+  --color-primary-lighter:    #EBF3FF;
+  --color-primary-subtle:     #E0F0FF;
+
+  --color-heading:            #002F68;
+  --color-body:               #424753;
+  --color-muted:              #94A3B8;
+  --color-connector:          #c2c6d5;
+  --color-page-bg:            #fffffe;
+  --color-white:              #ffffff;
+
+  /* ── Acentos ────────────────────────────────────────────────────── */
+  --color-accent-purple:      #7C3AED;
+  --color-accent-purple-bg:   #F5F0FF;
+  --color-accent-purple-light:#E5DAFF;
+
+  --color-accent-green:       #006D34;
+  --color-accent-green-bg:    #E8F8EE;
+  --color-accent-green-light: #C8EDD5;
+
+  --color-accent-amber:       #D97706;
+  --color-accent-amber-bg:    #FFFBEB;
+  --color-accent-amber-light: #FEF3C7;
+  --color-accent-amber-subtle:#FFF5E0;
+
+  --color-accent-pink:        #DB2777;
+  --color-accent-pink-bg:     #FCE7F3;
+
+  /* ── Gradientes ─────────────────────────────────────────────────── */
+  --gradient-cta:            linear-gradient(180deg, #E0F0FF 0%, #FFF5E0 100%);
+  --gradient-footer:         linear-gradient(180deg, #C4DDFB 0%, #FFF5E0 100%);
+  --gradient-hero-overlay:   linear-gradient(to bottom right, rgba(255,255,254,0.4), transparent, rgba(255,255,254,0.5));
+  --gradient-button:         linear-gradient(to right, #2F75DC, #4B8FEA);
+  --gradient-avatar:         linear-gradient(135deg, #A04E2D, #C87A53);
+
+  /* ── Botones ────────────────────────────────────────────────────── */
+  --btn-primary-bg:          var(--color-primary);
+  --btn-primary-hover:       var(--color-primary-hover);
+  --btn-primary-text:        var(--color-white);
+  --btn-outline-border:      var(--color-primary);
+  --btn-outline-text:        var(--color-primary);
+  --btn-outline-hover-bg:    rgba(47, 117, 220, 0.1);
+  --btn-radius:              9999px; /* full round */
+  --btn-padding-y:           0.875rem;
+  --btn-padding-x:           1.75rem;
+  --btn-font-size:           1rem;
+  --btn-font-weight:         600;
+
+  /* ── Sombras ────────────────────────────────────────────────────── */
+  --shadow-card:             0 4px 20px -4px rgba(30, 41, 59, 0.12);
+  --shadow-card-hover:       0 12px 32px -8px rgba(30, 41, 59, 0.18);
+  --shadow-navbar:           0 8px 30px -4px rgba(0, 0, 0, 0.1);
+  --shadow-speech-bubble:    0 4px 20px -2px rgba(30, 41, 59, 0.15);
+  --shadow-pet:              drop-shadow(0 24px 40px rgba(30, 41, 59, 0.18));
+
+  /* ── Tipografía ─────────────────────────────────────────────────── */
+  --font-display:            "Plus Jakarta Sans", "Inter", system-ui, sans-serif;
+  --font-sans:               "Inter", system-ui, sans-serif;
+  --font-heading-weight:     700;
+  --font-heading-spacing:    -0.02em;
+  --font-body-weight:        400;
+
+  /* ── Bordes ─────────────────────────────────────────────────────── */
+  --radius-sm:               0.5rem;
+  --radius-md:               0.75rem;
+  --radius-lg:               1rem;
+  --radius-xl:               1.5rem;
+  --radius-full:             9999px;
+
+  /* ── Espaciado ──────────────────────────────────────────────────── */
+  --section-gap-mobile:      3rem;
+  --section-gap-desktop:     5rem;
+  --content-max-width:       1650px;
+  --content-padding-mobile:  1.5rem;
+  --content-padding-tablet:  3rem;
+  --content-padding-desktop: 5rem;
+}
+
+/* ── Estilos base ─────────────────────────────────────────────────── */
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background-color: var(--color-page-bg);
+  color: var(--color-body);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ── Botones reutilizables ────────────────────────────────────────── */
+
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: var(--btn-radius);
+  background-color: var(--btn-primary-bg);
+  color: var(--btn-primary-text);
+  font-size: var(--btn-font-size);
+  font-weight: var(--btn-font-weight);
+  padding: var(--btn-padding-y) var(--btn-padding-x);
+  box-shadow: 0 4px 14px -2px rgba(47, 117, 220, 0.35);
+  transition: all 0.2s ease;
+  text-decoration: none;
+}
+
+.btn-primary:hover {
+  background-color: var(--btn-primary-hover);
+  box-shadow: 0 6px 20px -2px rgba(47, 117, 220, 0.45);
+}
+
+.btn-outline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: var(--btn-radius);
+  background-color: var(--color-white);
+  color: var(--btn-outline-text);
+  font-size: var(--btn-font-size);
+  font-weight: var(--btn-font-weight);
+  padding: var(--btn-padding-y) var(--btn-padding-x);
+  box-shadow: inset 0 0 0 1px var(--btn-outline-border);
+  transition: all 0.2s ease;
+  text-decoration: none;
+}
+
+.btn-outline:hover {
+  background-color: var(--btn-outline-hover-bg);
+}
+
+/* ── Cards ────────────────────────────────────────────────────────── */
+
+.card-feature {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1.5rem 1rem;
+  border-radius: var(--radius-xl);
+  background-color: var(--color-white);
+  box-shadow: var(--shadow-card);
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card-feature:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-card-hover);
+}
+
+/* ── Layout utilities ─────────────────────────────────────────────── */
+
+.section-container {
+  width: 100%;
+  max-width: var(--content-max-width);
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: var(--content-padding-mobile);
+  padding-right: var(--content-padding-mobile);
+}
+
+@media (min-width: 768px) {
+  .section-container {
+    padding-left: var(--content-padding-tablet);
+    padding-right: var(--content-padding-tablet);
+  }
+}
+
+@media (min-width: 1024px) {
+  .section-container {
+    padding-left: var(--content-padding-desktop);
+    padding-right: var(--content-padding-desktop);
+  }
+}
+
+.section-gap {
+  margin-top: var(--section-gap-mobile);
+}
+
+@media (min-width: 768px) {
+  .section-gap {
+    margin-top: var(--section-gap-desktop);
+  }
+}
+
+/* ── Tipografía ───────────────────────────────────────────────────── */
+
+.heading-1 {
+  font-family: var(--font-display);
+  font-weight: var(--font-heading-weight);
+  color: var(--color-heading);
+  letter-spacing: var(--font-heading-spacing);
+  line-height: 1.1;
+}
+
+.heading-2 {
+  font-family: var(--font-display);
+  font-weight: var(--font-heading-weight);
+  color: var(--color-heading);
+  letter-spacing: var(--font-heading-spacing);
+}
+
+.body-text {
+  font-family: var(--font-sans);
+  color: var(--color-body);
+  line-height: 1.6;
+}
