@@ -10,19 +10,19 @@
   <strong>Objetivo:</strong> Inicializar ambos proyectos, base de datos, autenticación y armado del esqueleto base.
 </div>
 
-| Área         | Actividad                                                        | Responsable          | Estado                                                                        |
-| ------------ | ---------------------------------------------------------------- | -------------------- | ----------------------------------------------------------------------------- |
+| Área         | Actividad                                                        | Responsable          | Estado                                                                          |
+| ------------ | ---------------------------------------------------------------- | -------------------- | ------------------------------------------------------------------------------- |
 | **Backend**  | Inicializar proyecto Python con FastAPI + estructura de carpetas | Backend lead - Ariel | ![Completada](https://img.shields.io/badge/Completada-00AA00?style=flat-square) |
-| **Backend**  | Configurar base de datos (migraciones)    | Backend              | ![Completada](https://img.shields.io/badge/Completada-00AA00?style=flat-square) |
+| **Backend**  | Configurar base de datos (migraciones)                           | Backend              | ![Completada](https://img.shields.io/badge/Completada-00AA00?style=flat-square) |
 | **Backend**  | Crear modelos de Usuario (datos personales + profesionales)      | Backend              | ![Completada](https://img.shields.io/badge/Completada-00AA00?style=flat-square) |
 | **Backend**  | Endpoint POST /auth/register — registro de usuario               | Backend              | ![Completada](https://img.shields.io/badge/Completada-00AA00?style=flat-square) |
 | **Backend**  | Endpoint POST /auth/login — login con JWT                        | Backend              | ![Completada](https://img.shields.io/badge/Completada-00AA00?style=flat-square) |
 | **Backend**  | Middleware de autenticación y protección de rutas                | Backend              | ![Completada](https://img.shields.io/badge/Completada-00AA00?style=flat-square) |
 | **Backend**  | Configurar manejador de errores y códigos de status HTTP         | Backend              | ![Completada](https://img.shields.io/badge/Completada-00AA00?style=flat-square) |
-| **Backend**  | Endpoint GET /usuarios/me — perfil del usuario logueado          | Backend              | ![Pendiente](https://img.shields.io/badge/Pendiente-FF4444?style=flat-square) |
-| **Frontend** | Inicializar proyecto (React)               | Frontend             | ![Completada](https://img.shields.io/badge/Completada-00AA00?style=flat-square) |
+| **Backend**  | Endpoint GET /usuarios/me — perfil del usuario logueado          | Backend              | ![Pendiente](https://img.shields.io/badge/Pendiente-FF4444?style=flat-square)   |
+| **Frontend** | Inicializar proyecto (React)                                     | Frontend             | ![Completada](https://img.shields.io/badge/Completada-00AA00?style=flat-square) |
 | **Frontend** | Crear prototipo navegable (mockups sin diseño final)             | Frontend             | ![Completada](https://img.shields.io/badge/Completada-00AA00?style=flat-square) |
-| **Frontend** | Pantalla de login y registro (sin conectar aún)                  | Frontend             | ![Completada](https://img.shields.io/badge/Completada-00AA00?style=flat-square) |
+| **Frontend** | Pantalla de login y registro (sin conectar aún)                  | Frontend             | ![Pendiente](https://img.shields.io/badge/Pendiente-FF4444?style=flat-square)   |
 | **Frontend** | Configurar manejo de estado global y router                      | Frontend             | ![Completada](https://img.shields.io/badge/Completada-00AA00?style=flat-square) |
 | **Frontend** | Configurar cliente HTTP para consumir API                        | Frontend             | ![Completada](https://img.shields.io/badge/Completada-00AA00?style=flat-square) |
 | **Equipo**   | Definir contrato de integración (request/response)               | Todo el equipo       | ![Completada](https://img.shields.io/badge/Completada-00AA00?style=flat-square) |
