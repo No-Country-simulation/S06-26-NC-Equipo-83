@@ -59,16 +59,16 @@ export const INTEREST_AREAS = [
 
 // Tecnologías predefinidas (~50 opciones — multiselect + creatable)
 export const PREDEFINED_TECHNOLOGIES = [
-  "JavaScript", "TypeScript", "Python", "Java", "C#", "C++", "Go", "Rust",
-  "Ruby", "PHP", "Kotlin", "Swift", "Dart", "Scala", "R", "SQL",
-  "React", "Angular", "Vue.js", "Svelte", "Next.js", "Nuxt",
-  "Django", "Flask", "FastAPI", "Spring Boot", ".NET",
-  "Express", "NestJS", "Laravel", "Ruby on Rails",
-  "Flutter", "React Native", "Electron",
-  "PostgreSQL", "MySQL", "MongoDB", "Redis", "SQLite",
-  "Firebase", "DynamoDB", "Elasticsearch",
-  "Docker", "Kubernetes", "AWS", "Azure", "GCP",
-  "Terraform", "Ansible", "CI/CD", "Linux", "Git",
-  "Figma", "Jira", "Notion", "GraphQL", "REST API",
-  "Webpack", "Vite", "Tailwind CSS", "Sass",
+  "frontend", "backend", "mobile", "fullstack",
+  "react", "angular", "vue", "svelte", "nextjs",
+  "javascript", "typescript",
+  "node", "java", "python", "csharp", "kotlin", "swift",
+  "rust", "php", "ruby", "go", "dart", "scala", "cpp", "r",
+  "sql", "nosql", "database",
+  "api", "rest", "graphql",
+  "css", "uiux",
+  "git", "linux", "docker", "kubernetes",
+  "devops", "cloud", "cicd", "testing", "security",
+  "ai", "data_science", "blockchain", "game_development",
+  "product_management", "iot"
 ];
