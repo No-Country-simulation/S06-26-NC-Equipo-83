@@ -7,6 +7,8 @@ import { MentalHealthPage } from '../modules/mental-health/mentalHealthPage';
 import { OrientationPage } from '../modules/orientation/orientationPage';
 import { UserProfilePage } from '../modules/profile/userProfilePage';
 import { MentorshipPage } from '../modules/mentorship/mentorshipPage';
+import { ExperienciasPage } from '../modules/experiencias/experienciasPage';
+import { CreateEventPage } from '../modules/experiencias/createEventPage';
 
 export const Layout = () => {
     //const isAuthenticated = true;
@@ -25,6 +27,8 @@ export const Layout = () => {
                     <Route path="mental-health" element={<MentalHealthPage />} />
                     <Route path="orientation" element={<OrientationPage />} />
                     <Route path="mentorship" element={<MentorshipPage />} />
+                    <Route path="experiencias" element={<ExperienciasPage />} />
+                    <Route path="experiencias/crear" element={<CreateEventPage />} />
                     <Route path="*" element={<Navigate to="dashboard" replace />} />
                 </Routes>
             </main>

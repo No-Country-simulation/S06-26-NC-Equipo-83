@@ -146,3 +146,94 @@ export interface SaludResponse {
   alerta: boolean;
   created_at: string;
 }
+
+// ── Eventos (comunidad) ────────────────────────────────────────────────────
+
+export interface EventCreateRequest {
+  title: string;
+  description?: string | null;
+  tipo: string;
+  categoria: string;
+  event_date?: string | null;
+  cluster?: string | null;
+  location?: string | null;
+  address?: string | null;
+  meeting_url?: string | null;
+  max_participants?: number | null;
+}
+
+export interface EventResponse {
+  id: string;
+  title: string;
+  description?: string | null;
+  tipo: string;
+  categoria: string;
+  event_date?: string | null;
+  created_by: string;
+  jitsi_room: string;
+  meeting_url?: string | null;
+  is_live: boolean;
+  cluster?: string | null;
+  location?: string | null;
+  address?: string | null;
+  max_participants?: number | null;
+  created_at: string;
+}
+
+export interface EventListResponse {
+  eventos: EventResponse[];
+  total: number;
+}
+
+export interface ExperienciasRequest {
+  lat: number;
+  lng: number;
+  hora_actual: string;
+  edad?: number;
+  area?: string;
+  objetivo?: string;
+}
+
+export interface CoberturaInfo {
+  calidad: string;
+  drop_pct: number;
+  congestion: number;
+  n_usuarios: number;
+  periodo: string;
+}
+
+export interface EventoCercano {
+  titulo: string;
+  tipo: string;
+  cluster: string;
+  lat: number;
+  lon: number;
+  asistentes_estimados: number;
+  categoria: string;
+  edad_recomendada: string;
+  url?: string | null;
+  meeting_url?: string | null;
+}
+
+export interface DestinoPopular {
+  cluster: string;
+  municipio: string;
+  n_usuarios: number;
+  dist_km: number;
+  periodo_predominante: string;
+}
+
+export interface ContenidoOffline {
+  titulo: string;
+  tipo: string;
+  duracion: string;
+  descripcion: string;
+}
+
+export interface ExperienciasResponse {
+  cluster_cercano: string;
+  cobertura: CoberturaInfo;
+  eventos_cercanos: EventoCercano[];
+  destinos_populares: DestinoPopular[];
+  contenido_offline: ContenidoOffline[];
+}

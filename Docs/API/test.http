@@ -1,55 +1,88 @@
-@HttpFiles_HotAddress = https://rickandmortyapi.com/api
+@baseUrl = http://localhost:8000
 
 ### ===============================
-### 
+### Health check
 ### ===============================
-
-GET {{HttpFiles_HotAddress}}
-
-### ===============================
-### Get all characters
-### ===============================
-GET {{HttpFiles_HotAddress}}/character
+GET {{baseUrl}}/health
 
 ### ===============================
-### Get a single character
+### Registro de usuario
 ### ===============================
-GET {{HttpFiles_HotAddress}}/character/10
+POST {{baseUrl}}/auth/register
+Content-Type: application/json
+
+{
+    "email": "test@example.com",
+    "password": "Test1234!",
+    "full_name": "Test User",
+    "birth_date": "1990-01-01",
+    "gender": "otro",
+    "education_level": "universitario",
+    "continent_code": "SA",
+    "continent_name": "Sudamérica",
+    "country_code": "BR",
+    "country_name": "Brasil",
+    "state_code": "SC",
+    "state_name": "Santa Catarina",
+    "city_name": "Florianópolis",
+    "whatsapp_e164": "+5551987654321",
+    "language_code": "pt",
+    "current_situation": "estudiando",
+    "interest_areas": ["tecnologia", "educacion"],
+    "known_technologies": ["Python"],
+    "bio": "Test bio"
+}
 
 ### ===============================
-### Get multiple characters by id
+### Login
 ### ===============================
-GET {{HttpFiles_HotAddress}}/character/[1,2,3]
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+    "email": "test@example.com",
+    "password": "Test1234!"
+}
 
 ### ===============================
-### Get all locations
+### Crear evento comunitario
 ### ===============================
-GET {{HttpFiles_HotAddress}}/location
-### ===============================
-### Get a single location
-### ===============================
-GET {{HttpFiles_HotAddress}}/location/1
-### ===============================
-### Get multiple locations by id
-### ===============================
-GET {{HttpFiles_HotAddress}}/location/[1,2,3]
+POST {{baseUrl}}/events
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "title": "Charla: Cómo entrar a tecnología desde cero",
+    "description": "Conversatorio sobre el camino para migrar a IT sin título formal.",
+    "tipo": "online",
+    "categoria": "carrera",
+    "event_date": "2025-12-20T19:00:00Z",
+    "max_participants": 50
+}
 
 ### ===============================
-### Get all episodes
+### Listar eventos
 ### ===============================
-GET {{HttpFiles_HotAddress}}/episode
-### ===============================
-### Get a single episode
-### ===============================
-GET {{HttpFiles_HotAddress}}/episode/1
-### ===============================
-### Get multiple episodes by id
-### ===============================
-GET {{HttpFiles_HotAddress}}/episode/[1,2,3]
-
+GET {{baseUrl}}/events
+Authorization: Bearer {{token}}
 
 ### ===============================
-### Get Page 2 of characters
+### Obtener evento por ID
 ### ===============================
+GET {{baseUrl}}/events/<REEMPLAZAR_CON_ID>
+Authorization: Bearer {{token}}
 
-GET {{HttpFiles_HotAddress}}/character?page=4
+### ===============================
+### Experiencias (requiere ubicación)
+### ===============================
+POST {{baseUrl}}/experiencias
+Content-Type: application/json
+
+{
+    "lat": -27.595,
+    "lng": -48.548,
+    "hora_actual": "TARDE",
+    "edad": 25,
+    "area": "desarrollo",
+    "objetivo": "crecimiento"
+}

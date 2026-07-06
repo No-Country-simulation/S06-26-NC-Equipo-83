@@ -8,6 +8,7 @@ from app.core.config import settings
 # ---------------------------------------------------------------------------
 import app.models.user  # noqa: F401 — registra User en SQLModel.metadata
 import app.models.mental_health  # noqa: F401 — registra MentalHealthLog
+import app.models.event  # noqa: F401 — registra Event en SQLModel.metadata
 
 
 # ---------------------------------------------------------------------------

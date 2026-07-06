@@ -113,3 +113,5 @@ docker-compose.override.yml
 # Artefactos de build de datos geográficos (GeoNames)
 frontend/scripts/*.txt
 frontend/scripts/*.zip
+EXPERIENCIAS_ESTRUCTURANTES/*
+backend/data/*
