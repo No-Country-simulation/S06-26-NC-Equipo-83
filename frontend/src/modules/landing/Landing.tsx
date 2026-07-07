@@ -148,9 +148,9 @@ export default function Landing() {
 
         {/* Contenido */}
         <div className="relative z-10 mx-auto flex h-full max-w-[1650px] items-center px-6 pb-[15%] pt-16 md:px-12 md:py-0 lg:px-20">
-          <div className="grid w-full grid-cols-1 items-center gap-8 md:grid-cols-2">
+          <div className="grid w-full grid-cols-1 items-center gap-8 min-[950px]:grid-cols-2">
             {/* Columna derecha (arriba en mobile): ave volando */}
-            <div className="relative hidden h-full items-center justify-center md:order-2 md:flex md:justify-end">
+            <div className="relative hidden h-full items-center justify-center min-[950px]:order-2 min-[950px]:flex min-[950px]:justify-end">
               <motion.div
                 initial={{ x: "120vw", opacity: 0 }}
                 animate={{ x: 0, opacity: 1 }}
@@ -182,10 +182,10 @@ export default function Landing() {
               transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1], delay: 0.2 }}
               className="w-full md:order-1"
             >
-              <h1 className="font-display font-bold leading-[1.1] tracking-tight text-4xl md:text-6xl lg:text-[64px]" style={{ color: "#002F68", letterSpacing: "-0.02em" }}>
+              <h1 className="font-display font-bold leading-[1.1] tracking-tight text-4xl md:text-5xl min-[1110px]:text-[64px]" style={{ color: "#002F68", letterSpacing: "-0.02em" }}>
                 Cada pequeño paso te acerca a tu <span style={{ color: "#2F75DC" }}>futuro</span>.
               </h1>
-              <p className="mt-8 font-sans leading-[1.6] text-base md:text-xl" style={{ color: "#002F68" }}>
+              <p className="mt-8 font-sans leading-[1.6] text-base md:text-lg min-[1100px]:text-xl" style={{ color: "#002F68" }}>
                 Te acompañamos con aprendizaje, mentorías, oportunidades y
                 bienestar para que crezcas a tu ritmo.
               </p>
@@ -269,13 +269,13 @@ export default function Landing() {
                   <feature.icon className="h-8 w-8 sm:h-10 sm:w-10 md:h-12 md:w-12" style={{ color: feature.color }} />
                 </div>
                 <h3
-                  className="font-display text-xl font-bold"
+                  className="font-display text-base font-bold sm:text-lg md:text-xl lg:text-base min-[1350px]:text-xl"
                   style={{ color: "#002F68" }}
                 >
                   {feature.title}
                 </h3>
                 <p
-                  className="mt-3 max-w-[20ch] font-sans leading-relaxed text-baseext-sm"
+                  className="mt-3 max-w-[20ch] font-sans text-xs leading-relaxed sm:text-sm md:text-base lg:text-xs min-[1350px]:text-base"
                   style={{ color: "#424753" }}
                 >
                   {feature.description}
@@ -297,7 +297,7 @@ export default function Landing() {
           className="mx-auto max-w-[1650px] px-6 md:px-12 lg:px-20"
         >
           <div className="sobre-bit-container">
-            <div className="grid h-full grid-cols-1 min-[1000px]:grid-cols-2" style={{ gap: "clamp(0.5rem, 2cqi, 2rem)" }}>
+            <div className="grid h-full grid-cols-1 min-[1000px]:grid-cols-2 sobre-bit-grid">
               {/* Columna 1: No estás solo */}
               <div className={`flex ${isMobile ? 'aspect-[18/16]' : 'aspect-video'} flex-col overflow-hidden rounded-3xl sb-dialog-bubble`} style={{ backgroundColor: "#F5F0FF" }}>
                 {isMobile ? (
@@ -369,8 +369,8 @@ export default function Landing() {
               </div>
 
               {/* Columna 2: Testimonios */}
-              <div className={`flex ${isMobile ? 'aspect-[18/16]' : 'aspect-video'} flex-col rounded-3xl sb-testimonial-col`} style={{ backgroundColor: "#FFFBEB" }}>
-                <div className="flex-1">
+              <div className="flex aspect-video flex-col rounded-3xl sb-testimonial-col" style={{ backgroundColor: "#FFFBEB" }}>
+                <div className="flex-1 flex items-center">
                   <AnimatePresence mode="wait">
                     <motion.div
                       key={currentTestimonial}
@@ -429,7 +429,7 @@ export default function Landing() {
           transition={{ duration: 0.6 }}
           className="mx-auto max-w-[1650px] px-6 md:px-12 lg:px-20"
         >
-          <div className="rounded-3xl bg-[#EBF3FF] px-6 py-4 md:px-12 md:py-6">
+          <div className="rounded-3xl bg-[#EBF3FF] px-6 py-4 md:px-4 md:py-6 min-[836px]:px-12">
             <h2
               className="font-display text-center text-xl font-bold md:text-2xl lg:text-3xl"
               style={{ color: "#002F68", letterSpacing: "-0.02em" }}
@@ -445,11 +445,11 @@ export default function Landing() {
               className="mx-auto mt-8 flex w-full flex-col items-center gap-6 md:flex-row md:justify-between md:gap-0"
             >
               <motion.div variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.4 } } }} className="flex flex-col items-center">
-                <div className="flex h-16 w-16 items-center justify-center rounded-full sm:h-20 sm:w-20 bg-[#E5DAFF]">
-                  <User className="h-8 w-8 sm:h-10 sm:w-10 text-[#7C3AED]" />
+                <div className="flex h-10 w-10 items-center justify-center rounded-full sm:h-12 sm:w-12 md:h-14 md:w-14 lg:h-20 lg:w-20 bg-[#E5DAFF]">
+                  <User className="h-5 w-5 sm:h-6 sm:w-6 md:h-7 md:w-7 lg:h-10 lg:w-10 text-[#7C3AED]" />
                 </div>
-                <span className="mt-3 w-24 text-center font-display text-sm font-bold md:text-base" style={{ color: "#002F68" }}>
-                  Crea tu perfil
+                <span className="mt-3 block w-24 text-center font-display text-sm font-bold sm:text-sm md:text-xs lg:text-base min-h-[1.75rem]" style={{ color: "#002F68" }}>
+                  Crea tu<br />perfil
                 </span>
               </motion.div>
               <motion.div variants={{ hidden: { opacity: 0 }, visible: { opacity: 1, transition: { duration: 0.4 } } }} className="hidden md:flex md:h-16 md:flex-1 md:items-center">
@@ -466,11 +466,11 @@ export default function Landing() {
               </motion.div>
 
               <motion.div variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.4 } } }} className="flex flex-col items-center">
-                <div className="flex h-16 w-16 items-center justify-center rounded-full sm:h-20 sm:w-20 bg-[#C8EDD5]">
-                  <Compass className="h-8 w-8 sm:h-10 sm:w-10 text-[#006D34]" />
+                <div className="flex h-10 w-10 items-center justify-center rounded-full sm:h-12 sm:w-12 md:h-14 md:w-14 lg:h-20 lg:w-20 bg-[#C8EDD5]">
+                  <Compass className="h-5 w-5 sm:h-6 sm:w-6 md:h-7 md:w-7 lg:h-10 lg:w-10 text-[#006D34]" />
                 </div>
-                <span className="mt-3 w-28 text-center font-display text-sm font-bold md:text-base" style={{ color: "#002F68" }}>
-                  Descubre tu camino
+                <span className="mt-3 block w-28 text-center font-display text-sm font-bold sm:text-sm md:text-xs lg:text-base min-h-[1.75rem]" style={{ color: "#002F68" }}>
+                  Descubre tu<br />camino
                 </span>
               </motion.div>
               <motion.div variants={{ hidden: { opacity: 0 }, visible: { opacity: 1, transition: { duration: 0.4 } } }} className="hidden md:flex md:h-16 md:flex-1 md:items-center">
@@ -487,11 +487,11 @@ export default function Landing() {
               </motion.div>
 
               <motion.div variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.4 } } }} className="flex flex-col items-center">
-                <div className="flex h-16 w-16 items-center justify-center rounded-full sm:h-20 sm:w-20 bg-[#C4DDFB]">
-                  <BookOpen className="h-8 w-8 sm:h-10 sm:w-10 text-[#2F75DC]" />
+                <div className="flex h-10 w-10 items-center justify-center rounded-full sm:h-12 sm:w-12 md:h-14 md:w-14 lg:h-20 lg:w-20 bg-[#C4DDFB]">
+                  <BookOpen className="h-5 w-5 sm:h-6 sm:w-6 md:h-7 md:w-7 lg:h-10 lg:w-10 text-[#2F75DC]" />
                 </div>
-                <span className="mt-3 w-28 text-center font-display text-sm font-bold md:text-base" style={{ color: "#002F68" }}>
-                  Aprende y desarrolla
+                <span className="mt-3 block w-28 text-center font-display text-sm font-bold sm:text-sm md:text-xs lg:text-base min-h-[1.75rem]" style={{ color: "#002F68" }}>
+                  Aprende y<br />desarrolla
                 </span>
               </motion.div>
               <motion.div variants={{ hidden: { opacity: 0 }, visible: { opacity: 1, transition: { duration: 0.4 } } }} className="hidden md:flex md:h-16 md:flex-1 md:items-center">
@@ -508,11 +508,11 @@ export default function Landing() {
               </motion.div>
 
               <motion.div variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.4 } } }} className="flex flex-col items-center">
-                <div className="flex h-16 w-16 items-center justify-center rounded-full sm:h-20 sm:w-20 bg-[#FDE68A]">
-                  <MessageCircle className="h-8 w-8 sm:h-10 sm:w-10 text-[#D97706]" />
+                <div className="flex h-10 w-10 items-center justify-center rounded-full sm:h-12 sm:w-12 md:h-14 md:w-14 lg:h-20 lg:w-20 bg-[#FDE68A]">
+                  <MessageCircle className="h-5 w-5 sm:h-6 sm:w-6 md:h-7 md:w-7 lg:h-10 lg:w-10 text-[#D97706]" />
                 </div>
-                <span className="mt-3 w-28 text-center font-display text-sm font-bold md:text-base" style={{ color: "#002F68" }}>
-                  Conecta con mentores
+                <span className="mt-3 block w-28 text-center font-display text-sm font-bold sm:text-sm md:text-xs lg:text-base min-h-[1.75rem]" style={{ color: "#002F68" }}>
+                  Conecta con<br />mentores
                 </span>
               </motion.div>
               <motion.div variants={{ hidden: { opacity: 0 }, visible: { opacity: 1, transition: { duration: 0.4 } } }} className="hidden md:flex md:h-16 md:flex-1 md:items-center">
@@ -529,11 +529,11 @@ export default function Landing() {
               </motion.div>
 
               <motion.div variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.4 } } }} className="flex flex-col items-center">
-                <div className="flex h-16 w-16 items-center justify-center rounded-full sm:h-20 sm:w-20 bg-[#C4DDFB]">
-                  <Briefcase className="h-8 w-8 sm:h-10 sm:w-10 text-[#2F75DC]" />
+                <div className="flex h-10 w-10 items-center justify-center rounded-full sm:h-12 sm:w-12 md:h-14 md:w-14 lg:h-20 lg:w-20 bg-[#C4DDFB]">
+                  <Briefcase className="h-5 w-5 sm:h-6 sm:w-6 md:h-7 md:w-7 lg:h-10 lg:w-10 text-[#2F75DC]" />
                 </div>
-                <span className="mt-3 w-24 text-center font-display text-sm font-bold md:text-base" style={{ color: "#002F68" }}>
-                  Aplica a trabajos
+                <span className="mt-3 block w-24 text-center font-display text-sm font-bold sm:text-sm md:text-xs lg:text-base min-h-[1.75rem]" style={{ color: "#002F68" }}>
+                  Aplica a<br />trabajos
                 </span>
               </motion.div>
               <motion.div variants={{ hidden: { opacity: 0 }, visible: { opacity: 1, transition: { duration: 0.4 } } }} className="hidden md:flex md:h-16 md:flex-1 md:items-center">
@@ -550,11 +550,11 @@ export default function Landing() {
               </motion.div>
 
               <motion.div variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.4 } } }} className="flex flex-col items-center">
-                <div className="flex h-16 w-16 items-center justify-center rounded-full sm:h-20 sm:w-20 bg-[#C8EDD5]">
-                  <Trophy className="h-8 w-8 sm:h-10 sm:w-10 text-[#006D34]" />
+                <div className="flex h-10 w-10 items-center justify-center rounded-full sm:h-12 sm:w-12 md:h-14 md:w-14 lg:h-20 lg:w-20 bg-[#C8EDD5]">
+                  <Trophy className="h-5 w-5 sm:h-6 sm:w-6 md:h-7 md:w-7 lg:h-10 lg:w-10 text-[#006D34]" />
                 </div>
-                <span className="mt-3 w-28 text-center font-display text-sm font-bold md:text-base" style={{ color: "#002F68" }}>
-                  Celebra tus logros
+                <span className="mt-3 block w-28 text-center font-display text-sm font-bold sm:text-sm md:text-xs lg:text-base min-h-[1.75rem]" style={{ color: "#002F68" }}>
+                  Celebra tus<br />logros
                 </span>
               </motion.div>
             </motion.div>
@@ -582,7 +582,7 @@ export default function Landing() {
             <motion.img
               src="/pet-3.webp"
               alt="Mascota BiT"
-              className="h-auto w-[320px] object-contain lg:w-[400px]"
+              className="h-auto w-[160px] object-contain sm:w-[200px] md:w-[260px] lg:w-[320px] min-[1261px]:w-[400px]"
               whileHover={{ rotate: -6, scale: 1.05 }}
               transition={{ type: "spring", stiffness: 200, damping: 15 }}
             />
@@ -590,20 +590,20 @@ export default function Landing() {
 
           <div className="flex flex-col items-center text-center md:items-start md:text-left">
             <h2
-              className="font-display font-bold text-3xl md:text-4xl lg:text-5xl"
+              className="font-display font-bold text-2xl sm:text-3xl md:text-4xl lg:text-4xl min-[1261px]:text-5xl"
               style={{ color: "#002F68", letterSpacing: "-0.02em" }}
             >
               Tu camino empieza ahora.
             </h2>
             <p
-              className="mt-4 max-w-md leading-relaxed text-base md:text-lg"
+              className="mt-4 max-w-md leading-relaxed text-sm sm:text-base md:text-base min-[1261px]:text-lg"
               style={{ color: "#424753" }}
             >
               ¿Qué estás esperando? Comienza ahora y descubre todo lo que tenemos preparado para ti.
             </p>
             <a
               href="/register"
-              className="mt-6 inline-flex items-center justify-center gap-2 rounded-full bg-[#2F75DC] px-8 py-3.5 text-base font-semibold text-white shadow-ambient transition-all hover:bg-[#004A9E] hover:shadow-ambient-lg"
+              className="mt-6 inline-flex items-center justify-center gap-2 rounded-full bg-[#2F75DC] px-8 py-3.5 text-sm font-semibold text-white shadow-ambient transition-all hover:bg-[#004A9E] hover:shadow-ambient-lg sm:text-base"
             >
               Comenzar mi camino
               <ArrowRight className="h-5 w-5" />
