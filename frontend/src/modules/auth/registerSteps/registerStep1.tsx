@@ -8,6 +8,7 @@ import { authService } from "../../../services/authService";
 const REQ_MIN_8 = /^.{8,}$/;
 const REQ_UPPER = /[A-Z]/;
 const REQ_NUMBER = /[0-9]/;
+const REQ_SPECIAL = /[\p{P}\p{S}]/u;
 
 function computeDateRange() {
   const today = new Date();
@@ -32,7 +33,7 @@ interface RegisterStep1Props {
 
 function ReqLine({ met, label }: { met: boolean; label: string }) {
   return (
-    <span className={`text-xs ${met ? "text-[#99462A]" : "text-stone-400"}`}>
+    <span className={`text-xs ${met ? "text-[var(--color-primary)]" : "text-stone-400"}`}>
       {met ? "\u2713" : "\u25CB"} {label}
     </span>
   );
@@ -49,7 +50,7 @@ export default function RegisterStep1({
 }: RegisterStep1Props) {
   const { min: birthMin, max: birthMax } = computeDateRange();
   return (
-    <div className="space-y-6">
+    <div className="space-y-3">
       <Input
         id="fullName"
         label="Nombre completo"
@@ -100,6 +101,7 @@ export default function RegisterStep1({
           <ReqLine met={REQ_MIN_8.test(password ?? "")} label="Mínimo 8 caracteres" />
           <ReqLine met={REQ_UPPER.test(password ?? "")} label="Al menos 1 mayúscula" />
           <ReqLine met={REQ_NUMBER.test(password ?? "")} label="Al menos 1 número" />
+          <ReqLine met={REQ_SPECIAL.test(password ?? "")} label="Al menos 1 símbolo" />
         </div>
       </div>
 
@@ -125,7 +127,7 @@ export default function RegisterStep1({
         </p>
       )}
 
-      <div className="grid gap-6 md:grid-cols-2">
+      <div className="grid gap-3 md:grid-cols-2">
         <DateInput
           id="birthDate"
           label="Fecha de nacimiento"

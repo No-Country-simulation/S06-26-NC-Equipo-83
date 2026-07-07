@@ -65,7 +65,7 @@ export default function RegisterStep3({ form }: RegisterStep3Props) {
   const bio = watch("bio") ?? "";
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-3">
       {/* ── Situación actual ──────────────────────────────────────────── */}
       <Controller
         name="currentSituation"
@@ -269,8 +269,8 @@ export default function RegisterStep3({ form }: RegisterStep3Props) {
           render={({ field }) => (
             <textarea
               id="bio"
-              className="w-full min-h-[100px] rounded-xl border border-stone-200 bg-stone-50 px-4 py-3 text-sm text-stone-800 placeholder:text-stone-400
-              focus:outline-none focus:ring-2 focus:ring-[#99462A]/30 focus:border-[#99462A]/40
+              className="w-full min-h-[80px] rounded-xl border border-stone-200 bg-stone-50 px-4 py-3 text-sm text-stone-800 placeholder:text-stone-400
+              focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]/30 focus:border-[var(--color-primary)]/40
               disabled:opacity-50 disabled:cursor-not-allowed
               resize-none"
               placeholder="Describí brevemente tu experiencia, tus intereses y qué te motiva..."
@@ -283,12 +283,6 @@ export default function RegisterStep3({ form }: RegisterStep3Props) {
         {errors.bio && (
           <p className="text-xs text-red-600 font-medium">{errors.bio.message}</p>
         )}
-      </div>
-
-      {/* ── Nota ──────────────────────────────────────────────────────── */}
-      <div className="rounded-xl bg-stone-100 p-4 text-sm text-stone-600">
-        Tus respuestas nos ayudarán a personalizar recomendaciones,
-        mentorías y oportunidades acordes a tu perfil profesional.
       </div>
     </div>
   );
