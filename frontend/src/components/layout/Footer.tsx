@@ -67,7 +67,7 @@ export default function Footer() {
             </p>
             <Link
               to="/register"
-              onClick={() => window.scrollTo({ top: 0, behavior: "instant" as ScrollBehavior })}
+              onClick={() => window.scrollTo(0, 0)}
               className="mt-4 inline-flex items-center gap-2 text-sm font-semibold transition-colors hover:underline"
               style={{ color: "#2F75DC" }}
             >
