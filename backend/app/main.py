@@ -10,7 +10,10 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.routers import auth
 from app.routers import salud
 from app.routers import orientar
-
+from app.routers import experiencias
+from app.routers import events
+from fastapi.exceptions import RequestValidationError
+from fastapi.responses import JSONResponse
 # ---------------------------------------------------------------------------
 # Application metadata
 # ---------------------------------------------------------------------------
