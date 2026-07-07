@@ -70,6 +70,7 @@ export default function Landing() {
   const [displayedSubtitle, setDisplayedSubtitle] = useState("");
   const [sectionVisible, setSectionVisible] = useState(false);
   const [isDesktop, setIsDesktop] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
   const fullTitle = "¡Craa! Soy BiT";
   const fullSubtitle = "Voy a acompañarte durante todo el camino para ayudarte a alcanzar tus objetivos.";
@@ -78,6 +79,13 @@ export default function Landing() {
 
   useEffect(() => {
     const check = () => setIsDesktop(window.innerWidth >= 768);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth <= 477);
     check();
     window.addEventListener("resize", check);
     return () => window.removeEventListener("resize", check);
@@ -288,152 +296,124 @@ export default function Landing() {
           transition={{ duration: 0.6 }}
           className="mx-auto max-w-[1650px] px-6 md:px-12 lg:px-20"
         >
-          <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
-            {/* Columna 1: No estás solo */}
-            <div
-              className="relative flex min-h-[360px] flex-col items-center overflow-hidden rounded-3xl md:min-h-[440px] md:justify-center"
-              style={{ backgroundColor: "#F5F0FF" }}
-            >
-              {/* Mobile layout: diálogo → pet → badge */}
-              <div className="relative flex w-full flex-col items-center px-6 pb-[270px] pt-4 sm:pb-[370px] md:hidden">
-                <div
-                  className="w-full rounded-2xl bg-white px-5 py-4"
-                  style={{ boxShadow: "0 4px 20px -2px rgba(30, 41, 59, 0.15)" }}
-                >
-                  <h2
-                    className="font-display text-xl font-bold"
-                    style={{ color: "#002F68", letterSpacing: "-0.02em" }}
-                  >
-                    {displayedTitle}
-                  </h2>
-                  <p
-                    className="mt-1 font-sans text-sm leading-relaxed"
-                    style={{ color: "#424753" }}
-                  >
-                    {displayedSubtitle}
-                  </p>
-                </div>
-                <img
-                  src="/pet-2.webp"
-                  alt="Mascota de apoyo"
-                  className="absolute bottom-0 left-0 h-[260px] w-auto object-contain sm:h-[360px]"
-                />
-                <div className="absolute bottom-6 left-6 right-6 flex justify-center">
-                  <div className="inline-flex items-center gap-3 rounded-2xl px-4 py-2"
-                  style={{ backgroundColor: "#E5DAFF" }}
-                >
-                  <Sparkles className="h-5 w-5 shrink-0" style={{ color: "#7C3AED" }} />
-                  <p className="text-left text-sm leading-relaxed" style={{ color: "#7C3AED" }}>
-                    BiT es un asistente de IA especializado en garantizar tu bienestar y ayudarte a cumplir tus metas.
-                  </p>
-                </div>
-                </div>
-              </div>
-
-              {/* Desktop layout: pet behind, diálogo + badge a la derecha */}
-              <div className="hidden md:flex md:h-full md:w-full">
-                <img
-                  src="/pet-2.webp"
-                  alt="Mascota de apoyo"
-                  className="absolute bottom-0 left-0 h-[90%] w-auto object-contain"
-                />
-                <div className="relative z-10 flex w-full flex-col justify-center px-8 py-4 md:ml-auto md:max-w-[55%] md:px-12 md:text-left">
-                  <div
-                    className="relative rounded-2xl bg-white px-5 py-4"
-                    style={{ boxShadow: "0 4px 20px -2px rgba(30, 41, 59, 0.15)" }}
-                  >
-                    <div
-                      className="absolute bottom-3 left-[-8px]"
-                      style={{
-                        width: 0,
-                        height: 0,
-                        borderTop: "8px solid transparent",
-                        borderBottom: "8px solid transparent",
-                        borderRight: "8px solid white",
-                      }}
-                    />
-                    <h2
-                      className="font-display text-xl font-bold md:text-2xl lg:text-3xl"
-                      style={{ color: "#002F68", letterSpacing: "-0.02em" }}
-                    >
-                      {displayedTitle}
-                    </h2>
-                    <p
-                      className="mt-1 font-sans leading-relaxed text-sm md:text-base"
-                      style={{ color: "#424753" }}
-                    >
-                      {displayedSubtitle}
-                    </p>
-                  </div>
-                  <div
-                    className="mt-6 inline-flex items-center gap-3 rounded-2xl px-4 py-2"
-                    style={{ backgroundColor: "#E5DAFF" }}
-                  >
-                    <Sparkles className="h-5 w-5 shrink-0" style={{ color: "#7C3AED" }} />
-                    <p className="text-left text-sm leading-relaxed" style={{ color: "#7C3AED" }}>
-                      BiT es un asistente de IA especializado en garantizar tu bienestar y ayudarte a cumplir tus metas.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Columna 2: Testimonios */}
-            <div className="flex h-full flex-col rounded-3xl px-6 py-6 sm:px-10 md:px-20 md:py-10" style={{ backgroundColor: "#FFFBEB" }}>
-              <div className="flex-1">
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={currentTestimonial}
-                  initial={{ opacity: 0, y: 12 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -12 }}
-                  transition={{ duration: 0.3 }}
-                  className="flex flex-col text-left"
-                >
-                  <Quote className="mb-3 h-6 w-6" style={{ color: "#D97706" }} />
-                  <p
-                    className="font-sans leading-relaxed italic text-base md:text-lg"
-                    style={{ color: "#002F68" }}
-                  >
-                    {testimonials[currentTestimonial].quote}
-                  </p>
-                  <div className="mt-6 flex items-center gap-4">
-                    <img
-                      src={`/${testimonials[currentTestimonial].avatar}`}
-                      alt={testimonials[currentTestimonial].name}
-                      className="h-16 w-16 rounded-full sm:h-20 sm:w-20"
-                    />
-                    <div className="text-left">
-                      <p
-                        className="font-display font-bold text-lgext-base"
-                        style={{ color: "#002F68" }}
-                      >
-                        {testimonials[currentTestimonial].name}, {testimonials[currentTestimonial].location}
-                      </p>
-                      <p className="leading-relaxed text-baseext-sm" style={{ color: "#424753" }}>
-                        {testimonials[currentTestimonial].role}
-                      </p>
+          <div className="sobre-bit-container">
+            <div className="grid h-full grid-cols-1 min-[1000px]:grid-cols-2" style={{ gap: "clamp(0.5rem, 2cqi, 2rem)" }}>
+              {/* Columna 1: No estás solo */}
+              <div className={`flex ${isMobile ? 'aspect-[18/16]' : 'aspect-video'} flex-col overflow-hidden rounded-3xl sb-dialog-bubble`} style={{ backgroundColor: "#F5F0FF" }}>
+                {isMobile ? (
+                  <div className="grid h-full w-full" style={{ gridTemplateRows: 'auto 1fr' }}>
+                    <div className="flex flex-col px-4 pt-4">
+                      <div className="relative rounded-2xl bg-white sb-dialog" style={{ boxShadow: "0 4px 20px -2px rgba(30, 41, 59, 0.15)" }}>
+                        <h2 className="font-display font-bold sb-title" style={{ color: "#002F68", letterSpacing: "-0.02em" }}>
+                          {displayedTitle}
+                        </h2>
+                        <p className="mt-1 font-sans leading-relaxed sb-body" style={{ color: "#424753" }}>
+                          {displayedSubtitle}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="relative">
+                      <img
+                        src="/pet-2.webp"
+                        alt="Mascota de apoyo"
+                        className="absolute bottom-0 left-0 h-full w-full object-contain object-left-bottom"
+                      />
+                      <div className="absolute bottom-0 left-0 right-0 px-4 pb-4">
+                        <div className="inline-flex items-center rounded-2xl sb-badge" style={{ backgroundColor: "#E5DAFF" }}>
+                          <Sparkles className="shrink-0" style={{ color: "#7C3AED", width: "clamp(0.875rem, 2.2cqi, 1.25rem)", height: "clamp(0.875rem, 2.2cqi, 1.25rem)" }} />
+                          <p className="text-left sb-body" style={{ color: "#7C3AED" }}>
+                            BiT es un asistente de IA especializado en garantizar tu bienestar y ayudarte a cumplir tus metas.
+                          </p>
+                        </div>
+                      </div>
                     </div>
                   </div>
-                </motion.div>
-              </AnimatePresence>
+                ) : (
+                  <div className="grid h-full w-full items-end" style={{ gridTemplateAreas: '"pet dialog"', gridTemplateColumns: '45% 55%' }}>
+                    <img
+                      src="/pet-2.webp"
+                      alt="Mascota de apoyo"
+                      className="h-full w-full object-contain object-left-bottom"
+                      style={{ gridArea: "pet" }}
+                    />
+                    <div className="flex flex-col justify-center self-center px-4 py-2 md:px-[8%]" style={{ gridArea: "dialog" }}>
+                      <div className="relative rounded-2xl bg-white sb-dialog" style={{ boxShadow: "0 4px 20px -2px rgba(30, 41, 59, 0.15)" }}>
+                        {isDesktop && (
+                          <div
+                            className="absolute bottom-3 left-[-8px]"
+                            style={{
+                              width: 0,
+                              height: 0,
+                              borderTop: "8px solid transparent",
+                              borderBottom: "8px solid transparent",
+                              borderRight: "8px solid white",
+                            }}
+                          />
+                        )}
+                        <h2 className="font-display font-bold sb-title" style={{ color: "#002F68", letterSpacing: "-0.02em" }}>
+                          {displayedTitle}
+                        </h2>
+                        <p className="mt-1 font-sans leading-relaxed sb-body" style={{ color: "#424753" }}>
+                          {displayedSubtitle}
+                        </p>
+                      </div>
+                      <div className="mt-4 inline-flex items-center rounded-2xl sb-badge" style={{ backgroundColor: "#E5DAFF" }}>
+                        <Sparkles className="shrink-0" style={{ color: "#7C3AED", width: "clamp(0.875rem, 2.2cqi, 1.25rem)", height: "clamp(0.875rem, 2.2cqi, 1.25rem)" }} />
+                        <p className="text-left sb-body" style={{ color: "#7C3AED" }}>
+                          BiT es un asistente de IA especializado en garantizar tu bienestar y ayudarte a cumplir tus metas.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
 
-              {/* Dots */}
-              <div className="mt-8 flex items-center justify-center gap-3">
-                {testimonials.map((_, i) => (
-                  <button
-                    key={i}
-                    onClick={() => setCurrentTestimonial(i)}
-                    className="rounded-full transition-all duration-300"
-                    style={{
-                      width: i === currentTestimonial ? "24px" : "10px",
-                      height: "10px",
-                      backgroundColor: i === currentTestimonial ? "#D97706" : "#FDE68A",
-                    }}
-                    aria-label={`Testimonio ${i + 1}`}
-                  />
-                ))}
+              {/* Columna 2: Testimonios */}
+              <div className={`flex ${isMobile ? 'aspect-[18/16]' : 'aspect-video'} flex-col rounded-3xl sb-testimonial-col`} style={{ backgroundColor: "#FFFBEB" }}>
+                <div className="flex-1">
+                  <AnimatePresence mode="wait">
+                    <motion.div
+                      key={currentTestimonial}
+                      initial={{ opacity: 0, y: 12 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -12 }}
+                      transition={{ duration: 0.3 }}
+                      className="flex flex-col text-left"
+                    >
+                      <Quote className="sb-quote-icon" style={{ color: "#D97706" }} />
+                      <p className="font-sans italic leading-relaxed sb-testimonial-quote" style={{ color: "#002F68" }}>
+                        {testimonials[currentTestimonial].quote}
+                      </p>
+                      <div className="mt-6 flex items-center" style={{ gap: "clamp(0.5rem, 2cqi, 1rem)" }}>
+                        <img
+                          src={`/${testimonials[currentTestimonial].avatar}`}
+                          alt={testimonials[currentTestimonial].name}
+                          className="rounded-full sb-avatar object-cover"
+                        />
+                        <div className="text-left">
+                          <p className="font-display font-bold sb-testimonial-name" style={{ color: "#002F68" }}>
+                            {testimonials[currentTestimonial].name}, {testimonials[currentTestimonial].location}
+                          </p>
+                          <p className="sb-testimonial-role" style={{ color: "#424753" }}>
+                            {testimonials[currentTestimonial].role}
+                          </p>
+                        </div>
+                      </div>
+                    </motion.div>
+                  </AnimatePresence>
+                </div>
+
+                <div className="mt-4 flex items-center justify-center" style={{ gap: "clamp(0.25rem, 1cqi, 0.75rem)" }}>
+                  {testimonials.map((_, i) => (
+                    <button
+                      key={i}
+                      onClick={() => setCurrentTestimonial(i)}
+                      className={`rounded-full transition-all duration-300 ${i === currentTestimonial ? 'sb-dot-active' : 'sb-dot-inactive'}`}
+                      style={{ backgroundColor: i === currentTestimonial ? "#D97706" : "#FDE68A" }}
+                      aria-label={`Testimonio ${i + 1}`}
+                    />
+                  ))}
+                </div>
               </div>
             </div>
           </div>
