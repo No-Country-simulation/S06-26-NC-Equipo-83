@@ -1,5 +1,6 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect, useRef } from "react";
+import { useLocation } from "react-router-dom";
 import { ArrowRight, Play, BookOpen, Briefcase, Users, HeartHandshake, Heart, User, Compass, MessageCircle, Trophy, Sparkles, Quote } from "lucide-react";
 
 const features = [
@@ -76,6 +77,21 @@ export default function Landing() {
   const fullSubtitle = "Voy a acompañarte durante todo el camino para ayudarte a alcanzar tus objetivos.";
 
   const typewriterStartedRef = useRef(false);
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.hash) {
+      const id = location.hash.replace("#", "");
+      const el = document.getElementById(id);
+      if (el) {
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            el.scrollIntoView();
+          });
+        });
+      }
+    }
+  }, [location.hash]);
 
   useEffect(() => {
     const check = () => setIsDesktop(window.innerWidth >= 768);

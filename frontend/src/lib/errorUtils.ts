@@ -1,27 +1,50 @@
-/**
- * Extrae un mensaje de error legible de una respuesta de FastAPI.
- *
- * FastAPI puede devolver `detail` como string (errores 401, 404, 409, 500)
- * o como array de objetos (errores 422 de validación).
- *
- * Ejemplo 422:
- *   {"detail": [{"loc": ["body","email"], "msg": "invalid email", "type": "..."}]}
- *   → "email: invalid email"
- */
-export function extractErrorMessage(err: any): string {
-  const detail = err?.response?.data?.detail;
-  if (!detail) return "Error inesperado. Intentá de nuevo.";
+function flattenErrors(obj: any, prefix = ""): string[] {
+  if (!obj || typeof obj !== "object") return [];
+  if (Array.isArray(obj)) {
+    return obj.flatMap((item) => {
+      if (typeof item === "object" && item.msg) {
+        const field = item.loc?.slice(1).join(".") || "campo";
+        return [`${field}: ${item.msg}`];
+      }
+      return flattenErrors(item, prefix);
+    });
+  }
+  return Object.entries(obj).flatMap(([key, val]) => {
+    const path = prefix ? `${prefix}.${key}` : key;
+    if (typeof val === "string") {
+      if (key === "detail" && !prefix) return [val];
+      return [`${path}: ${val}`];
+    }
+    if (Array.isArray(val)) {
+      if (key === "detail" && !prefix) {
+        return val.map((item: any) =>
+          item.msg
+            ? `${item.loc?.slice(1).join(".") || "campo"}: ${item.msg}`
+            : String(item),
+        );
+      }
+      return val.flatMap((item) =>
+        typeof item === "string" ? [`${path}: ${item}`] : flattenErrors(item, path),
+      );
+    }
+    if (typeof val === "object" && val !== null) {
+      return flattenErrors(val, path);
+    }
+    return [];
+  });
+}
 
-  // FastAPI 422: detail es un array de objetos con loc y msg
-  if (Array.isArray(detail)) {
-    return detail
-      .map((d: any) => {
-        const field = d.loc?.slice(1).join(".") || "campo";
-        return `${field}: ${d.msg}`;
-      })
-      .join(". ");
+export function extractErrorMessage(err: any): string {
+  const data = err?.response?.data;
+  if (!data) {
+    if (err?.message) return String(err.message);
+    return "Error inesperado. Intentá de nuevo.";
   }
 
-  // FastAPI otros errores: detail es un string
-  return String(detail);
+  if (typeof data === "string") return data;
+
+  const messages = flattenErrors(data);
+  return messages.length > 0
+    ? messages.join(". ")
+    : "Error inesperado. Intentá de nuevo.";
 }

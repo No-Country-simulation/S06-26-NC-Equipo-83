@@ -33,17 +33,17 @@ export default function Button({
     variant === "secondary"
       ? `
         border
-        border-[#99462A]
+        border-[var(--color-primary)]
         bg-white
-        text-[#99462A]
-        hover:bg-stone-50
-        focus:ring-[#99462A]/30
+        text-[var(--color-primary)]
+        hover:bg-[var(--color-primary-lighter)]
+        focus:ring-[var(--color-primary)]/30
       `
       : `
-        bg-[#99462A]
+        bg-[var(--color-primary)]
         text-white
         hover:brightness-110
-        focus:ring-[#99462A]/30
+        focus:ring-[var(--color-primary)]/30
       `;
 
   return (

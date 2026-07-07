@@ -23,7 +23,7 @@ interface Option {
 
 // ── Estilos de react-select con colores de marca ───────────────────────
 
-const brandColor = "#99462A";
+const brandColor = "#2F75DC";
 const SELECT_MENU_PROPS = {
   menuPosition: "fixed" as const,
   maxMenuHeight: 200,
@@ -35,13 +35,13 @@ const selectStyles: StylesConfig<Option, false> = {
     minHeight: "3.5rem",
     borderRadius: "0.75rem",
     borderColor: "transparent",
-    backgroundColor: "#f5f5f4",
+    backgroundColor: "#f1f5f9",
     boxShadow: "none",
     "&:hover": { borderColor: "transparent" },
   }),
   option: (base, state) => ({
     ...base,
-    backgroundColor: state.isFocused ? "rgba(153, 70, 42, 0.1)" : "white",
+    backgroundColor: state.isFocused ? "rgba(47,117,220,0.1)" : "white",
     color: state.isFocused ? brandColor : "#292524",
     cursor: "pointer",
     fontSize: "0.875rem",
@@ -85,13 +85,14 @@ export default function RegisterStep2({ form }: RegisterStep2Props) {
   const countries = continentCode ? getCountriesByContinent(continentCode) : [];
   const states = countryCode ? getStatesByCountry(countryCode) : [];
 
-  // ── Teléfono: bandera sincronizada con el país geográfico ────────
+  // ── Teléfono: sincronizar bandera con país ──────────────────────
   const phoneInputRef = useRef<PhoneInputRefType>(null);
+  const initialCountryRef = useRef(countryCode);
 
   useEffect(() => {
-    if (countryCode) {
-      phoneInputRef.current?.setCountry(countryCode.toLowerCase());
-    }
+    if (!countryCode || countryCode === initialCountryRef.current) return;
+    initialCountryRef.current = countryCode;
+    phoneInputRef.current?.setCountry(countryCode.toLowerCase());
   }, [countryCode]);
 
   // ── Ciudad: debounce del filtro para no filtrar en cada tecla ────
@@ -128,7 +129,7 @@ export default function RegisterStep2({ form }: RegisterStep2Props) {
   }, [countryCode, stateCode]);
 
   return (
-    <div className="space-y-6">
+      <div className="space-y-3">
       {/* ── Continente ──────────────────────────────────────────────── */}
       <div>
         <label
@@ -245,7 +246,7 @@ export default function RegisterStep2({ form }: RegisterStep2Props) {
       </div>
 
       {/* ── Provincia/Estado + Ciudad ────────────────────────────────── */}
-      <div className="space-y-6">
+    <div className="space-y-3">
         {/* Provincia / Estado */}
         <div>
           <label
@@ -390,7 +391,7 @@ export default function RegisterStep2({ form }: RegisterStep2Props) {
           render={({ field }) => (
             <PhoneInput
               ref={phoneInputRef}
-              defaultCountry="ar"
+              defaultCountry={countryCode?.toLowerCase() || "ar"}
               value={field.value}
               onChange={(phone: string) => field.onChange(phone)}
               inputStyle={{
@@ -398,7 +399,7 @@ export default function RegisterStep2({ form }: RegisterStep2Props) {
                 height: "3.5rem",
                 borderRadius: "0 0.75rem 0.75rem 0",
                 border: "none",
-                backgroundColor: "#f5f5f4",
+                backgroundColor: "#f1f5f9",
                 fontSize: "0.875rem",
               }}
               countrySelectorStyleProps={{
@@ -406,7 +407,7 @@ export default function RegisterStep2({ form }: RegisterStep2Props) {
                   height: "3.5rem",
                   borderRadius: "0.75rem 0 0 0.75rem",
                   border: "none",
-                  backgroundColor: "#f5f5f4",
+                  backgroundColor: "#f1f5f9",
                   paddingLeft: "0.75rem",
                 },
                 dropdownStyleProps: {
@@ -421,9 +422,6 @@ export default function RegisterStep2({ form }: RegisterStep2Props) {
             {errors.whatsapp.message}
           </p>
         )}
-        <p className="text-xs text-stone-500 mt-1.5">
-          Lo utilizaremos únicamente para notificaciones importantes.
-        </p>
       </div>
     </div>
   );

@@ -35,7 +35,7 @@ export default function DateInput({
 
       <div className="relative">
         <div
-          className="absolute left-4 top-1/2 -translate-y-1/2 text-[#99462A] cursor-pointer z-10"
+          className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--color-primary)] cursor-pointer z-10"
           onClick={() => {
             inputRef.current?.focus();
             inputRef.current?.showPicker();
@@ -68,10 +68,10 @@ export default function DateInput({
             autofill:bg-slate-100
             autofill:shadow-[inset_0_0_0px_1000px_#f1f5f9]
             autofill:[-webkit-text-fill-color:#292524]
-            focus:border-[#99462A]
+            focus:border-[var(--color-primary)]
             focus:outline-none
             focus:ring-2
-            focus:ring-[#99462A]/20
+            focus:ring-[var(--color-primary)]/20
             ${error ? "border-red-400 focus:border-red-500 focus:ring-red-500/20" : ""}
           `}
         />

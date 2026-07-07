@@ -1,10 +1,9 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
+import { motion } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader2 } from "lucide-react";
-
-import Button from "../../components/ui/Button";
+import { ArrowLeft, ArrowRight, Loader2, Check } from "lucide-react";
 
 import RegisterStep1 from "./registerSteps/registerStep1";
 import RegisterStep2 from "./registerSteps/registerStep2";
@@ -13,50 +12,26 @@ import RegisterStep3 from "./registerSteps/registerStep3";
 import { useAuthStore } from "../../store/useAuthStore";
 import { mapRegisterFormToApi } from "../../lib/fieldMappings";
 import {
-  registerStep1Schema,
-  registerStep2Schema,
-  registerStep3Schema,
+  registerStep1Schema, registerStep2Schema, registerStep3Schema,
   type RegisterFormData,
 } from "../../lib/validations";
 
-const fullSchema = registerStep1Schema
-  .merge(registerStep2Schema)
-  .merge(registerStep3Schema)
+const fullSchema = registerStep1Schema.merge(registerStep2Schema).merge(registerStep3Schema)
   .refine((data) => data.password === data.confirmPassword, {
-    message: "Las contraseñas no coinciden",
-    path: ["confirmPassword"],
+    message: "Las contraseñas no coinciden", path: ["confirmPassword"],
   });
 
 const stepFields: Record<number, (keyof RegisterFormData)[]> = {
-  1: [
-    "fullName",
-    "email",
-    "password",
-    "confirmPassword",
-    "birthDate",
-    "gender",
-    "educationLevel",
-  ],
-  2: [
-    "continentCode",
-    "continentName",
-    "countryCode",
-    "countryName",
-    "stateCode",
-    "stateName",
-    "cityName",
-    "whatsapp",
-  ],
-  3: [
-    "currentSituation",
-    "workSector",
-    "seniority",
-    "interestAreas",
-    "currentSearch",
-    "knownTechnologies",
-    "bio",
-  ],
+  1: ["fullName", "email", "password", "confirmPassword", "birthDate", "gender", "educationLevel"],
+  2: ["continentCode", "continentName", "countryCode", "countryName", "stateCode", "stateName", "cityName", "whatsapp"],
+  3: ["currentSituation", "workSector", "seniority", "interestAreas", "currentSearch", "knownTechnologies", "bio"],
 };
+
+const steps = [
+  { title: "Datos personales", desc: "Nombre, email y contraseña" },
+  { title: "Ubicación y contacto", desc: "País, ciudad y WhatsApp" },
+  { title: "Perfil profesional", desc: "Experiencia e intereses" },
+];
 
 export default function Register() {
   const navigate = useNavigate();
@@ -67,241 +42,150 @@ export default function Register() {
   const [step, setStep] = useState(1);
   const [isValidating, setIsValidating] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const formContentRef = useRef<HTMLDivElement>(null);
-
-  // Ref sincronizada en cada render para evitar closures stale
   const stepRef = useRef(step);
   stepRef.current = step;
-
-  useEffect(() => {
-    formContentRef.current?.scrollTo(0, 0);
-  }, [step]);
 
   const form = useForm<RegisterFormData>({
     resolver: zodResolver(fullSchema) as any,
     defaultValues: {
-      fullName: "",
-      email: "",
-      password: "",
-      confirmPassword: "",
-      birthDate: "",
-      gender: "",
-      educationLevel: "",
-
-      continentCode: "",
-      continentName: "",
-      countryCode: "",
-      countryName: "",
-      stateCode: "",
-      stateName: "",
-      cityName: "",
-      whatsapp: "",
-
-      currentSituation: "",
-      workSector: "",
-      seniority: "",
-      interestAreas: [],
-      currentSearch: "",
-      knownTechnologies: [],
-      bio: "",
+      fullName: "", email: "", password: "", confirmPassword: "",
+      birthDate: "", gender: "", educationLevel: "",
+      continentCode: "", continentName: "", countryCode: "", countryName: "",
+      stateCode: "", stateName: "", cityName: "", whatsapp: "",
+      currentSituation: "", workSector: "", seniority: "",
+      interestAreas: [], currentSearch: "", knownTechnologies: [], bio: "",
     },
   });
 
-  const {
-    register,
-    handleSubmit,
-    trigger,
-    watch,
-    setFocus,
-    setValue,
-    setError,
-    formState: { errors },
-  } = form;
-
+  const { register, handleSubmit, trigger, watch, setFocus, setValue, setError, formState: { errors } } = form;
   const password = watch("password");
   const confirmPassword = watch("confirmPassword");
   const birthDate = watch("birthDate");
 
   const nextStep = async () => {
-    clearError();
-    setIsValidating(true);
-    const fields = stepFields[stepRef.current];
-    const valid = await trigger(fields);
+    clearError(); setIsValidating(true);
+    const valid = await trigger(stepFields[stepRef.current]);
     setIsValidating(false);
     if (valid) {
       setStep((s) => Math.min(s + 1, 3));
+      window.scrollTo(0, 0);
       return;
     }
     setTimeout(() => {
-      const firstError = fields.find((f) => form.getFieldState(f).error);
+      const firstError = stepFields[stepRef.current].find((f) => form.getFieldState(f).error);
       if (firstError) setFocus(firstError);
     }, 0);
   };
 
-  const previousStep = () => {
-    clearError();
-    setStep((s) => Math.max(s - 1, 1));
-  };
+  const previousStep = () => { clearError(); setStep((s) => Math.max(s - 1, 1)); window.scrollTo(0, 0); };
 
   const onSubmit = async (data: RegisterFormData) => {
     clearError();
-
-    // Validación condicional: si trabaja → sector y seniority obligatorios
     if (data.currentSituation === "employed") {
       let hasError = false;
-      if (!data.workSector) {
-        setError("workSector", {
-          message: "Seleccioná tu sector laboral",
-        });
-        hasError = true;
-      }
-      if (!data.seniority) {
-        setError("seniority", {
-          message: "Seleccioná tu seniority",
-        });
-        hasError = true;
-      }
+      if (!data.workSector) { setError("workSector", { message: "Seleccioná tu sector laboral" }); hasError = true; }
+      if (!data.seniority) { setError("seniority", { message: "Seleccioná tu seniority" }); hasError = true; }
       if (hasError) return;
     }
-
     setIsSubmitting(true);
-    try {
-      const apiData = mapRegisterFormToApi(data);
-      await registerAction(apiData);
-      navigate("/dashboard", { replace: true });
-    } catch {
-      setIsSubmitting(false);
-    }
+    try { await registerAction(mapRegisterFormToApi(data)); navigate("/dashboard", { replace: true }); }
+    catch { setIsSubmitting(false); }
   };
 
+  const currentStepIndex = step - 1;
+
   return (
-    
-    <main className="h-screen w-full bg-background flex items-center justify-center overflow-hidden lg:p-6">
-      <section className="w-full max-w-6xl h-full md:h-[85vh] md:max-h-[750px] bg-white overflow-hidden shadow-2xl flex flex-col md:flex-row lg:rounded-3xl">
-        {/* ── Aside con imagen ──────────────────────────────────────── */}
-        <aside className="relative hidden md:flex md:w-1/2 h-full">
-          <img
-            src="/heroRegister.png"
-            alt="Comienza tu viaje en BiT"
-            className="absolute inset-0 h-full w-full object-cover"
-          />
-          <div className="absolute inset-0 bg-black/40" />
-          <div className="relative z-10 flex flex-col justify-end p-12 text-white h-full w-full bg-gradient-to-t from-black/60 to-transparent">
-            <h1 className="mb-4 text-4xl font-extrabold tracking-tight text-white">
-              Comienza tu viaje en BiT
-            </h1>
-            <p className="text-base text-stone-200">
-              Un espacio seguro diseñado para guiarte en tu orientación
-              personal con un enfoque humano y empático.
-            </p>
-          </div>
-        </aside>
+    <div
+      className="min-h-full flex items-center justify-center px-6 sm:px-8 relative overflow-hidden"
+      style={{ background: "radial-gradient(ellipse 80% 60% at 50% -20%, #D6E8FF 0%, #EBF3FF 35%, #fffffe 100%)" }}
+    >
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 0.5 }}
+          transition={{ duration: 1.2, delay: 0.3 }}
+          className="absolute top-[15%] left-[50%] -translate-x-1/2 w-[500px] h-[500px] rounded-full"
+          style={{ background: "radial-gradient(circle, rgba(47,117,220,0.06) 0%, transparent 70%)" }}
+        />
+        <div className="absolute -top-24 right-[12%] w-56 h-56 rounded-full opacity-[0.03] bg-[#2F75DC]" />
+        <div className="absolute -bottom-16 left-[8%] w-40 h-40 rounded-full opacity-[0.02] bg-[#2F75DC]" />
+      </div>
 
-        {/* ── Formulario ────────────────────────────────────────────── */}
-        <section className="w-full md:w-1/2 flex flex-col h-full p-6 sm:p-10 md:p-12 overflow-hidden">
-          <div className="flex-shrink-0 space-y-[10px] mb-2">
-            <div className="flex items-center justify-between md:hidden">
-              <Link to="/" className="flex items-center">
-                <img
-                  src="/Logo.png"
-                  alt="BiT App Logo"
-                  className="h-9 w-auto object-contain"
-                />
-              </Link>
-              <span className="text-sm font-semibold text-stone-500">
-                Paso {step}/3
-              </span>
-            </div>
-            <h1 className="m-0 text-xl sm:text-2xl font-extrabold text-stone-900 tracking-tight text-center">
-              Crear cuenta
-            </h1>
-            <p className="m-0 text-sm text-stone-500 text-center">
-              Ingresa tus datos para empezar tu experiencia personalizada.
-            </p>
-          </div>
-
-          {storeError && (
-            <div className="mb-3 p-3 bg-red-50 border border-red-200 rounded-xl text-sm text-red-700 font-medium flex-shrink-0">
-              {storeError}
-            </div>
-          )}
-
-          <div
-            ref={formContentRef}
-            className="flex-1 overflow-y-auto pr-2 min-h-0 scrollbar-thin"
+      <motion.div
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+        className="relative z-10 w-full max-w-[460px] py-12 sm:py-16"
+      >
+        <div className="mb-7">
+          <p className="text-[11px] font-semibold tracking-[0.15em] uppercase mb-3" style={{ color: "#94A3B8" }}>
+            Paso {step} de 3 — {["Tu identidad", "Tu ubicación", "Tu perfil"][currentStepIndex]}
+          </p>
+          <h1
+            className="font-display text-[1.85rem] font-bold tracking-tight"
+            style={{ color: "#002F68", letterSpacing: "-0.02em" }}
           >
-            {/* Siempre montados para preservar estado interno de los componentes */}
-            <div className={step !== 1 ? "hidden" : "space-y-4"}>
-              <RegisterStep1
-                register={register}
-                trigger={trigger}
-                errors={errors}
-                password={password}
-                confirmPassword={confirmPassword}
-                birthDate={birthDate}
-                setValue={setValue}
-              />
-            </div>
-            <div className={step !== 2 ? "hidden" : "space-y-4"}>
-              <RegisterStep2 form={form} />
-            </div>
-            <div className={step !== 3 ? "hidden" : "space-y-4"}>
-              <RegisterStep3 form={form} />
-            </div>
-          </div>
+            {steps[currentStepIndex].title}
+          </h1>
+        </div>
 
-          {/* ── Botones de navegación ────────────────────────────────── */}
-          <div className="flex-shrink-0 pt-3 mt-3 border-t border-stone-100 bg-white">
-            <div className="flex gap-3">
-              {step > 1 && (
-                <Button
-                  type="button"
-                  variant="secondary"
-                  onClick={previousStep}
-                  className="w-1/3 h-12 border border-[#99462A] bg-white text-[#99462A] hover:bg-stone-50 rounded-xl py-2 font-semibold text-sm transition-all"
-                >
-                  Volver
-                </Button>
-              )}
+        {storeError && (
+          <motion.div
+            initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }}
+            className="mb-5 p-3.5 rounded-xl text-sm text-red-700 font-medium flex items-center gap-2.5"
+            style={{ backgroundColor: "rgba(239,68,68,0.06)", border: "1px solid rgba(239,68,68,0.2)" }}
+          >
+            <span className="w-1.5 h-1.5 rounded-full bg-red-500 flex-shrink-0" />{storeError}
+          </motion.div>
+        )}
 
-              <Button
-                type="button"
-                onClick={step === 3 ? handleSubmit(onSubmit) : nextStep}
-                disabled={isValidating || isSubmitting}
-                className={`h-12 py-2 rounded-xl font-semibold text-sm shadow-md transition-all ${
-                  step > 1 ? "w-2/3" : "w-full"
-                } disabled:opacity-70 disabled:cursor-not-allowed`}
+        <div>
+          {step === 1 && <RegisterStep1 register={register} trigger={trigger} errors={errors} password={password} confirmPassword={confirmPassword} birthDate={birthDate} setValue={setValue} />}
+          {step === 2 && <RegisterStep2 form={form} />}
+          {step === 3 && <RegisterStep3 form={form} />}
+        </div>
+
+        <div className="flex gap-3 mt-6">
+          {step > 1 && (
+            <motion.button type="button" onClick={previousStep} whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.98 }}
+              className="w-[40%] h-12 flex items-center justify-center gap-2 rounded-full font-semibold text-sm transition-all duration-200"
+              style={{ color: "var(--color-primary)", border: "1px solid var(--color-primary)", backgroundColor: "#ffffff" }}>
+              <ArrowLeft className="w-4 h-4" />Volver
+            </motion.button>
+          )}
+          <motion.button type="button" onClick={step === 3 ? handleSubmit(onSubmit) : nextStep}
+            disabled={isValidating || isSubmitting} whileHover={{ y: -1 }} whileTap={{ y: 0, scale: 0.985 }}
+            className={`h-12 flex items-center justify-center gap-2 rounded-full font-semibold text-sm text-white transition-shadow duration-200 shadow-[0_4px_14px_-2px_rgba(47,117,220,0.35)] hover:shadow-[0_8px_24px_-4px_rgba(47,117,220,0.5)] disabled:opacity-60 disabled:cursor-not-allowed ${step > 1 ? "w-[60%]" : "w-full"}`}
+            style={{ background: "linear-gradient(135deg, #2F75DC 0%, #4B8FEA 100%)" }}>
+            {isSubmitting ? <><Loader2 className="w-4 h-4 animate-spin" />Creando cuenta...</>
+             : isValidating ? <><Loader2 className="w-4 h-4 animate-spin" />Verificando...</>
+             : step === 3 ? "Finalizar registro"
+             : <span className="flex items-center gap-2">Siguiente paso <ArrowRight className="w-4 h-4" /></span>}
+          </motion.button>
+        </div>
+
+        <div className="flex items-center justify-center gap-2 mt-5">
+          {steps.map((_, i) => (
+            <div key={i} className="flex items-center gap-2">
+              <motion.div
+                animate={{ backgroundColor: i <= currentStepIndex ? "#2F75DC" : "#C4DDFB" }}
+                transition={{ duration: 0.3 }}
+                className={`rounded-full flex items-center justify-center text-xs font-bold text-white transition-all duration-300 ${i === currentStepIndex ? "w-7 h-7" : "w-6 h-6"}`}
               >
-                {isSubmitting ? (
-                  <span className="flex items-center justify-center gap-2">
-                    <Loader2 className="w-4 h-4 animate-spin" />
-                    Creando cuenta...
-                  </span>
-                ) : isValidating ? (
-                  <span className="flex items-center justify-center gap-2">
-                    <Loader2 className="w-4 h-4 animate-spin" />
-                    Verificando...
-                  </span>
-                ) : step === 3 ? (
-                  "Finalizar registro"
-                ) : (
-                  "Siguiente paso"
-                )}
-              </Button>
+                {i < currentStepIndex ? <Check className="w-3 h-3" /> : i + 1}
+              </motion.div>
+              {i < 2 && <motion.div animate={{ backgroundColor: i < currentStepIndex ? "#2F75DC" : "#C4DDFB" }} transition={{ duration: 0.3 }} className="w-8 h-px" />}
             </div>
+          ))}
+        </div>
 
-            <p className="text-center text-xs text-stone-500 mt-2">
-              ¿Ya tenés una cuenta?{" "}
-              <Link
-                to="/login"
-                className="font-bold text-[#99462A] hover:underline"
-              >
-                Iniciar sesión
-              </Link>
-            </p>
-          </div>
-        </section>
-      </section>
-    </main>
+        <p className="text-center text-xs mt-6" style={{ color: "#424753" }}>
+          ¿Ya tenés una cuenta?{" "}
+          <Link to="/login" onClick={() => window.scrollTo(0, 0)} className="font-bold hover:underline transition-colors" style={{ color: "var(--color-primary)" }}>
+            Iniciar sesión
+          </Link>
+        </p>
+      </motion.div>
+    </div>
   );
 }
