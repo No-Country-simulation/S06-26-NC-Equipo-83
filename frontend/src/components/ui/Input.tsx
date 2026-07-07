@@ -50,7 +50,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
               left-4
               top-1/2
               -translate-y-1/2
-              text-[#99462A]
+              text-[var(--color-primary)]
               cursor-pointer
               z-10"
               onClick={() => {
@@ -86,10 +86,10 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
               autofill:bg-slate-100
               autofill:shadow-[inset_0_0_0px_1000px_#f1f5f9]
               autofill:[-webkit-text-fill-color:#292524]
-              focus:border-[#99462A]
+              focus:border-[var(--color-primary)]
               focus:outline-none
               focus:ring-2
-              focus:ring-[#99462A]/20
+              focus:ring-[var(--color-primary)]/20
               ${icon ? "pl-12" : ""}
               ${showPasswordToggle ? "pr-12" : ""}
               ${error ? "border-red-400 focus:border-red-500 focus:ring-red-500/20" : ""}
@@ -101,7 +101,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
             <button
               type="button"
               onClick={() => setPasswordVisible((v) => !v)}
-              className="absolute right-4 top-1/2 -translate-y-1/2 text-[#99462A] hover:text-stone-600 z-10"
+              className="absolute right-4 top-1/2 -translate-y-1/2 text-[var(--color-primary)] hover:opacity-70 z-10"
               aria-label={passwordVisible ? "Ocultar contraseña" : "Mostrar contraseña"}
             >
               {passwordVisible ? (
