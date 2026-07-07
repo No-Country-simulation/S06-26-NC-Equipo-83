@@ -56,22 +56,22 @@ export default function Navbar() {
         ))}
       </div>
 
-      {!isAuth && (
-        <div className="hidden items-center gap-4 md:flex md:gap-6 ml-auto">
-          <Link
-            to="/login"
-            className="rounded-full bg-white px-6 py-2.5 text-sm font-semibold text-[#2F75DC] shadow-[inset_0_0_0_1px_#2F75DC] transition-all hover:bg-[#2F75DC]/10"
-          >
-            Iniciar sesión
-          </Link>
-          <Link
-            to="/register"
-            className="rounded-full bg-[#2F75DC] px-6 py-2.5 text-sm font-semibold text-white shadow-ambient transition-all hover:bg-[#004A9E]"
-          >
-            Comenzar
-          </Link>
-        </div>
-      )}
+      <div className="hidden items-center gap-4 md:flex md:gap-6 ml-auto">
+        <Link
+          to="/login"
+          onClick={() => window.scrollTo({ top: 0, behavior: "instant" as ScrollBehavior })}
+          className="rounded-full bg-white px-6 py-2.5 text-sm font-semibold text-[#2F75DC] shadow-[inset_0_0_0_1px_#2F75DC] transition-all hover:bg-[#2F75DC]/10"
+        >
+          Iniciar sesión
+        </Link>
+        <Link
+          to="/register"
+          onClick={() => window.scrollTo({ top: 0, behavior: "instant" as ScrollBehavior })}
+          className="rounded-full bg-[#2F75DC] px-6 py-2.5 text-sm font-semibold text-white shadow-ambient transition-all hover:bg-[#004A9E]"
+        >
+          Comenzar
+        </Link>
+      </div>
 
       <button
         onClick={() => setOpen(!open)}
@@ -107,24 +107,22 @@ export default function Navbar() {
             </a>
           ),
         )}
-        {!isAuth && (
-          <div className="mt-3 flex flex-col gap-2 border-t border-stone-100 pt-4">
-            <Link
-              to="/login"
-              onClick={() => setOpen(false)}
-              className="rounded-full bg-white px-6 py-2.5 text-center text-sm font-semibold text-[#2F75DC] shadow-[inset_0_0_0_1px_#2F75DC]"
-            >
-              Iniciar sesión
-            </Link>
-            <Link
-              to="/register"
-              onClick={() => setOpen(false)}
-              className="rounded-full bg-[#2F75DC] px-6 py-2.5 text-center text-sm font-semibold text-white shadow-ambient"
-            >
-              Comenzar
-            </Link>
-          </div>
-        )}
+        <div className="mt-3 flex flex-col gap-2 border-t border-stone-100 pt-4">
+          <Link
+            to="/login"
+            onClick={() => { setOpen(false); window.scrollTo({ top: 0, behavior: "instant" as ScrollBehavior }); }}
+            className="rounded-full bg-white px-6 py-2.5 text-center text-sm font-semibold text-[#2F75DC] shadow-[inset_0_0_0_1px_#2F75DC]"
+          >
+            Iniciar sesión
+          </Link>
+          <Link
+            to="/register"
+            onClick={() => { setOpen(false); window.scrollTo({ top: 0, behavior: "instant" as ScrollBehavior }); }}
+            className="rounded-full bg-[#2F75DC] px-6 py-2.5 text-center text-sm font-semibold text-white shadow-ambient"
+          >
+            Comenzar
+          </Link>
+        </div>
       </div>
     </div>
   );
