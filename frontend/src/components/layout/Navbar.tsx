@@ -39,7 +39,7 @@ export default function Navbar() {
           isAuth ? (
             <Link
               key={link.label}
-              to={`/${link.to}`}
+              to={`/landing${link.to}`}
               className="text-sm font-medium text-[#1E293B] transition-colors hover:text-[#2F75DC]"
             >
               {link.label}
@@ -59,14 +59,14 @@ export default function Navbar() {
       <div className="hidden items-center gap-4 md:flex md:gap-6 ml-auto">
         <Link
           to="/login"
-          onClick={() => window.scrollTo({ top: 0, behavior: "instant" as ScrollBehavior })}
+          onClick={() => window.scrollTo(0, 0)}
           className="rounded-full bg-white px-6 py-2.5 text-sm font-semibold text-[#2F75DC] shadow-[inset_0_0_0_1px_#2F75DC] transition-all hover:bg-[#2F75DC]/10"
         >
           Iniciar sesión
         </Link>
         <Link
           to="/register"
-          onClick={() => window.scrollTo({ top: 0, behavior: "instant" as ScrollBehavior })}
+          onClick={() => window.scrollTo(0, 0)}
           className="rounded-full bg-[#2F75DC] px-6 py-2.5 text-sm font-semibold text-white shadow-ambient transition-all hover:bg-[#004A9E]"
         >
           Comenzar
@@ -90,7 +90,7 @@ export default function Navbar() {
           isAuth ? (
             <Link
               key={link.label}
-              to={`/${link.to}`}
+              to={`/landing${link.to}`}
               onClick={() => setOpen(false)}
               className="rounded-lg px-3 py-2.5 text-base font-medium text-[#1E293B] transition-colors hover:bg-[#2F75DC]/10 hover:text-[#2F75DC]"
             >

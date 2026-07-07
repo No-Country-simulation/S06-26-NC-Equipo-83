@@ -35,7 +35,7 @@ export default function Footer() {
     }
     if (isAuth) {
       return (
-        <Link to={`/${link.to}`} className={className} style={{ color: "#424753" }}>
+        <Link to={`/landing${link.to}`} className={className} style={{ color: "#424753" }}>
           {link.label}
         </Link>
       );
@@ -65,17 +65,15 @@ export default function Footer() {
             <p className="mt-3 max-w-xs text-sm leading-relaxed" style={{ color: "#424753" }}>
               Te acompañamos con aprendizaje, mentorías, oportunidades y bienestar para que crezcas a tu ritmo.
             </p>
-            {!isAuth && (
-              <Link
-                to="/register"
-                onClick={() => window.scrollTo({ top: 0, behavior: "instant" as ScrollBehavior })}
-                className="mt-4 inline-flex items-center gap-2 text-sm font-semibold transition-colors hover:underline"
-                style={{ color: "#2F75DC" }}
-              >
+            <Link
+              to="/register"
+              onClick={() => window.scrollTo({ top: 0, behavior: "instant" as ScrollBehavior })}
+              className="mt-4 inline-flex items-center gap-2 text-sm font-semibold transition-colors hover:underline"
+              style={{ color: "#2F75DC" }}
+            >
                 Comenzar ahora
-                <ArrowRight className="h-4 w-4" />
-              </Link>
-            )}
+              <ArrowRight className="h-4 w-4" />
+            </Link>
           </div>
 
           {Object.entries(footerLinks).map(([title, links]) => (
