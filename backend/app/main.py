@@ -36,6 +36,11 @@ app.add_middleware(
         "http://localhost:5174",
         "http://localhost:5175",
     ],
+    allow_origin_regex=(
+    "https://appbit-83.vercel.app$"
+    r"^https://[a-zA-Z0-9-]+\.onrender\.com$"
+    r"|^https://[a-zA-Z0-9-]+\.up\.railway\.app$"
+    ),
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
