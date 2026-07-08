@@ -114,3 +114,4 @@ docker-compose.override.yml
 frontend/scripts/*.txt
 frontend/scripts/*.zip
 EXPERIENCIAS_ESTRUCTURANTES/*
+backend/data/*

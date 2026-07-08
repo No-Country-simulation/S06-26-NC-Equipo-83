@@ -63,15 +63,7 @@ Check-in diario vía emojis. El agente de IA detecta el estado emocional y sugie
 
 ---
 
-## Flujos de la Aplicación
-
-### Flujo del Usuario
-
 ![Flujo Usuario](Docs/Flujo%20User.png)
-
-### Flujo del Administrador 
-
-![Flujo Admin](Docs/Flujo%20Admin.png)
 
 ---
 
@@ -119,7 +111,7 @@ Backend API
 | **Base de Datos** | Supabase (PostgreSQL) | ![supabase](https://img.shields.io/badge/Supabase-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white) ![postgresql](https://img.shields.io/badge/PostgreSQL-4169E1?style=for-the-badge&logo=postgresql&logoColor=white) |
 | **IA** | OpenAI / Azure OpenAI | ![openai](https://img.shields.io/badge/OpenAI-412991?style=for-the-badge&logo=openai&logoColor=white) |
 | **Auth** | JWT + Supabase Auth | ![jwt](https://img.shields.io/badge/JWT-000000?style=for-the-badge&logo=jsonwebtokens&logoColor=white) |
-| **Deploy** | Railway / Render | ![railway](https://img.shields.io/badge/Railway-0B0D0E?style=for-the-badge&logo=railway&logoColor=white) |
+| **Deploy** | Frontend: Vercel · Backend: Render | ![vercel](https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white) ![render](https://img.shields.io/badge/Render-46E3B7?style=for-the-badge&logo=render&logoColor=white) |
 | **Control de Versiones** | Git + GitHub | ![git](https://img.shields.io/badge/Git-F05032?style=for-the-badge&logo=git&logoColor=white) ![github](https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white) |
 | **Comunicación** | Discord | ![discord](https://img.shields.io/badge/Discord-5865F2?style=for-the-badge&logo=discord&logoColor=white) |
 
@@ -209,10 +201,12 @@ Endpoint de salud mental. Procesa el check-in emocional y sugiere acciones.
 | Foto | Rol | Nombre | Contacto |
 |------|-----|--------|----------|
 | <img src="https://media.licdn.com/dms/image/v2/D4D35AQEFky5c9mjq0w/profile-framedphoto-shrink_400_400/profile-framedphoto-shrink_400_400/0/1735406313026?e=1783706400&v=beta&t=bNl9huw64hz-hIy12msztVRsYxK8czdScuZUqzC5WeI" width="48" height="48" style="border-radius:50%"> | **Project Manager** | Orlando Cardenas Villegas | [LinkedIn](https://www.linkedin.com/in/orlandocardenasvillegas/) |
-| <img src="https://unavatar.io/linkedin/in/DanteJac" width="48" height="48" style="border-radius:50%"> | **Backend Developer** | Dante Escalona Bustos | [LinkedIn](https://www.linkedin.com/in/DanteJac) |
-| <img src="https://unavatar.io/linkedin/in/matias-solanes" width="48" height="48" style="border-radius:50%"> | **Backend Developer** | Matias Solanes | [LinkedIn](https://www.linkedin.com/in/matias-solanes/) |
+|  | **Backend Developer** | Dante Escalona Bustos | [LinkedIn](https://www.linkedin.com/in/DanteJac) |
+| <img src="https://media.licdn.com/dms/image/v2/D4D03AQFdepvrOc09Hg/profile-displayphoto-crop_800_800/B4DZwuXZOSIgAI-/0/1770304411180?e=1785369600&v=beta&t=uziEQJxmtKa7k3fVYdO7KjdVJvf-mlkbkBnMl0hZn0c" width="48" height="48" style="border-radius:50%"> | **Backend Developer** | Matias Solanes | [LinkedIn](https://www.linkedin.com/in/matias-solanes/) |
 | <img src="https://media.licdn.com/dms/image/v2/D4E03AQHg8cIJyTxViA/profile-displayphoto-scale_400_400/B4EZnj_L_tGcAg-/0/1760466641041?e=1784764800&v=beta&t=7TzFE200yVZ1hYjTqlWOpSY12kFviqGmA_k2uwv3Ilc" width="48" height="48" style="border-radius:50%"> | **Full Stack Developer** | Luis Feliz | [LinkedIn](https://www.linkedin.com/in/luis-antonio-feliz/) |
-| <img src="https://unavatar.io/linkedin/in/arielseijo" width="48" height="48" style="border-radius:50%"> | **Full Stack Developer** | Hugo Ariel Seijo | [LinkedIn](https://www.linkedin.com/in/arielseijo/) |
+| <img src="https://media.licdn.com/dms/image/v2/D4D03AQFY7xcJSkWVLQ/profile-displayphoto-crop_800_800/B4DZ2x66yMI4AI-/0/1776806511380?e=1785369600&v=beta&t=wmUohpgZLrN85SRTztMTcrYHzV7zhoZZhiTEHo8ZOGY" width="48" height="48" style="border-radius:50%"> | **Full Stack Developer** | Hugo Ariel Seijo | [LinkedIn](https://www.linkedin.com/in/arielseijo/) |
+| <img src="https://media.licdn.com/dms/image/v2/D4D03AQG-tP22zcud6w/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1698798694955?e=1785369600&v=beta&t=KnYZ7h1Hvjo7_sm_dcLEtFlN7CTDRmiBZQeTKGSwfhY" width="48" height="48" style="border-radius:50%"> | **Frontend Developer** | Elias Marolla | [LinkedIn](https://www.linkedin.com/in/elias-marolla/) |
+| <img src="https://media.licdn.com/dms/image/v2/C4D03AQGKUU3tLER_rA/profile-displayphoto-shrink_200_200/profile-displayphoto-shrink_200_200/0/1655925781874?e=1785369600&v=beta&t=QUqb-aw1bdnvctvws3EHczCaRGSHMKOsEU4IK7g2V2w" width="48" height="48" style="border-radius:50%"> | **Backend Developer** | Gabriel Braga | [LinkedIn](https://www.linkedin.com/in/gabriel-braga-24b546232/) |
 
 ---
 
@@ -460,6 +454,44 @@ La documentación técnica se encuentra en la carpeta [`/docs`](Docs/):
 | [API](Docs/API/Leeme.md) | Documentación de endpoints |
 | [Tecnologías](Docs/Tecnologias.md) | Stack tecnológico |
 | [Conventional Commits](Docs/Conventional%20Commits.md) | Guía de commits |
+
+---
+
+## Deploy
+
+### Frontend — Vercel
+
+1. Conectá el repo a [Vercel](https://vercel.com)
+2. **Root Directory:** `frontend/`
+3. **Build Command:** `tsc && vite build` (auto-detected)
+4. **Output:** `dist`
+5. En **Environment Variables** agregá:
+
+| Variable | Valor |
+|----------|-------|
+| `VITE_API_URL` | `https://<tu-backend>.onrender.com/api` |
+
+El archivo `frontend/vercel.json` ya maneja las rewrites SPA.
+
+### Backend — Render
+
+1. Conectá el repo a [Render](https://render.com)
+2. Creá un **Web Service** apuntando al repo
+3. **Root Directory:** `backend/`
+4. **Runtime:** `Python`
+5. **Build Command:** `pip install -r requirements.txt`
+6. **Start Command:** `uvicorn app.main:app --host 0.0.0.0 --port $PORT`
+7. En **Environment Variables** agregá:
+
+| Variable | Valor |
+|----------|-------|
+| `DATABASE_URL` | Supabase Session Pooler |
+| `SECRET_KEY` | mínimo 32 caracteres |
+| `CORS_ORIGINS` | `https://<tu-frontend>.vercel.app` |
+
+> También podés usar el archivo `render.yaml` en la raíz del repo si habilitás **Render Blueprint**.
+
+> **Nota sobre CSVs:** El dataset Vísent CDRView (`backend/data/*`) está en `.gitignore`. En producción los CSVs no estarán disponibles y el backend responderá sin datos de cobertura/destinos, mostrando solo los eventos comunitarios. Si querés incluirlos, eliminá `backend/data/*` del `.gitignore` y commitear los CSVs.
 
 ---
 
