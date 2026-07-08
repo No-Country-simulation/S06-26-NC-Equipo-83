@@ -35,3 +35,6 @@ groq>=0.18.0
 
 # CORS
 # (FastAPI lo maneja vía CORSMiddleware — sin dependencia extra)
+
+# Testing
+pytest>=8.0.0

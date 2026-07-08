@@ -7,7 +7,7 @@ from app.models.user import User
 from app.models.mental_health import MentalHealthLog
 
 
-def test_create_user(session):
+def test_create_user(db_session):
     user = User(
     email="relations@test.com",
     hashed_password="hashed",
@@ -37,16 +37,16 @@ def test_create_user(session):
     tech_area="backend",
     career_objective="find_job",
 )
-    session.add(user)
-    session.commit()
-    session.refresh(user)
+    db_session.add(user)
+    db_session.commit()
+    db_session.refresh(user)
 
     assert isinstance(user.id, UUID)
     assert user.email == "relations@test.com"
     assert user.full_name == "Relations Test"
 
 
-def test_create_mental_health_log_linked_to_user(session):
+def test_create_mental_health_log_linked_to_user(db_session):
     user = User(
     email="log@test.com",
     hashed_password="hashed",
@@ -76,9 +76,9 @@ def test_create_mental_health_log_linked_to_user(session):
     tech_area="backend",
     career_objective="find_job",
 )
-    session.add(user)
-    session.commit()
-    session.refresh(user)
+    db_session.add(user)
+    db_session.commit()
+    db_session.refresh(user)
 
     log = MentalHealthLog(
         user_id=user.id,
@@ -87,9 +87,9 @@ def test_create_mental_health_log_linked_to_user(session):
         response_message="Excelente estado de ánimo",
         suggested_action="Mantener la rutina actual",
     )
-    session.add(log)
-    session.commit()
-    session.refresh(log)
+    db_session.add(log)
+    db_session.commit()
+    db_session.refresh(log)
 
     assert isinstance(log.id, UUID)
     assert log.user_id == user.id
@@ -99,7 +99,7 @@ def test_create_mental_health_log_linked_to_user(session):
     assert log.alert_triggered is False
 
 
-def test_user_mental_health_logs_relationship(session):
+def test_user_mental_health_logs_relationship(db_session):
     user = User(
     email="rel@test.com",
     hashed_password="hashed",
@@ -129,9 +129,9 @@ def test_user_mental_health_logs_relationship(session):
     tech_area="backend",
     career_objective="find_job",
 )
-    session.add(user)
-    session.commit()
-    session.refresh(user)
+    db_session.add(user)
+    db_session.commit()
+    db_session.refresh(user)
 
     log1 = MentalHealthLog(
         user_id=user.id,
@@ -147,11 +147,11 @@ def test_user_mental_health_logs_relationship(session):
         response_message="Gran semana",
         suggested_action="Seguí así",
     )
-    session.add_all([log1, log2])
-    session.commit()
-    session.refresh(user)
+    db_session.add_all([log1, log2])
+    db_session.commit()
+    db_session.refresh(user)
 
-    logs = session.exec(
+    logs = db_session.exec(
         MentalHealthLog.__table__.select().where(
             MentalHealthLog.user_id == user.id
         )
@@ -162,7 +162,7 @@ def test_user_mental_health_logs_relationship(session):
     assert logs[1].mood in ("tired", "happy")
 
 
-def test_foreign_key_enforces_user_exists(session):
+def test_foreign_key_enforces_user_exists(db_session):
     orphan_log = MentalHealthLog(
         user_id="00000000-0000-0000-0000-000000000000",
         mood="happy",
@@ -170,13 +170,13 @@ def test_foreign_key_enforces_user_exists(session):
         response_message="N/A",
         suggested_action="N/A",
     )
-    session.add(orphan_log)
+    db_session.add(orphan_log)
     with pytest.raises(Exception):
-        session.flush()
-    session.rollback()
+        db_session.flush()
+    db_session.rollback()
 
 
-def test_derivar_cvv_triggered(session):
+def test_derivar_cvv_triggered(db_session):
     user = User(
     email="cvv@test.com",
     hashed_password="hashed",
@@ -206,9 +206,9 @@ def test_derivar_cvv_triggered(session):
     tech_area="backend",
     career_objective="find_job",
 )
-    session.add(user)
-    session.commit()
-    session.refresh(user)
+    db_session.add(user)
+    db_session.commit()
+    db_session.refresh(user)
 
     log = MentalHealthLog(
         user_id=user.id,
@@ -219,9 +219,9 @@ def test_derivar_cvv_triggered(session):
         derivate_cvv=True,
         alert_triggered=True,
     )
-    session.add(log)
-    session.commit()
-    session.refresh(log)
+    db_session.add(log)
+    db_session.commit()
+    db_session.refresh(log)
 
     assert log.derivate_cvv is True
     assert log.alert_triggered is True

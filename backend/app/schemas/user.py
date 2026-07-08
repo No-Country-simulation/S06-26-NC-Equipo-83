@@ -187,6 +187,37 @@ class UserResponse(SQLModel):
 
     created_at: datetime
 
+class UserUpdate(SQLModel):
+    """Schema para actualización parcial del perfil.
+
+    Todos los campos son opcionales. Solo se actualizan los campos
+    que vienen en el request (exclude_unset=True en el service).
+    """
+    full_name: Optional[str] = None
+    birth_date: Optional[date] = None
+    gender: Optional[str] = None
+    education_level: Optional[str] = None
+
+    continent_code: Optional[str] = None
+    continent_name: Optional[str] = None
+    country_code: Optional[str] = None
+    country_name: Optional[str] = None
+    state_code: Optional[str] = None
+    state_name: Optional[str] = None
+    city_name: Optional[str] = None
+    whatsapp_e164: Optional[str] = None
+
+    language_code: Optional[str] = None
+
+    # ── Campos profesionales v3 ──────────────────────────────────────
+    current_situation: Optional[str] = None
+    work_sector: Optional[str] = None
+    seniority: Optional[str] = None
+    interest_areas: Optional[list[str]] = None
+    current_search: Optional[str] = None
+    known_technologies: Optional[list[dict]] = None
+    bio: Optional[str] = None 
+
 
 class UserLogin(SQLModel):
     email: EmailStr

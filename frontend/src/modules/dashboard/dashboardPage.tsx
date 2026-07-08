@@ -96,9 +96,17 @@ export const DashboardPage: React.FC = () => {
                       style={{ letterSpacing: "-0.01em" }}>{selectedVacancy.title}</h3>
                     <div className="flex flex-wrap items-center gap-x-3 gap-y-0.5 mt-1.5 text-[11px] font-medium text-[var(--color-body)]">
                       <span className="inline-flex items-center gap-1"><MapPin className="w-3 h-3 text-[var(--color-muted)]" />{selectedVacancy.location}</span>
-                      <span className="capitalize"><Star className="w-3 h-3 inline mr-0.5 text-[var(--color-muted)]" />{SENIORITY_LABEL[selectedVacancy.seniority] ?? selectedVacancy.seniority}</span>
-                      {selectedVacancy.salary && <span><DollarSign className="w-3 h-3 inline mr-0.5 text-[var(--color-muted)]" />{selectedVacancy.salary}</span>}
+                      <span className="inline-flex items-center gap-1"><Star className="w-3 h-3 text-[var(--color-muted)]" />{SENIORITY_LABEL[selectedVacancy.seniority] ?? selectedVacancy.seniority}</span>
+                      {selectedVacancy.salary && <span className="inline-flex items-center gap-1"><DollarSign className="w-3 h-3 text-[var(--color-muted)]" />{selectedVacancy.salary}</span>}
                     </div>
+                    {selectedVacancy.required_skills.length > 0 && (
+                      <p className="mt-1.5 text-[11px] leading-relaxed text-[var(--color-body)]">
+                        <span className="font-semibold">Requisitos: </span>
+                        {selectedVacancy.required_skills.map((s, i) => (
+                          <span key={s}>{s}{i < selectedVacancy.required_skills.length - 1 ? ", " : ""}</span>
+                        ))}
+                      </p>
+                    )}
                   </div>
 
                   <div className="flex-shrink-0 text-right">

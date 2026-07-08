@@ -40,3 +40,22 @@ def create_user(session: Session, user: User) -> User:
     session.commit()
     session.refresh(user)
     return user
+    
+def update_user(session: Session, user: User, data: dict) -> User:
+    """Actualiza los campos del usuario con los valores del diccionario.
+
+    Solo los campos cuyos valores NO son None se sobreescriben.
+    Se usa setattr() para no hardcodear nombres de campo — si el
+    schema UserUpdate cambia, esta función no necesita modificarse.
+
+    session.add()  → marca el objeto para UPDATE
+    session.commit() → persiste los cambios en la DB
+    session.refresh() → recarga los datos (updated_at, etc.)
+    """
+    for key, value in data.items():
+        if value is not None and hasattr(user, key):
+            setattr(user, key, value)
+    session.add(user)
+    session.commit()
+    session.refresh(user)
+    return user

@@ -1,6 +1,6 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect, useRef } from "react";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { ArrowRight, Play, BookOpen, Briefcase, Users, HeartHandshake, Heart, User, Compass, MessageCircle, Trophy, Sparkles, Quote } from "lucide-react";
 
 const features = [
@@ -207,13 +207,14 @@ export default function Landing() {
               </p>
 
               <div className="mt-8 flex flex-col gap-4 sm:flex-row">
-                <a
-                  href="/register"
+                <Link
+                  to="/register"
+                  onClick={() => window.scrollTo(0, 0)}
                   className="inline-flex items-center justify-center gap-2 rounded-full bg-[#2F75DC] px-7 py-3.5 text-base font-semibold text-white shadow-ambient transition-all hover:bg-[#004A9E] hover:shadow-ambient-lg"
                 >
                   Comienza tu camino
                   <ArrowRight className="h-5 w-5" />
-                </a>
+                </Link>
                 <a
                   href="#como-funciona"
                   className="inline-flex items-center justify-center gap-2 rounded-full bg-white px-7 py-3.5 text-base font-semibold shadow-[inset_0_0_0_1px_#2F75DC] transition-all hover:bg-[#2F75DC]/10"
@@ -617,13 +618,14 @@ export default function Landing() {
             >
               ¿Qué estás esperando? Comienza ahora y descubre todo lo que tenemos preparado para ti.
             </p>
-            <a
-              href="/register"
+            <Link
+              to="/register"
+              onClick={() => window.scrollTo(0, 0)}
               className="mt-6 inline-flex items-center justify-center gap-2 rounded-full bg-[#2F75DC] px-8 py-3.5 text-sm font-semibold text-white shadow-ambient transition-all hover:bg-[#004A9E] hover:shadow-ambient-lg sm:text-base"
             >
               Comenzar mi camino
               <ArrowRight className="h-5 w-5" />
-            </a>
+            </Link>
           </div>
           </div>
         </motion.div>
