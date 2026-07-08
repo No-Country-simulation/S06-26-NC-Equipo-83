@@ -14,7 +14,7 @@ from app.routers import salud
 from app.routers import orientar
 from app.routers import experiencias
 from app.routers import events
-
+from app.routers import users
 # ---------------------------------------------------------------------------
 # Application metadata
 # ---------------------------------------------------------------------------
@@ -46,6 +46,7 @@ app.include_router(salud.router)
 app.include_router(orientar.router)
 app.include_router(experiencias.router)
 app.include_router(events.router)
+app.include_router(users.router)
 
 
 # ---------------------------------------------------------------------------
