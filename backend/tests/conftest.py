@@ -44,3 +44,9 @@ def client(db_session):
         yield client
 
     app.dependency_overrides.clear()
+
+
+@pytest.fixture
+def session(db_session):
+    """Alias de db_session para compatibilidad con tests existentes."""
+    yield db_session
