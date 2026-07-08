@@ -9,6 +9,7 @@ from app.services.geo_validator import (
     validate_geographic_consistency,
     GeographicValidationError,
 )
+from app.repositories.user import get_user_by_email, create_user, update_user
 
 
 class AuthService:
@@ -88,3 +89,13 @@ class AuthService:
 
         token = create_access_token(data={"sub": str(user.id)})
         return {"access_token": token, "token_type": "bearer"}
+
+    def update_profile(self, user: User, data) -> User:
+        """Actualiza el perfil del usuario autenticado.
+
+        Usa exclude_unset=True para que solo los campos que el frontend
+        ENVIÓ EXPLÍCITAMENTE se actualicen. Si el frontend manda
+        {"full_name": "Nuevo Nombre"}, los demás campos quedan intactos.
+        """
+        update_data = data.model_dump(exclude_unset=True)
+        return update_user(self.session, user, update_data)
