@@ -106,9 +106,17 @@ export const OrientationJobCard = ({ job, index: _index }: Props) => {
                         style={{ letterSpacing: "-0.01em" }}>{job.title}</h3>
                     <div className="flex flex-wrap items-center gap-x-3 gap-y-0.5 mt-1.5 text-[11px] font-medium text-[var(--color-body)]">
                         <span className="inline-flex items-center gap-1"><MapPin className="w-3 h-3 text-[var(--color-muted)]" />{job.location}</span>
-                        <span className="capitalize"><Star className="w-3 h-3 inline mr-0.5 text-[var(--color-muted)]" />{seniorityLabel[job.seniority] ?? job.seniority}</span>
-                        {job.salary && <span><DollarSign className="w-3 h-3 inline mr-0.5 text-[var(--color-muted)]" />{job.salary}</span>}
+                        <span className="inline-flex items-center gap-1"><Star className="w-3 h-3 text-[var(--color-muted)]" />{seniorityLabel[job.seniority] ?? job.seniority}</span>
+                        {job.salary && <span className="inline-flex items-center gap-1"><DollarSign className="w-3 h-3 text-[var(--color-muted)]" />{job.salary}</span>}
                     </div>
+                    {job.required_skills.length > 0 && (
+                        <p className="mt-1.5 text-[11px] leading-relaxed text-[var(--color-body)]">
+                            <span className="font-semibold">Requisitos: </span>
+                            {job.required_skills.map((s, i) => (
+                                <span key={s}>{s}{i < job.required_skills.length - 1 ? ", " : ""}</span>
+                            ))}
+                        </p>
+                    )}
                     <div className="flex items-center gap-2 mt-1.5">
                         <span className="text-[11px] font-semibold text-[var(--color-body)]">{matchedCount}/{requiredCount} skills cumplidas</span>
                         {missingPreview.length > 0 && (
@@ -124,17 +132,21 @@ export const OrientationJobCard = ({ job, index: _index }: Props) => {
                     {isSelected ? (
                         <button
                             onClick={clearVacancy}
-                            className="flex items-center gap-1.5 px-4 py-2 font-bold text-[11px] rounded-full transition-all duration-200 active:scale-[0.97] group"
+                            className="relative flex items-center justify-center px-4 py-2 font-bold text-[11px] rounded-full transition-all duration-200 active:scale-[0.97] group"
                             style={{
                                 background: "var(--color-accent-green-bg)",
                                 color: "var(--color-accent-green)",
                                 boxShadow: "inset 0 0 0 1px var(--color-accent-green-light)",
                             }}
                             title="Click para cancelar">
-                            <CheckCircle2 className="w-3 h-3 group-hover:hidden" />
-                            <X className="w-3 h-3 hidden group-hover:block" />
-                            <span className="group-hover:hidden">Seleccionada</span>
-                            <span className="hidden group-hover:inline">Cancelar</span>
+                            <span className="flex items-center gap-1.5 group-hover:invisible">
+                                <CheckCircle2 className="w-3 h-3" />
+                                Seleccionada
+                            </span>
+                            <span className="absolute inset-0 flex items-center justify-center gap-1.5 invisible group-hover:visible">
+                                <X className="w-3 h-3" />
+                                Cancelar
+                            </span>
                         </button>
                     ) : (
                         <button
