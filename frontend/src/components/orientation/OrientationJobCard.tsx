@@ -1,10 +1,11 @@
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import {
-    MapPin, Star, Clock, ChevronDown, GraduationCap,
-    BookOpen, ArrowUpRight, Sparkles,
+    MapPin, Star, DollarSign, ChevronDown, GraduationCap,
+    BookOpen, ArrowUpRight, Sparkles, CheckCircle2, X,
 } from "lucide-react";
 import type { JobMatchDetail, CourseRecommendation } from "../../types/api";
+import { useDashboardStore } from "../../store/useDashboardStore";
 
 const seniorityLabel: Record<string, string> = {
     trainee: "Trainee", junior: "Junior", "semi-senior": "Semi Senior", senior: "Senior",
@@ -18,49 +19,51 @@ const AREA_LABEL: Record<string, string> = {
     blockchain: "Blockchain", iot: "IoT", game_development: "Game Dev",
 };
 
-const MiniDonut = ({ percent, size = 56 }: { percent: number; size?: number }) => {
-    const radius = (size - 6) / 2;
+const MiniDonut = ({ percent, size = 52 }: { percent: number; size?: number }) => {
+    const radius = (size - 5) / 2;
     const circumference = 2 * Math.PI * radius;
     const offset = circumference - (percent / 100) * circumference;
-    const color = percent >= 75 ? "#059669" : percent >= 50 ? "#d97706" : "#dc2626";
+    const color = percent >= 75 ? "var(--color-accent-green)" : percent >= 50 ? "var(--color-accent-amber)" : "var(--color-accent-pink)";
     return (
         <div className="relative flex items-center justify-center" style={{ width: size, height: size }}>
-            <svg width={size} height={size} className="transform -rotate-90">
-                <circle cx={size / 2} cy={size / 2} r={radius} fill="none" stroke="#f1f5f9" strokeWidth="5" />
-                <circle cx={size / 2} cy={size / 2} r={radius} fill="none" stroke={color} strokeWidth="5"
+            <svg width={size} height={size} className="-rotate-90">
+                <circle cx={size / 2} cy={size / 2} r={radius} fill="none" stroke="var(--color-primary-light)" strokeOpacity="0.5" strokeWidth="4" />
+                <circle cx={size / 2} cy={size / 2} r={radius} fill="none" stroke={color} strokeWidth="4"
                     strokeLinecap="round" strokeDasharray={circumference} strokeDashoffset={offset}
-                    className="transition-all duration-700 ease-out" />
+                    style={{ transition: "stroke-dashoffset 0.7s ease-out" }} />
             </svg>
-            <span className="absolute text-sm font-extrabold text-stone-700 tabular-nums">{percent}%</span>
+            <span className="absolute text-xs font-extrabold text-[var(--color-heading)] tabular-nums font-display"
+                style={{ letterSpacing: "-0.02em" }}>{percent}%</span>
         </div>
     );
 };
 
 const SkillChip = ({ label, variant }: { label: string; variant: "matched" | "pending" }) => {
     const styles = {
-        matched: "bg-emerald-50 text-emerald-700 border-emerald-200",
-        pending: "bg-amber-50 text-amber-700 border-amber-200",
+        matched: "bg-[var(--color-accent-green-bg)] text-[var(--color-accent-green)] border-[var(--color-accent-green-light)]",
+        pending: "bg-[var(--color-accent-amber-bg)] text-[var(--color-accent-amber)] border-[var(--color-accent-amber-light)]",
     };
     return (
-        <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] font-semibold border ${styles[variant]}`}>
-            {variant === "matched" ? <span className="w-1 h-1 rounded-full bg-emerald-500" /> : <span className="w-1 h-1 rounded-full bg-amber-500" />}
+        <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-semibold border ${styles[variant]}`}>
+            <span className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${variant === "matched" ? "bg-[var(--color-accent-green)]" : "bg-[var(--color-accent-amber)]"}`} />
             {label}
         </span>
     );
 };
 
 const CourseRow = ({ course }: { course: CourseRecommendation }) => (
-    <div className="flex items-center gap-2.5 p-2.5 bg-white rounded-lg border border-stone-100 hover:border-stone-200 transition-colors group">
-        <div className="w-7 h-7 rounded-md bg-[#A04E2D]/10 flex items-center justify-center flex-shrink-0">
-            <BookOpen className="w-3.5 h-3.5 text-[#A04E2D]" />
+    <div className="flex items-center gap-3 p-2.5 bg-white rounded-xl border border-gray-100 hover:border-[var(--color-primary-light)] transition-colors duration-200 group">
+        <div className="w-8 h-8 rounded-lg bg-[var(--color-primary-lighter)] flex items-center justify-center flex-shrink-0 group-hover:bg-[var(--color-primary-light)] transition-colors duration-200">
+            <BookOpen className="w-4 h-4 text-[var(--color-primary)]" />
         </div>
         <div className="flex-1 min-w-0">
-            <p className="text-xs font-semibold text-stone-700 truncate">{course.title}</p>
-            <p className="text-[10px] text-stone-400">{course.provider} · {course.duration}</p>
+            <p className="text-xs font-semibold text-[var(--color-heading)] truncate font-display"
+                style={{ letterSpacing: "-0.01em" }}>{course.title}</p>
+            <p className="text-[10px] text-[var(--color-muted)]">{course.provider} · {course.duration}</p>
         </div>
         {course.url && (
             <a href={course.url} target="_blank" rel="noopener noreferrer"
-                className="p-1 text-stone-300 hover:text-[#A04E2D] transition-colors flex-shrink-0">
+                className="p-1.5 text-[var(--color-muted)] hover:text-[var(--color-primary)] hover:bg-[var(--color-primary-lighter)] rounded-lg transition-colors duration-200 flex-shrink-0">
                 <ArrowUpRight className="w-3.5 h-3.5" />
             </a>
         )}
@@ -69,8 +72,10 @@ const CourseRow = ({ course }: { course: CourseRecommendation }) => (
 
 interface Props { job: JobMatchDetail; index: number; }
 
-export const OrientationJobCard = ({ job, index }: Props) => {
+export const OrientationJobCard = ({ job, index: _index }: Props) => {
     const [showDetails, setShowDetails] = useState(false);
+    const { selectedVacancy, selectVacancy, clearVacancy } = useDashboardStore();
+    const isSelected = selectedVacancy?.id === job.id;
 
     const compatPercent = Math.round(100 - job.gap_porcentual);
     const matchedCount = job.matched_skills.length;
@@ -80,122 +85,134 @@ export const OrientationJobCard = ({ job, index }: Props) => {
     const courseCount = job.recommended_courses.length;
 
     return (
-        <motion.article
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3, delay: index * 0.06 }}
-            className="bg-white rounded-2xl border border-stone-200/80 shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden"
-        >
-            {/* FILA PRINCIPAL (siempre visible) */}
+        <article className="bg-white rounded-2xl border border-gray-100 overflow-hidden
+            shadow-[0_1px_3px_rgba(0,0,0,0.04)] hover:shadow-[0_4px_20px_-4px_rgba(30,41,59,0.12)] transition-shadow duration-300">
             <div className="flex items-center gap-4 p-4 sm:p-5">
-                {/* Avatar empresa */}
-                <div className="flex-shrink-0 w-10 h-10 rounded-xl bg-gradient-to-br from-[#A04E2D] to-[#C87A53] flex items-center justify-center text-white font-extrabold text-xs shadow-sm">
+                <div className="flex-shrink-0 w-11 h-11 rounded-xl flex items-center justify-center text-white font-extrabold text-xs"
+                    style={{ background: "var(--gradient-button)" }}>
                     {job.company.slice(0, 2).toUpperCase()}
                 </div>
 
-                {/* Info central */}
                 <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-1.5">
-                        <p className="text-[11px] font-bold text-[#A04E2D] uppercase tracking-wider truncate">{job.company}</p>
+                        <p className="text-[11px] font-bold text-[var(--color-primary)] uppercase tracking-wider truncate">{job.company}</p>
                         {job.area && (
-                            <span className="flex-shrink-0 px-1.5 py-px rounded-full bg-[#A04E2D]/10 text-[9px] font-extrabold text-[#A04E2D]/70 uppercase tracking-wider">
+                            <span className="flex-shrink-0 px-2 py-0.5 rounded-full bg-[var(--color-primary-lighter)] text-[10px] font-extrabold text-[var(--color-primary)] uppercase tracking-wider">
                                 {AREA_LABEL[job.area] ?? job.area}
                             </span>
                         )}
                     </div>
-                    <h3 className="text-sm sm:text-base font-extrabold text-stone-900 leading-snug truncate mt-0.5">{job.title}</h3>
-                    <div className="flex flex-wrap items-center gap-x-3 gap-y-0.5 mt-1.5 text-[11px] font-medium text-stone-400">
-                        <span className="inline-flex items-center gap-1"><MapPin className="w-3 h-3" />{job.location}</span>
-                        <span className="capitalize"><Star className="w-3 h-3 inline mr-0.5" />{seniorityLabel[job.seniority] ?? job.seniority}</span>
-                        {job.salary && <span><Clock className="w-3 h-3 inline mr-0.5" />{job.salary}</span>}
+                    <h3 className="text-sm sm:text-base font-extrabold text-[var(--color-heading)] leading-snug truncate mt-0.5 font-display"
+                        style={{ letterSpacing: "-0.01em" }}>{job.title}</h3>
+                    <div className="flex flex-wrap items-center gap-x-3 gap-y-0.5 mt-1.5 text-[11px] font-medium text-[var(--color-body)]">
+                        <span className="inline-flex items-center gap-1"><MapPin className="w-3 h-3 text-[var(--color-muted)]" />{job.location}</span>
+                        <span className="capitalize"><Star className="w-3 h-3 inline mr-0.5 text-[var(--color-muted)]" />{seniorityLabel[job.seniority] ?? job.seniority}</span>
+                        {job.salary && <span><DollarSign className="w-3 h-3 inline mr-0.5 text-[var(--color-muted)]" />{job.salary}</span>}
                     </div>
                     <div className="flex items-center gap-2 mt-1.5">
-                        <span className="text-[11px] font-semibold text-stone-500">{matchedCount}/{requiredCount} skills cumplidas</span>
+                        <span className="text-[11px] font-semibold text-[var(--color-body)]">{matchedCount}/{requiredCount} skills cumplidas</span>
                         {missingPreview.length > 0 && (
-                            <span className="text-[11px] text-amber-600 font-medium truncate">
+                            <span className="text-[11px] text-[var(--color-accent-amber)] font-medium truncate">
                                 · Te falta{missingPreview.length === 1 ? "" : "n"}: {missingPreview.join(", ")}{extraMissing > 0 ? ` +${extraMissing}` : ""}
                             </span>
                         )}
                     </div>
                 </div>
 
-                {/* Donut + botones */}
-                <div className="flex-shrink-0 flex flex-col items-center gap-2">
+                <div className="flex-shrink-0 flex flex-col items-center gap-2.5">
                     <MiniDonut percent={compatPercent} />
+                    {isSelected ? (
+                        <button
+                            onClick={clearVacancy}
+                            className="flex items-center gap-1.5 px-4 py-2 font-bold text-[11px] rounded-full transition-all duration-200 active:scale-[0.97] group"
+                            style={{
+                                background: "var(--color-accent-green-bg)",
+                                color: "var(--color-accent-green)",
+                                boxShadow: "inset 0 0 0 1px var(--color-accent-green-light)",
+                            }}
+                            title="Click para cancelar">
+                            <CheckCircle2 className="w-3 h-3 group-hover:hidden" />
+                            <X className="w-3 h-3 hidden group-hover:block" />
+                            <span className="group-hover:hidden">Seleccionada</span>
+                            <span className="hidden group-hover:inline">Cancelar</span>
+                        </button>
+                    ) : (
+                        <button
+                            onClick={() => selectVacancy(job)}
+                            className="flex items-center gap-1.5 px-4 py-2 text-white font-bold text-[11px] rounded-full transition-all duration-200 hover:shadow-[0_4px_12px_-2px_rgba(47,117,220,0.4)] active:scale-[0.97]"
+                            style={{
+                                background: "var(--gradient-button)",
+                                boxShadow: "0 2px 8px -2px rgba(47,117,220,0.25)",
+                            }}>
+                            <Sparkles className="w-3 h-3" />
+                            Elegir vacante
+                        </button>
+                    )}
                     <button onClick={() => setShowDetails(!showDetails)}
-                        className="flex items-center gap-1 px-3 py-1.5 bg-gradient-to-r from-[#A04E2D] to-[#C87A53] hover:from-[#853F22] hover:to-[#A04E2D] text-white font-bold text-[11px] rounded-lg transition-all duration-200 shadow-sm active:scale-[0.97]">
-                        <Sparkles className="w-3 h-3" />
-                        Elegir vacante
-                    </button>
-                    <button onClick={() => setShowDetails(!showDetails)}
-                        className="flex items-center gap-1 text-[11px] font-medium text-stone-400 hover:text-stone-600 transition-colors">
+                        className="flex items-center gap-1 text-[11px] font-medium text-[var(--color-primary)] hover:text-[var(--color-primary-hover)] transition-colors duration-200">
                         Ver detalles
-                        <motion.span animate={{ rotate: showDetails ? 180 : 0 }} transition={{ duration: 0.2 }}>
-                            <ChevronDown className="w-3 h-3" />
-                        </motion.span>
+                        <ChevronDown className={`w-3 h-3 transition-transform duration-200 ${showDetails ? "rotate-180" : ""}`} />
                     </button>
                 </div>
             </div>
 
-            {/* PANEL EXPANDIBLE */}
-            <AnimatePresence>
+            <AnimatePresence initial={false}>
                 {showDetails && (
                     <motion.div
                         initial={{ height: 0, opacity: 0 }}
                         animate={{ height: "auto", opacity: 1 }}
                         exit={{ height: 0, opacity: 0 }}
-                        transition={{ duration: 0.25, ease: "easeInOut" }}
+                        transition={{ duration: 0.2, ease: "easeInOut" }}
                         className="overflow-hidden"
                     >
-                        <div className="border-t border-stone-100 bg-stone-50/60 px-4 sm:px-5 py-4 space-y-4">
-                            {/* Descripcion */}
-                            <p className="text-xs text-stone-500 leading-relaxed">{job.description}</p>
+                        <div className="border-t border-gray-100 bg-gray-50/50 px-4 sm:px-5 py-4 space-y-4">
+                            <p className="text-xs text-[var(--color-body)] leading-relaxed">{job.description}</p>
 
-                            {/* Motivo recomendacion */}
-                            <div className="flex items-start gap-2">
-                                <Sparkles className="w-3 h-3 text-amber-500 flex-shrink-0 mt-0.5" />
-                                <p className="text-[11px] text-stone-400 italic leading-relaxed">
-                                    Recomendada porque coincide con tus areas de interes y tecnologias. Tu perfil tiene un {compatPercent}% de compatibilidad.
+                            <div className="flex items-start gap-2.5">
+                                <Sparkles className="w-3 h-3 text-[var(--color-primary)] flex-shrink-0 mt-0.5" />
+                                <p className="text-[11px] text-[var(--color-body)] leading-relaxed">
+                                    Recomendada porque coincide con tus áreas de interés y tecnologías. Tu perfil tiene un{" "}
+                                    <span className="font-bold text-[var(--color-heading)]">{compatPercent}%</span> de compatibilidad.
                                 </p>
                             </div>
 
-                            {/* Skills en 2 columnas */}
-                            <div className="grid grid-cols-2 gap-3">
-                                <div className="space-y-1.5">
-                                    <p className="text-[10px] font-extrabold text-emerald-600 uppercase tracking-wider">
-                                        Ya cumplis ({matchedCount})
+                            <div className="grid grid-cols-2 gap-4">
+                                <div className="space-y-2">
+                                    <p className="text-[10px] font-extrabold text-[var(--color-accent-green)] uppercase tracking-wider flex items-center gap-1.5">
+                                        <span className="w-1.5 h-1.5 rounded-full bg-[var(--color-accent-green)]" />
+                                        Ya cumplís ({matchedCount})
                                     </p>
-                                    <div className="flex flex-wrap gap-1">
+                                    <div className="flex flex-wrap gap-1.5">
                                         {job.matched_skills.map((s) => <SkillChip key={s} label={s} variant="matched" />)}
                                     </div>
                                 </div>
-                                <div className="space-y-1.5">
-                                    <p className="text-[10px] font-extrabold text-amber-600 uppercase tracking-wider">
+                                <div className="space-y-2">
+                                    <p className="text-[10px] font-extrabold text-[var(--color-accent-amber)] uppercase tracking-wider flex items-center gap-1.5">
+                                        <span className="w-1.5 h-1.5 rounded-full bg-[var(--color-accent-amber)]" />
                                         Por desarrollar ({job.missing_skills.length})
                                     </p>
-                                    <div className="flex flex-wrap gap-1">
+                                    <div className="flex flex-wrap gap-1.5">
                                         {job.missing_skills.map((s) => <SkillChip key={s} label={s} variant="pending" />)}
                                     </div>
                                 </div>
                             </div>
 
-                            {/* CTA accionable */}
                             {job.missing_skills.length > 0 && courseCount > 0 && (
-                                <div className="flex items-center gap-2 px-2.5 py-2 bg-[#A04E2D]/5 rounded-lg border border-[#A04E2D]/10">
-                                    <GraduationCap className="w-3.5 h-3.5 text-[#A04E2D] flex-shrink-0" />
-                                    <p className="text-[11px] font-semibold text-[#A04E2D]">
-                                        Con {courseCount} {courseCount === 1 ? "curso" : "cursos"} podes cerrar este gap y postularte.
+                                <div className="flex items-center gap-3 px-3 py-2.5 bg-[var(--color-primary-lighter)] rounded-xl border border-[var(--color-primary-light)]/50">
+                                    <GraduationCap className="w-4 h-4 text-[var(--color-primary)] flex-shrink-0" />
+                                    <p className="text-[11px] font-semibold text-[var(--color-primary)]">
+                                        Con {courseCount} {courseCount === 1 ? "curso" : "cursos"} podés cerrar este gap y postularte.
                                     </p>
                                 </div>
                             )}
 
-                            {/* Cursos */}
                             {courseCount > 0 && (
-                                <div className="space-y-2">
-                                    <p className="text-[10px] font-extrabold text-stone-500 uppercase tracking-wider flex items-center gap-1.5">
-                                        <span className="w-1 h-1 rounded-full bg-[#A04E2D]" />Camino de aprendizaje
+                                <div className="space-y-2.5">
+                                    <p className="text-[10px] font-extrabold text-[var(--color-heading)] uppercase tracking-wider flex items-center gap-1.5 font-display"
+                                        style={{ letterSpacing: "0.05em" }}>
+                                        <span className="w-1.5 h-1.5 rounded-full bg-[var(--color-primary)]" />Camino de aprendizaje
                                     </p>
-                                    <div className="space-y-1.5">
+                                    <div className="space-y-2">
                                         {job.recommended_courses.map((c, i) => <CourseRow key={`${c.title}-${i}`} course={c} />)}
                                     </div>
                                 </div>
@@ -204,6 +221,6 @@ export const OrientationJobCard = ({ job, index }: Props) => {
                     </motion.div>
                 )}
             </AnimatePresence>
-        </motion.article>
+        </article>
     );
 };

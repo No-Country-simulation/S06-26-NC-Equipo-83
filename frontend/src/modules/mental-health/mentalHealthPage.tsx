@@ -1,106 +1,312 @@
 import React, { useState } from "react";
-import { Play, ArrowRight, HeartHandshake, BookOpen, Navigation, Loader2 } from "lucide-react";
+import { motion } from "framer-motion";
+import {
+  Heart, Loader2, Shield, Phone,
+  Lightbulb, Send,
+} from "lucide-react";
 import { useSaludStore } from "../../store/useSaludStore";
 import { Mood } from "../../types/api";
+import { PageBackground } from "../../components/layout/PageBackground";
 
-interface DayMood {
-  day: string;
+interface MoodOption {
+  id: string;
+  value: string;
   emoji: string;
   label: string;
-  isActive?: boolean;
 }
 
-export const MentalHealthPage: React.FC = () => {
-  const { currentResponse: saludData, isLoading, sendCheckin } = useSaludStore();
-  const [crisisSent, setCrisisSent] = useState(false);
-  const [viewMode, setViewMode] = useState<"semana" | "mes">("semana");
+const moodOptions: MoodOption[] = [
+  { id: "happy", value: Mood.HAPPY, emoji: "😊", label: "Feliz" },
+  { id: "tired", value: Mood.TIRED, emoji: "🥱", label: "Cansado" },
+  { id: "sad", value: Mood.SAD, emoji: "😢", label: "Triste" },
+  { id: "anxious", value: Mood.ANXIOUS, emoji: "😰", label: "Ansioso" },
+  { id: "overwhelmed", value: Mood.OVERWHELMED, emoji: "😫", label: "Agobiado" },
+  { id: "stressed", value: Mood.STRESSED, emoji: "🤯", label: "Estresado" },
+  { id: "angry", value: Mood.ANGRY, emoji: "😡", label: "Enojado" },
+  { id: "depressed", value: Mood.DEPRESSED, emoji: "😔", label: "Deprimido" },
+];
 
-  const handleCrisis = async () => {
-    await sendCheckin({ humor: Mood.SAD, nota_semanal: 1, contexto: "Botón de crisis activado por el usuario" });
-    setCrisisSent(true);
+const CARD_SHADOW = { boxShadow: "0 4px 20px -4px rgba(30,41,59,0.08)" };
+
+export const MentalHealthPage: React.FC = () => {
+  const { currentResponse: saludData, isLoading, error, sendCheckin, clearResponse } = useSaludStore();
+  const [selectedMood, setSelectedMood] = useState<string | null>(null);
+  const [weeklyScore, setWeeklyScore] = useState<number>(7);
+  const [contexto, setContexto] = useState<string>("");
+  const [isSubmitted, setIsSubmitted] = useState(false);
+
+  const isCrisisScore = weeklyScore < 4;
+
+  const handleSubmit = async () => {
+    if (!selectedMood) return;
+    await sendCheckin({
+      humor: selectedMood as typeof Mood.HAPPY,
+      nota_semanal: weeklyScore,
+      contexto: contexto.trim() || null,
+    });
+    setIsSubmitted(true);
   };
 
-  const weekMoods: DayMood[] = [
-    { day: "Lun", emoji: "😊", label: "Feliz" },
-    { day: "Mar", emoji: "😡", label: "Enojado", isActive: true },
-    { day: "Mié", emoji: "😀", label: "Alegre" },
-    { day: "Jue", emoji: "🙂", label: "Neutral" },
-    { day: "Vie", emoji: "😰", label: "Ansioso" },
-    { day: "Sáb", emoji: "😀", label: "Alegre" },
-    { day: "Dom", emoji: "😇", label: "Calmado" },
-  ];
+  const handleReset = () => {
+    clearResponse();
+    setIsSubmitted(false);
+    setSelectedMood(null);
+    setWeeklyScore(7);
+    setContexto("");
+  };
+
+  const handleCrisis = async () => {
+    await sendCheckin({
+      humor: Mood.DEPRESSED,
+      nota_semanal: 1,
+      contexto: "Botón de crisis activado por el usuario",
+    });
+    setIsSubmitted(true);
+  };
 
   return (
-    <main className="min-h-screen py-6 px-4 font-sans antialiased text-gray-800 sm:px-6 md:py-10 lg:px-8">
-      <div className="max-w-[1024px] mx-auto space-y-10">
-        <header className="space-y-3">
-          <h1 className="text-3xl md:text-4xl font-extrabold text-[#A04E2D] tracking-tight">Tu Bienestar Mental</h1>
-          <p className="text-sm md:text-base text-gray-600 leading-relaxed max-w-[720px]">
-            {saludData?.mensaje || "Este es un espacio seguro diseñado para escucharte y apoyarte. Tómate un momento para respirar, registrar cómo te sientes y explorar recursos creados especialmente para ti."}
-          </p>
-        </header>
+    <PageBackground className="px-4 sm:px-6">
+      <div className="max-w-[750px] mx-auto space-y-8 py-6 md:py-10">
+        <motion.div
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+        className="space-y-2">
+        <div className="flex items-center gap-2.5">
+          <div className="w-8 h-8 rounded-full bg-[var(--color-accent-pink-bg)] flex items-center justify-center">
+            <Heart className="w-4 h-4 text-[var(--color-accent-pink)]" />
+          </div>
+          <h1 className="font-display text-2xl sm:text-3xl font-bold tracking-tight text-[var(--color-heading)]"
+            style={{ letterSpacing: "-0.02em" }}>
+            Tu Bienestar
+          </h1>
+        </div>
+        <div className="flex items-start gap-3 pt-2">
+          <img
+            src="/pet-res.webp"
+            alt="BiT"
+            className="w-10 h-10 rounded-full object-cover border-2 border-white shadow-sm flex-shrink-0"
+          />
+          <div className="flex-1 min-w-0">
+            <div className="bg-white rounded-2xl rounded-tl-md p-4 border border-gray-200 shadow-sm">
+              <p className="text-sm text-[var(--color-body)] leading-relaxed">
+                Este es un espacio seguro para escucharte. Tomate un momento para respirar, registrar cómo te sentís y recibir una recomendación pensada para vos.
+              </p>
+            </div>
+            <p className="text-[10px] text-[var(--color-muted)] mt-1.5">BiT</p>
+          </div>
+        </div>
+      </motion.div>
 
-        <section className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="bg-white rounded-2xl border border-gray-200/50 p-6 shadow-sm md:col-span-2 flex flex-col justify-between space-y-8">
-            <div className="flex justify-between items-center">
-              <h2 className="text-lg md:text-xl font-bold text-gray-900 tracking-tight">Historial de Ánimo</h2>
-              <div className="flex bg-gray-100 p-0.5 rounded-lg text-xs font-semibold text-gray-500">
-                <button onClick={() => setViewMode("semana")} className={`px-3 py-1 rounded-md transition-all ${viewMode === "semana" ? "bg-white text-gray-800 shadow-sm" : "hover:text-gray-800"}`}>Semana</button>
-                <button onClick={() => setViewMode("mes")} className={`px-3 py-1 rounded-md transition-all ${viewMode === "mes" ? "bg-white text-gray-800 shadow-sm" : "hover:text-gray-800"}`}>Mes</button>
-              </div>
-            </div>
-            <div className="grid grid-cols-7 gap-1 sm:gap-2 text-center pt-4">
-              {weekMoods.map((mood, idx) => (
-                <div key={idx} className="flex flex-col items-center space-y-3">
-                  <div className={`w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center text-xl md:text-2xl transition-all ${mood.isActive ? "bg-orange-50 border-2 border-[#A04E2D]/80 scale-110 shadow-sm" : "bg-gray-50/50 hover:bg-gray-100/70 cursor-pointer"}`}>{mood.emoji}</div>
-                  <span className={`text-xs font-bold ${mood.isActive ? "text-[#A04E2D]" : "text-gray-400"}`}>{mood.day}</span>
-                </div>
-              ))}
-            </div>
+      {!isSubmitted ? (
+        <motion.section
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
+          className="bg-white rounded-2xl border border-gray-100 p-5 sm:p-6 space-y-6"
+          style={CARD_SHADOW}>
+
+          <div>
+            <h2 className="font-display font-bold text-[var(--color-heading)] text-base"
+              style={{ letterSpacing: "-0.02em" }}>¿Cómo te sentís hoy?</h2>
+            <p className="text-xs text-[var(--color-muted)] mt-0.5">Elegí el emoji que mejor describe tu estado actual.</p>
           </div>
 
-          <div className="bg-[#853F22]/5 rounded-2xl border border-[#853F22]/10 p-6 flex flex-col justify-between space-y-4">
-            <div className="space-y-2">
-              <div className="flex items-center gap-2 text-[#A04E2D]"><HeartHandshake className="w-5 h-5 flex-shrink-0" /><h2 className="font-bold text-lg text-[#853F22] tracking-tight">Apoyo en Crisis</h2></div>
-              <p className="text-xs md:text-sm text-[#A04E2D] font-medium leading-relaxed">Si te sentís abrumado o necesitás hablar con alguien de inmediato, estamos acá.</p>
-            </div>
-            <div className="space-y-3">
-              {crisisSent && saludData?.derivar_cvv ? (
-                <div className="bg-red-50 border border-red-200 rounded-xl p-3 text-xs text-red-700 font-semibold">✅ Derivación activada. CVV: llamá al 188 (24h, gratuito).</div>
-              ) : (
-                <button onClick={handleCrisis} disabled={isLoading} className="w-full py-3 bg-[#A04E2D] hover:bg-[#853F22] text-white font-bold text-sm rounded-xl transition-all shadow-sm flex items-center justify-center gap-2 active:scale-[0.99] disabled:opacity-70">
-                  {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <HeartHandshake className="w-4 h-4" />}
-                  {isLoading ? "Procesando..." : "Botón de Crisis"}
+          <div className="grid grid-cols-4 gap-2.5">
+            {moodOptions.map((mood) => {
+              const isCurrent = selectedMood === mood.value;
+              return (
+                <button
+                  key={mood.id}
+                  onClick={() => setSelectedMood(mood.value)}
+                  className={`p-3 rounded-xl border flex flex-col items-center gap-1.5 transition-all duration-200
+                    ${isCurrent
+                      ? "border-[var(--color-accent-pink)] bg-[var(--color-accent-pink-bg)] shadow-sm"
+                      : "border-gray-100 bg-white hover:border-[var(--color-accent-pink)]/30 hover:bg-[var(--color-accent-pink-bg)]/50"
+                    }`}>
+                  <span className="text-2xl">{mood.emoji}</span>
+                  <span className={`text-[10px] font-semibold ${isCurrent ? "text-[var(--color-accent-pink)]" : "text-[var(--color-muted)]"}`}>
+                    {mood.label}
+                  </span>
                 </button>
-              )}
-              <p className="text-[11px] text-center font-bold text-gray-400 tracking-wide">Referencia automática a CVV 24/7</p>
+              );
+            })}
+          </div>
+
+          <div className="border-t border-gray-100 pt-5 space-y-4">
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <label className="text-xs font-semibold text-[var(--color-body)]">¿Cómo calificás tu día?</label>
+                <span className={`text-sm font-extrabold tabular-nums ${isCrisisScore ? "text-red-500" : "text-[var(--color-accent-pink)]"}`}>
+                  {weeklyScore}/10
+                </span>
+              </div>
+              <input
+                type="range" min="1" max="10" value={weeklyScore}
+                onChange={(e) => setWeeklyScore(Number(e.target.value))}
+                className="w-full h-1.5 rounded-full appearance-none cursor-pointer"
+                style={{ accentColor: isCrisisScore ? "#EF4444" : "var(--color-accent-pink)" }} />
+              <div className="flex justify-between text-[10px] text-[var(--color-muted)] font-medium">
+                <span>1</span><span>5</span><span>10</span>
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-xs font-semibold text-[var(--color-body)] block">
+                ¿Querés contarnos algo más? <span className="text-[var(--color-muted)] font-normal">(opcional)</span>
+              </label>
+              <textarea
+                value={contexto}
+                onChange={(e) => setContexto(e.target.value)}
+                placeholder="Ej: Tuve un día complicado en el trabajo..."
+                rows={3}
+                className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-[var(--color-body)] placeholder:text-[var(--color-muted)] resize-none focus:outline-none focus:border-[var(--color-accent-pink)]/40 focus:ring-2 focus:ring-[var(--color-accent-pink)]/10 transition-all" />
             </div>
           </div>
-        </section>
 
-        <section className="space-y-5">
-          <h2 className="text-xl md:text-2xl font-bold text-gray-900 tracking-tight">Sugerencias de Bienestar</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-            <article className="bg-white rounded-2xl border border-gray-100 overflow-hidden flex flex-col shadow-sm">
-              <div className="h-44 bg-gradient-to-br from-amber-900/30 to-amber-950/70 relative flex items-center justify-center"><div className="w-12 h-12 rounded-full bg-white/90 flex items-center justify-center text-[#A04E2D] shadow-lg cursor-pointer hover:scale-105 transition-transform"><Play className="w-5 h-5 fill-current ml-0.5" /></div></div>
-              <div className="p-5 flex-1 flex flex-col justify-between space-y-4">
-                <span className="text-[10px] font-extrabold tracking-widest text-[#A04E2D] uppercase">El Podcast de Hoy</span>
-                <h3 className="font-extrabold text-base md:text-lg text-gray-900">Navegando la Ansiedad</h3>
-                <p className="text-xs font-bold text-gray-400">12 min • Dra. Sofia Ruiz</p>
+          <button
+            onClick={handleSubmit}
+            disabled={!selectedMood || isLoading}
+            className="w-full py-3 rounded-full font-semibold text-sm transition-all duration-200 flex items-center justify-center gap-2 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
+            style={selectedMood && !isLoading ? {
+              background: "linear-gradient(135deg, var(--color-accent-pink) 0%, #EC4899 100%)",
+              color: "white",
+              boxShadow: "0 4px 14px -2px rgba(219,39,119,0.3)",
+            } : {
+              background: "#F3F4F6",
+              color: "var(--color-muted)",
+            }}>
+            {isLoading ? (
+              <><Loader2 className="w-4 h-4 animate-spin" />Analizando tu estado...</>
+            ) : (
+              <><Send className="w-4 h-4" />Enviar check-in</>
+            )}
+          </button>
+
+          {error && (
+            <div className="p-3 bg-red-50 border border-red-100 rounded-xl text-xs text-red-600 font-medium">{error}</div>
+          )}
+        </motion.section>
+      ) : (
+        <motion.section
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4 }}
+          className="space-y-5">
+
+          {saludData && (
+            <div className="bg-white rounded-2xl border border-gray-100 p-5 sm:p-6 space-y-5" style={CARD_SHADOW}>
+              {/* Diálogo del usuario */}
+              {selectedMood && (
+                <div className="flex items-start gap-3 justify-end">
+                  {(() => {
+                    const moodOption = moodOptions.find((m) => m.value === selectedMood);
+                    return (
+                      <div className="flex-1 min-w-0 flex flex-col items-end">
+                        <div className="bg-sky-100 rounded-2xl rounded-tr-md p-4 border border-sky-200">
+                          <p className="text-sm text-[var(--color-body)] leading-relaxed whitespace-pre-line">
+                            {`Estado de ánimo: ${moodOption?.label} ${moodOption?.emoji}\nPuntuación de la semana: ${weeklyScore}/10`}
+                            {contexto?.trim() ? `\n\n${contexto.trim()}` : ""}
+                          </p>
+                        </div>
+                        <p className="text-[10px] text-[var(--color-muted)] mt-1.5">Tu mensaje</p>
+                      </div>
+                    );
+                  })()}
+                </div>
+              )}
+
+              {/* Diálogo de BiT */}
+              <div className="flex items-start gap-3">
+                <img
+                  src="/pet-res.webp"
+                  alt="BiT"
+                  className="w-10 h-10 rounded-full object-cover border-2 border-white shadow-sm flex-shrink-0"
+                />
+                <div className="flex-1 min-w-0">
+                  <div className="bg-white rounded-2xl rounded-tl-md p-4 border border-gray-200">
+                    <p className="text-sm text-[var(--color-body)] leading-relaxed">{saludData.mensaje}</p>
+                  </div>
+                  <p className="text-[10px] text-[var(--color-muted)] mt-1.5">
+                    Respuesta de BiT · {new Date(saludData.created_at).toLocaleDateString()}
+                  </p>
+                </div>
               </div>
-            </article>
-            <article className="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm flex flex-col justify-between space-y-6">
-              <div><span className="text-[10px] font-extrabold tracking-widest text-gray-400 uppercase">Lectura Recomendada</span>
-              <h3 className="font-extrabold text-lg md:text-xl text-gray-900">{saludData?.accion_sugerida?.includes("Buenas Ideas") ? "De Dónde Vienen las Buenas Ideas" : "El Poder del Presente"}</h3></div>
-              <div className="pt-4 border-t border-gray-100 flex items-center justify-between text-xs font-bold"><span className="text-gray-400 flex items-center gap-1"><BookOpen className="w-3.5 h-3.5" /> 5 min</span><button className="text-[#A04E2D]">Leer ahora<ArrowRight className="w-3.5 h-3.5 inline ml-1" /></button></div>
-            </article>
-            <article className="bg-[#F3F6F3] rounded-2xl border border-emerald-100/50 p-5 shadow-sm flex flex-col justify-between space-y-8">
-              <div><span className="text-[10px] font-extrabold tracking-widest text-emerald-800/80 uppercase">Caminata Consciente</span><Navigation className="w-5 h-5 text-emerald-800 rotate-45 mt-1" /><h3 className="font-extrabold text-lg md:text-xl text-emerald-950">Ruta en la Naturaleza</h3></div>
-              <div className="space-y-4"><div className="flex items-center gap-4 border-b border-emerald-900/10 pb-4"><div><span className="block font-extrabold text-sm text-emerald-950">2.4 km</span><span className="text-[10px] font-bold text-emerald-800/60 uppercase">Distancia ideal</span></div><div className="border-l border-emerald-900/10 pl-4"><span className="block font-extrabold text-sm text-emerald-950">30 min</span><span className="text-[10px] font-bold text-emerald-800/60 uppercase">Tiempo</span></div></div><button className="w-full py-2.5 bg-white border border-emerald-800/20 hover:bg-emerald-50 text-emerald-900 font-bold text-xs md:text-sm rounded-xl">Ver mapa de ruta</button></div>
-            </article>
+
+              {saludData.derivar_cvv && (
+                <div className="bg-red-50 border-2 border-red-200 rounded-xl p-4 space-y-2">
+                  <div className="flex items-center gap-2">
+                    <Phone className="w-4 h-4 text-red-600" />
+                    <span className="text-xs font-extrabold tracking-wider text-red-600 uppercase">Derivación al CVV</span>
+                  </div>
+                  <p className="text-sm text-red-800 font-semibold leading-relaxed">
+                    Llamá al <span className="text-lg font-extrabold">188</span> — Centro de Valorización de la Vida.
+                  </p>
+                  <p className="text-xs text-red-600">
+                    Atención 24 horas, gratuita y confidencial.
+                  </p>
+                </div>
+              )}
+
+              <div className="flex items-start gap-3">
+                <div className="w-10 h-10 flex-shrink-0" />
+                <div className="flex-1 bg-[var(--color-accent-amber-bg)] border border-[var(--color-accent-amber-light)] rounded-xl p-4 space-y-1.5">
+                  <div className="flex items-center gap-1.5">
+                    <Lightbulb className="w-3.5 h-3.5 text-[var(--color-accent-amber)]" />
+                    <span className="text-[10px] font-extrabold tracking-wider text-[var(--color-accent-amber)] uppercase">
+                      Acción sugerida
+                    </span>
+                  </div>
+                  <p className="text-xs text-[var(--color-body)] font-semibold leading-relaxed">{saludData.accion_sugerida}</p>
+                </div>
+              </div>
+
+              <button
+                onClick={handleReset}
+                className="w-full py-2.5 rounded-full font-semibold text-sm transition-all duration-200 flex items-center justify-center gap-2 border border-gray-200 text-[var(--color-body)] hover:bg-gray-50 active:scale-[0.98]">
+                Hacer otro check-in
+              </button>
+            </div>
+          )}
+        </motion.section>
+      )}
+
+      {!isSubmitted && (
+        <motion.section
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.25 }}
+          className="bg-white rounded-2xl border border-gray-100 p-5 sm:p-6 space-y-4" style={CARD_SHADOW}>
+          <div className="flex items-center gap-2.5">
+            <div className="w-9 h-9 rounded-full bg-red-50 flex items-center justify-center">
+              <Shield className="w-4.5 h-4.5 text-red-500" />
+            </div>
+            <div>
+              <h3 className="font-display font-bold text-[var(--color-heading)] text-sm"
+                style={{ letterSpacing: "-0.02em" }}>¿Necesitás ayuda inmediata?</h3>
+              <p className="text-xs text-[var(--color-muted)]">No estás solo. Activá el botón para derivación automática al CVV.</p>
+            </div>
           </div>
-        </section>
+          <button
+            onClick={handleCrisis}
+            disabled={isLoading}
+            className="w-full py-3 rounded-full font-semibold text-sm transition-all duration-200 flex items-center justify-center gap-2 active:scale-[0.98] disabled:opacity-50"
+            style={{
+              background: "white",
+              color: "#DC2626",
+              border: "2px solid #FECACA",
+              boxShadow: "0 2px 8px -2px rgba(220,38,38,0.1)",
+            }}>
+            {isLoading ? (
+              <><Loader2 className="w-4 h-4 animate-spin" />Procesando...</>
+            ) : (
+              <><Phone className="w-4 h-4" />Botón de Crisis — Llamar al 188</>
+            )}
+          </button>
+        </motion.section>
+      )}
+
       </div>
-    </main>
+    </PageBackground>
   );
 };
