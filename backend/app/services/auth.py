@@ -3,13 +3,12 @@ from sqlmodel import Session
 
 from app.models.user import User
 from app.schemas.user import UserCreate
-from app.repositories.user import get_user_by_email, create_user
+from app.repositories.user import get_user_by_email, create_user, update_user
 from app.core.security import hash_password, verify_password, create_access_token
 from app.services.geo_validator import (
     validate_geographic_consistency,
     GeographicValidationError,
 )
-from app.repositories.user import get_user_by_email, create_user, update_user
 
 
 class AuthService:
