@@ -1,225 +1,214 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import {
-  ArrowRight, Sparkles, Smile, Brain, Lightbulb,
-  TrendingUp, CheckCircle2, Loader2,
+  ArrowRight, Lightbulb,
+  Compass, MapPin, Star,
+  DollarSign, BookOpen, ArrowUpRight, GraduationCap, X, Heart,
 } from "lucide-react";
+import { Link } from "react-router-dom";
 import { useAuthStore } from "../../store/useAuthStore";
-import { useSaludStore } from "../../store/useSaludStore";
-import { useOrientarStore } from "../../store/useOrientarStore";
-import { Mood } from "../../types/api";
+import { useDashboardStore } from "../../store/useDashboardStore";
+import type { CourseRecommendation } from "../../types/api";
+import { PageBackground } from "../../components/layout/PageBackground";
 
-interface MoodOption {
-  id: string;
-  label: string;
-  emoji: string;
-  bgClass: string;
-}
+const SENIORITY_LABEL: Record<string, string> = {
+  trainee: "Trainee", junior: "Junior", "semi-senior": "Semi Senior", senior: "Senior",
+};
+
+const CourseCard = ({ course }: { course: CourseRecommendation }) => (
+  <div className="flex-shrink-0 w-[220px] bg-white rounded-xl border border-gray-100 p-3.5 flex flex-col gap-2.5 hover:border-[var(--color-primary-light)] transition-colors duration-200 group">
+    <div className="w-8 h-8 rounded-lg bg-[var(--color-primary-lighter)] flex items-center justify-center group-hover:bg-[var(--color-primary-light)] transition-colors">
+      <BookOpen className="w-4 h-4 text-[var(--color-primary)]" />
+    </div>
+    <div className="flex-1 space-y-1">
+      <p className="text-xs font-semibold text-[var(--color-heading)] leading-snug line-clamp-2 font-display"
+        style={{ letterSpacing: "-0.01em" }}>{course.title}</p>
+      <p className="text-[10px] text-[var(--color-muted)]">{course.provider}</p>
+    </div>
+    <div className="flex items-center justify-between">
+      <span className="text-[10px] font-medium text-[var(--color-muted)] bg-gray-50 px-2 py-0.5 rounded-md">{course.duration}</span>
+      {course.url && (
+        <a href={course.url} target="_blank" rel="noopener noreferrer"
+          className="p-1 text-[var(--color-muted)] hover:text-[var(--color-primary)] hover:bg-[var(--color-primary-lighter)] rounded-md transition-colors">
+          <ArrowUpRight className="w-3 h-3" />
+        </a>
+      )}
+    </div>
+  </div>
+);
 
 export const DashboardPage: React.FC = () => {
   const user = useAuthStore((s) => s.user);
-  const {
-    currentResponse: aiResponse,
-    isLoading: isSaludLoading,
-    error: saludError,
-    sendCheckin,
-  } = useSaludStore();
-  const {
-    data: orientarData,
-    isLoading: isOrientarLoading,
-    fetchAnalysis,
-  } = useOrientarStore();
+  const { selectedVacancy, clearVacancy } = useDashboardStore();
 
-  const [selectedMood, setSelectedMood] = useState<string | null>(null);
-  const [weeklyScore, setWeeklyScore] = useState<number>(7);
-  const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
-
-  useEffect(() => {
-    if (user) {
-      fetchAnalysis({
-        perfil: user.tech_area || "frontend",
-        nivel: user.professional_level || "junior",
-        region: user.country_name || "LATAM",
-        idioma: "es",
-        lat: 0,
-        lng: 0,
-      });
-    }
-  }, [user]);
-
-  const moodToApi: Record<string, string> = {
-    feliz: Mood.HAPPY,
-    cansado: Mood.TIRED,
-    triste: Mood.SAD,
-    ansioso: Mood.ANXIOUS,
-    estresado: Mood.STRESSED,
-    enojado: Mood.ANGRY,
-    deprimido: Mood.DEPRESSED,
-  };
-
-  const moods: MoodOption[] = [
-    { id: "feliz", label: "Feliz", emoji: "😊", bgClass: "hover:bg-yellow-50" },
-    { id: "cansado", label: "Cansado", emoji: "🥱", bgClass: "hover:bg-amber-50" },
-    { id: "triste", label: "Triste", emoji: "😢", bgClass: "hover:bg-blue-50" },
-    { id: "ansioso", label: "Ansioso", emoji: "😰", bgClass: "hover:bg-indigo-50" },
-    { id: "estresado", label: "Estresado", emoji: "🤯", bgClass: "hover:bg-orange-50" },
-    { id: "enojado", label: "Enojado", emoji: "😡", bgClass: "hover:bg-red-50" },
-    { id: "deprimido", label: "Deprimido", emoji: "😔", bgClass: "hover:bg-purple-50" },
-  ];
-
-  const handleMoodSubmit = async () => {
-    if (!selectedMood) return;
-    const apiMood = moodToApi[selectedMood] || Mood.HAPPY;
-    await sendCheckin({
-      humor: apiMood as Mood,
-      nota_semanal: weeklyScore,
-      contexto: null,
-    });
-    setIsSubmitted(true);
-  };
+  const firstName = user?.full_name?.split(" ")[0] ?? "";
+  const compatPercent = selectedVacancy ? Math.round(100 - selectedVacancy.gap_porcentual) : 0;
+  const matchedCount = selectedVacancy?.matched_skills.length ?? 0;
+  const requiredCount = selectedVacancy?.required_skills.length ?? 0;
+  const courseCount = selectedVacancy?.recommended_courses.length ?? 0;
 
   return (
-    <main className="min-h-screen py-6 px-4 font-sans antialiased text-gray-800 sm:px-6 md:py-10 lg:px-8">
-      <div className="max-w-[1024px] mx-auto space-y-8">
+    <PageBackground>
+      <div className="max-w-[900px] mx-auto space-y-8 py-6 md:py-10">
         <header className="space-y-1">
-          <h1 className="text-3xl md:text-4xl font-extrabold text-[#A04E2D] tracking-tight">
-            ¡Hola de nuevo{user ? `, ${user.full_name.split(" ")[0]}` : ""}!
-          </h1>
-          <p className="text-sm md:text-base text-gray-500 font-medium">
-            Es un buen día para seguir creciendo profesionalmente.
-          </p>
-        </header>
+        <h1 className="font-display text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-[var(--color-heading)]"
+          style={{ letterSpacing: "-0.02em" }}>
+          ¡Hola{firstName ? `, ${firstName}` : ""}!
+        </h1>
+        <p className="text-sm md:text-base text-[var(--color-body)]">
+          Es un buen día para seguir creciendo profesionalmente.
+        </p>
+      </header>
 
-        <section className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
-          {/* TARJETA IZQUIERDA: CONTROL DE ÁNIMO */}
-          <article className="bg-white rounded-2xl border border-gray-200/60 p-6 shadow-sm space-y-6 min-h-[400px] flex flex-col justify-between">
-            <div className="space-y-4">
-              <div className="flex items-center gap-2">
-                <Smile className="w-5 h-5 text-[#A04E2D]" />
-                <h2 className="font-bold text-lg text-gray-900 tracking-tight">¿Cómo estás hoy?</h2>
-              </div>
-
-              <div className="grid grid-cols-3 sm:grid-cols-4 gap-3 pt-2">
-                {moods.map((mood) => {
-                  const isCurrent = selectedMood === mood.id;
-                  return (
-                    <button
-                      key={mood.id}
-                      onClick={() => !isSubmitted && setSelectedMood(mood.id)}
-                      disabled={isSubmitted}
-                      className={`p-3 rounded-xl border flex flex-col items-center justify-center gap-1.5 transition-all group ${
-                        isCurrent
-                          ? "border-[#A04E2D] bg-[#FAF4EE] shadow-xs scale-105"
-                          : "border-gray-100 bg-white " + mood.bgClass
-                      } ${isSubmitted ? "opacity-60 cursor-not-allowed" : "cursor-pointer"}`}
-                    >
-                      <span className="text-3xl md:text-4xl transition-transform group-hover:scale-110">{mood.emoji}</span>
-                      <span className={`text-xs font-bold tracking-tight ${isCurrent ? "text-[#A04E2D]" : "text-gray-500"}`}>{mood.label}</span>
-                    </button>
-                  );
-                })}
-              </div>
-
-              {selectedMood && !isSubmitted && (
-                <div className="pt-2 space-y-2">
-                  <label className="text-sm font-semibold text-gray-700">¿Cómo calificás tu semana? (1-10)</label>
-                  <input type="range" min="1" max="10" value={weeklyScore} onChange={(e) => setWeeklyScore(Number(e.target.value))} className="w-full accent-[#A04E2D]" />
-                  <div className="flex justify-between text-xs text-gray-400 font-bold">
-                    <span>1</span>
-                    <span className="text-[#A04E2D] font-extrabold text-sm">{weeklyScore}</span>
-                    <span>10</span>
-                  </div>
-                </div>
-              )}
-            </div>
-
-            <div className="pt-4">
-              {!isSubmitted ? (
-                <button
-                  onClick={handleMoodSubmit}
-                  disabled={!selectedMood || isSaludLoading}
-                  className={`w-full py-3 rounded-xl font-bold text-sm transition-all shadow-xs flex items-center justify-center gap-2 ${
-                    selectedMood && !isSaludLoading
-                      ? "bg-[#A04E2D] hover:bg-[#853F22] text-white cursor-pointer active:scale-[0.99]"
-                      : "bg-gray-200 text-gray-400 cursor-not-allowed opacity-70"
-                  }`}
-                >
-                  {isSaludLoading ? (
-                    <><Loader2 className="w-4 h-4 animate-spin" />Analizando...</>
-                  ) : (
-                    <><Sparkles className="w-4 h-4" />Analizar mi estado con IA</>
-                  )}
-                </button>
-              ) : (
-                <div className="flex items-center justify-center gap-2 py-2 text-emerald-700 font-bold text-sm bg-emerald-50 rounded-xl border border-emerald-100">
-                  <CheckCircle2 className="w-4 h-4" />Estado registrado exitosamente
-                </div>
-              )}
-            </div>
-          </article>
-
-          {/* TARJETA DERECHA: PROGRESO */}
-          <article className="bg-white rounded-2xl border border-gray-200/60 p-6 shadow-sm space-y-6 flex flex-col justify-between min-h-[400px]">
-            {isOrientarLoading ? (
-              <div className="flex-1 flex items-center justify-center"><Loader2 className="w-8 h-8 animate-spin text-[#A04E2D]" /></div>
-            ) : orientarData ? (
-              <>
-                <div className="space-y-6">
-                  <div className="flex justify-between items-start">
-                    <h2 className="font-extrabold text-lg md:text-xl text-gray-900 tracking-tight max-w-[200px]">Tu camino hacia el éxito</h2>
-                    <div className="p-2.5 bg-gray-50 rounded-xl text-gray-400 border border-gray-100"><TrendingUp className="w-5 h-5" /></div>
-                  </div>
-                  <p className="text-sm text-gray-600 leading-relaxed font-medium">
-                    Cumples el <span className="font-extrabold text-emerald-700">{Math.round(orientarData.gap_porcentual)}%</span> de los requisitos para <span className="font-bold text-gray-900">{user?.tech_area || "tu área"}</span>.
-                  </p>
-                  <div className="w-full bg-gray-100 h-3 rounded-full overflow-hidden">
-                    <div className="bg-[#6B8471] h-full rounded-full transition-all duration-500" style={{ width: `${orientarData.gap_porcentual}%` }} />
-                  </div>
-                </div>
-              </>
-            ) : (
-              <div className="flex-1 flex items-center justify-center text-gray-400 text-sm">No se pudo cargar el análisis.</div>
-            )}
-            <div className="pt-6">
-              <button className="w-full py-3 bg-[#A04E2D] hover:bg-[#853F22] text-white font-bold text-sm rounded-xl transition-all shadow-sm flex items-center justify-center gap-2 group">
-                Ver hoja de ruta completa<ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5" />
+      <section>
+        {selectedVacancy ? (
+          <div className="space-y-5">
+            <div className="flex items-center justify-between">
+              <h2 className="font-display font-bold text-sm text-[var(--color-heading)] uppercase tracking-wider flex items-center gap-2"
+                style={{ letterSpacing: "0.05em" }}>
+                <span className="w-1.5 h-1.5 rounded-full bg-[var(--color-primary)]" />
+                Tu objetivo profesional
+              </h2>
+              <button
+                onClick={clearVacancy}
+                className="text-xs font-medium text-[var(--color-muted)] hover:text-[var(--color-body)] transition-colors flex items-center gap-1">
+                <X className="w-3 h-3" />Cambiar
               </button>
             </div>
-          </article>
-        </section>
 
-        {!isSubmitted && (
-          <div className="bg-[#F3F6F3] rounded-xl border border-emerald-100/50 p-4 flex items-center gap-3 shadow-xs">
-            <div className="p-2 bg-white rounded-lg text-emerald-800 shadow-2xs"><Lightbulb className="w-4 h-4" /></div>
-            <p className="text-xs md:text-sm text-emerald-950 font-medium italic leading-snug">"Pequeños pasos hoy construyen grandes futuros mañana. Tu constancia es tu mayor superpoder."</p>
-          </div>
-        )}
+            <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden"
+              style={{ boxShadow: "0 4px 20px -4px rgba(30,41,59,0.10)" }}>
 
-        {isSubmitted && aiResponse && (
-          <section className="bg-[#A04E2D]/5 rounded-2xl border border-[#A04E2D]/10 p-6 shadow-sm space-y-4 animate-fadeIn">
-            <div className="flex items-center gap-2 text-[#853F22]">
-              <Brain className="w-5 h-5" />
-              <h3 className="font-extrabold text-base md:text-lg tracking-tight">Análisis y Recomendación de AppBiT IA</h3>
-            </div>
-            <div className="space-y-3">
-              <p className="text-sm md:text-base text-gray-800 leading-relaxed font-medium">{aiResponse.mensaje}</p>
-              {aiResponse.derivar_cvv && (
-                <div className="bg-red-50 border border-red-200 rounded-xl p-4 space-y-2">
-                  <span className="text-xs font-extrabold tracking-wider text-red-600 uppercase block">⚠️ Alerta de Bienestar</span>
-                  <p className="text-sm text-red-800 font-semibold">CVV — Centro de Valorización de la Vida: llama al 188 (24h, gratuito, confidencial).</p>
+              <div className="p-5 sm:p-6">
+                <div className="flex items-start gap-4">
+                  <div className="flex-shrink-0 w-12 h-12 rounded-xl flex items-center justify-center text-white font-extrabold text-sm"
+                    style={{ background: "var(--gradient-button)" }}>
+                    {selectedVacancy.company.slice(0, 2).toUpperCase()}
+                  </div>
+
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <p className="text-xs font-bold text-[var(--color-primary)] uppercase tracking-wider">{selectedVacancy.company}</p>
+                      <span className="px-2 py-0.5 rounded-full bg-[var(--color-primary-lighter)] text-[10px] font-extrabold text-[var(--color-primary)] uppercase tracking-wider">
+                        {selectedVacancy.area}
+                      </span>
+                    </div>
+                    <h3 className="text-base sm:text-lg font-extrabold text-[var(--color-heading)] mt-0.5 font-display"
+                      style={{ letterSpacing: "-0.01em" }}>{selectedVacancy.title}</h3>
+                    <div className="flex flex-wrap items-center gap-x-3 gap-y-0.5 mt-1.5 text-[11px] font-medium text-[var(--color-body)]">
+                      <span className="inline-flex items-center gap-1"><MapPin className="w-3 h-3 text-[var(--color-muted)]" />{selectedVacancy.location}</span>
+                      <span className="inline-flex items-center gap-1"><Star className="w-3 h-3 text-[var(--color-muted)]" />{SENIORITY_LABEL[selectedVacancy.seniority] ?? selectedVacancy.seniority}</span>
+                      {selectedVacancy.salary && <span className="inline-flex items-center gap-1"><DollarSign className="w-3 h-3 text-[var(--color-muted)]" />{selectedVacancy.salary}</span>}
+                    </div>
+                    {selectedVacancy.required_skills.length > 0 && (
+                      <p className="mt-1.5 text-[11px] leading-relaxed text-[var(--color-body)]">
+                        <span className="font-semibold">Requisitos: </span>
+                        {selectedVacancy.required_skills.map((s, i) => (
+                          <span key={s}>{s}{i < selectedVacancy.required_skills.length - 1 ? ", " : ""}</span>
+                        ))}
+                      </p>
+                    )}
+                  </div>
+
+                  <div className="flex-shrink-0 text-right">
+                    <span className="text-2xl font-extrabold text-[var(--color-heading)] font-display tabular-nums"
+                      style={{ letterSpacing: "-0.02em" }}>{compatPercent}%</span>
+                    <p className="text-[10px] text-[var(--color-muted)] font-medium">compatible</p>
+                  </div>
+                </div>
+
+                <div className="mt-4 space-y-2">
+                  <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
+                    <div className="h-full rounded-full transition-all duration-700"
+                      style={{
+                        width: `${compatPercent}%`,
+                        background: compatPercent >= 75
+                          ? "var(--color-accent-green)"
+                          : compatPercent >= 50
+                            ? "var(--color-accent-amber)"
+                            : "var(--color-accent-pink)",
+                      }} />
+                  </div>
+                  <div className="flex items-center justify-between text-[11px]">
+                    <span className="font-semibold text-[var(--color-body)]">
+                      {matchedCount}/{requiredCount} skills cumplidas
+                    </span>
+                    {selectedVacancy.missing_skills.length > 0 && (
+                      <span className="text-[var(--color-accent-amber)] font-medium">
+                        Te falta{selectedVacancy.missing_skills.length === 1 ? "" : "n"}: {selectedVacancy.missing_skills.slice(0, 2).join(", ")}
+                        {selectedVacancy.missing_skills.length > 2 ? ` +${selectedVacancy.missing_skills.length - 2}` : ""}
+                      </span>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              {courseCount > 0 && (
+                <div className="border-t border-gray-100 bg-gray-50/50 px-5 sm:px-6 py-4">
+                  <div className="flex items-center gap-2 mb-3">
+                    <GraduationCap className="w-4 h-4 text-[var(--color-primary)]" />
+                    <p className="text-xs font-extrabold text-[var(--color-heading)] uppercase tracking-wider font-display"
+                      style={{ letterSpacing: "0.05em" }}>
+                      Plan de aprendizaje · {courseCount} {courseCount === 1 ? "curso" : "cursos"}
+                    </p>
+                  </div>
+                  <div className="flex gap-3 overflow-x-auto pb-1 -mx-1 px-1 scrollbar-none">
+                    {selectedVacancy.recommended_courses.map((c, i) => (
+                      <CourseCard key={`${c.title}-${i}`} course={c} />
+                    ))}
+                  </div>
                 </div>
               )}
-              <div className="bg-white/80 backdrop-blur-xs border border-orange-100/60 rounded-xl p-4 space-y-1.5">
-                <span className="text-[10px] font-extrabold tracking-wider text-[#A04E2D] uppercase block">Acción sugerida para tu día</span>
-                <p className="text-xs md:text-sm text-gray-700 font-semibold leading-normal">{aiResponse.accion_sugerida}</p>
-              </div>
             </div>
-          </section>
+          </div>
+        ) : (
+          <Link to="/orientation"
+            className="block bg-white rounded-2xl border border-gray-100 p-6 sm:p-8 text-center space-y-4 hover:border-[var(--color-primary-light)] transition-colors duration-200 group"
+            style={{ boxShadow: "0 4px 20px -4px rgba(30,41,59,0.08)" }}>
+            <div className="mx-auto w-16 h-16 rounded-2xl bg-[var(--color-primary-lighter)] flex items-center justify-center group-hover:bg-[var(--color-primary-light)] transition-colors">
+              <Compass className="w-8 h-8 text-[var(--color-primary)]" />
+            </div>
+            <div>
+              <h2 className="font-display font-bold text-[var(--color-heading)] text-lg"
+                style={{ letterSpacing: "-0.02em" }}>Descubrí tu camino profesional</h2>
+              <p className="text-sm text-[var(--color-body)] max-w-sm mx-auto mt-1.5">
+                Elegí una vacante en Orientación para ver tu progreso y plan de aprendizaje personalizado.
+              </p>
+            </div>
+            <span className="btn-primary text-sm inline-flex mx-auto">
+              Ir a Orientación <ArrowRight className="w-4 h-4" />
+            </span>
+          </Link>
         )}
+      </section>
 
-        {saludError && (
-          <div className="bg-red-50 border border-red-200 rounded-xl p-4 text-sm text-red-700 font-medium">{saludError}</div>
-        )}
+      <section className="grid grid-cols-1 md:grid-cols-3 gap-5 items-start">
+        <Link to="/mental-health"
+          className="md:col-span-2 bg-white rounded-2xl border border-gray-100 p-5 sm:p-6 hover:border-[var(--color-accent-pink)] transition-colors duration-200 group"
+          style={{ boxShadow: "0 4px 20px -4px rgba(30,41,59,0.06)" }}>
+          <div className="flex items-center gap-2 mb-3">
+            <div className="w-8 h-8 rounded-full bg-[var(--color-accent-pink-bg)] flex items-center justify-center">
+              <Heart className="w-4 h-4 text-[var(--color-accent-pink)]" />
+            </div>
+            <h2 className="font-display font-bold text-[var(--color-heading)] text-sm"
+              style={{ letterSpacing: "-0.02em" }}>Check-in diario</h2>
+          </div>
+          <p className="text-sm text-[var(--color-body)] leading-relaxed mb-4">
+            Registrá cómo te sentís hoy y recibí una recomendación personalizada de nuestra IA para cuidar tu bienestar.
+          </p>
+          <span className="inline-flex items-center gap-2 text-sm font-semibold text-[var(--color-accent-pink)] group-hover:gap-3 transition-all">
+            Hacer check-in <ArrowRight className="w-4 h-4" />
+          </span>
+        </Link>
+
+        <div className="bg-[var(--color-primary-lighter)]/50 rounded-2xl border border-[var(--color-primary-light)]/50 p-5 flex flex-col justify-center items-center text-center space-y-3">
+          <Lightbulb className="w-5 h-5 text-[var(--color-primary)]" />
+          <p className="text-xs text-[var(--color-heading)] font-medium leading-relaxed italic">
+            "Pequeños pasos hoy construyen grandes futuros mañana. Tu constancia es tu mayor superpoder."
+          </p>
+        </div>
+      </section>
+
       </div>
-    </main>
+    </PageBackground>
   );
 };

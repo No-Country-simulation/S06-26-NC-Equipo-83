@@ -1,6 +1,8 @@
 import type { StylesConfig } from "react-select";
 
-const brandColor = "#99462A";
+const brandColor = "#2F75DC";
+const brandBg = "rgba(47,117,220,0.1)";
+const brandBgHover = "rgba(47,117,220,0.2)";
 
 export const SELECT_MENU_PROPS = {
   menuPosition: "fixed" as const,
@@ -13,13 +15,13 @@ export const selectStyles: StylesConfig<{ value: string; label: string }, false>
     minHeight: "3.5rem",
     borderRadius: "0.75rem",
     borderColor: "transparent",
-    backgroundColor: "#f5f5f4",
+    backgroundColor: "#f1f5f9",
     boxShadow: "none",
     "&:hover": { borderColor: "transparent" },
   }),
   option: (base, state) => ({
     ...base,
-    backgroundColor: state.isFocused ? "rgba(153, 70, 42, 0.1)" : "white",
+    backgroundColor: state.isFocused ? brandBg : "white",
     color: state.isFocused ? brandColor : "#292524",
     cursor: "pointer",
     fontSize: "0.875rem",
@@ -29,10 +31,9 @@ export const selectStyles: StylesConfig<{ value: string; label: string }, false>
   placeholder: (base) => ({ ...base, color: "#a8a29e", fontSize: "0.875rem" }),
   menu: (base) => ({ ...base, borderRadius: "0.75rem", marginTop: "0.25rem" }),
   menuList: (base) => ({ ...base, padding: "0.25rem" }),
-  // Estilos para modo multiselect (chips)
   multiValue: (base) => ({
     ...base,
-    backgroundColor: "rgba(153, 70, 42, 0.1)",
+    backgroundColor: brandBg,
     borderRadius: "0.5rem",
     margin: "2px",
   }),
@@ -47,7 +48,7 @@ export const selectStyles: StylesConfig<{ value: string; label: string }, false>
     color: brandColor,
     borderRadius: "0 0.5rem 0.5rem 0",
     ":hover": {
-      backgroundColor: "rgba(153, 70, 42, 0.2)",
+      backgroundColor: brandBgHover,
       color: "#292524",
     },
   }),

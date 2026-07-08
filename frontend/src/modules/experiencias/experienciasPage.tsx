@@ -7,6 +7,7 @@ import {
 } from "lucide-react";
 import { useExperienciasStore } from "../../store/useExperienciasStore";
 import { useAuthStore } from "../../store/useAuthStore";
+import { PageBackground } from "../../components/layout/PageBackground";
 
 const COBERTURA_STYLES: Record<string, { label: string; color: string; bg: string; icon: React.ElementType }> = {
   buena: { label: "Buena", color: "text-emerald-700", bg: "bg-emerald-100/70", icon: Signal },
@@ -72,37 +73,43 @@ export const ExperienciasPage: React.FC = () => {
 
   if (isLoading) {
     return (
-      <main className="min-h-screen flex items-center justify-center">
-        <div className="text-center space-y-3">
-          <Loader2 className="w-10 h-10 animate-spin text-[#A04E2D] mx-auto" />
-          <p className="text-sm text-gray-500 font-medium">Buscando experiencias cerca de ti...</p>
-          <p className="text-xs text-gray-400">Usando dataset Vísent CDRView</p>
-        </div>
-      </main>
+      <PageBackground>
+        <main className="min-h-screen flex items-center justify-center">
+          <div className="text-center space-y-3">
+            <Loader2 className="w-10 h-10 animate-spin text-[#A04E2D] mx-auto" />
+            <p className="text-sm text-gray-500 font-medium">Buscando experiencias cerca de ti...</p>
+            <p className="text-xs text-gray-400">Usando dataset Vísent CDRView</p>
+          </div>
+        </main>
+      </PageBackground>
     );
   }
 
   if (error) {
     return (
-      <main className="min-h-screen flex items-center justify-center px-4">
-        <div className="text-center space-y-4 max-w-sm">
-          <AlertCircle className="w-10 h-10 text-red-400 mx-auto" />
-          <p className="text-sm text-red-600 font-medium">{error}</p>
-          <button onClick={getLocationAndFetch} className="px-6 py-2.5 bg-[#A04E2D] text-white font-semibold text-sm rounded-xl shadow-sm">Reintentar</button>
-        </div>
-      </main>
+      <PageBackground>
+        <main className="min-h-screen flex items-center justify-center px-4">
+          <div className="text-center space-y-4 max-w-sm">
+            <AlertCircle className="w-10 h-10 text-red-400 mx-auto" />
+            <p className="text-sm text-red-600 font-medium">{error}</p>
+            <button onClick={getLocationAndFetch} className="px-6 py-2.5 bg-[#A04E2D] text-white font-semibold text-sm rounded-xl shadow-sm">Reintentar</button>
+          </div>
+        </main>
+      </PageBackground>
     );
   }
 
   if (locationError && !data) {
     return (
-      <main className="min-h-screen flex items-center justify-center px-4">
-        <div className="text-center space-y-4 max-w-sm">
-          <MapPin className="w-10 h-10 text-amber-400 mx-auto" />
-          <p className="text-sm text-amber-700 font-medium">{locationError}</p>
-          <button onClick={getLocationAndFetch} className="px-6 py-2.5 bg-[#A04E2D] text-white font-semibold text-sm rounded-xl shadow-sm">Intentar de nuevo</button>
-        </div>
-      </main>
+      <PageBackground>
+        <main className="min-h-screen flex items-center justify-center px-4">
+          <div className="text-center space-y-4 max-w-sm">
+            <MapPin className="w-10 h-10 text-amber-400 mx-auto" />
+            <p className="text-sm text-amber-700 font-medium">{locationError}</p>
+            <button onClick={getLocationAndFetch} className="px-6 py-2.5 bg-[#A04E2D] text-white font-semibold text-sm rounded-xl shadow-sm">Intentar de nuevo</button>
+          </div>
+        </main>
+      </PageBackground>
     );
   }
 
@@ -112,8 +119,9 @@ export const ExperienciasPage: React.FC = () => {
   const CoberturaIcon = coberturaStyle.icon;
 
   return (
-    <main className="min-h-screen py-6 px-4 font-sans antialiased text-gray-800 sm:px-6 md:py-10 lg:px-8">
-      <div className="max-w-[1024px] mx-auto space-y-6 md:space-y-8">
+    <PageBackground>
+      <main className="min-h-screen py-6 px-4 font-sans antialiased text-gray-800 sm:px-6 md:py-10 lg:px-8">
+        <div className="max-w-[1024px] mx-auto space-y-6 md:space-y-8">
 
         <header className="flex items-center justify-between">
           <div>
@@ -274,7 +282,8 @@ export const ExperienciasPage: React.FC = () => {
           </p>
         </section>
       </div>
-    </main>
+      </main>
+    </PageBackground>
   );
 };
 

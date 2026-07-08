@@ -5,14 +5,14 @@ Personal Guidance Ecosystem for Shark Tank BiT
 FastAPI application entry point.
 """
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
+from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from app.routers import auth
 from app.routers import salud
 from app.routers import orientar
 from app.routers import experiencias
 from app.routers import events
-from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 from app.routers import users
 # ---------------------------------------------------------------------------

@@ -16,10 +16,10 @@ export const Layout = () => {
     if (!isAuthenticated) return <Navigate to="/landing" replace />;
 
     return (
-        <div className="min-h-screen flex pb-16 flex-col bg-[#FDFBF7] text-slate-800 antialiased">
+        <div className="min-h-screen flex pb-16 lg:pb-0 flex-col antialiased" style={{ backgroundColor: "var(--color-page-bg)", color: "var(--color-body)" }}>
             <Header />
             
-            <main className="flex-1 pt-16 pb-16 px-4 w-full mx-auto overflow-y-auto lg:max-w-[1300px]">
+            <main className="flex-1 pt-16 pb-16 lg:pb-8 px-4 w-full mx-auto overflow-y-auto lg:max-w-[1300px]">
                 <Routes>
                     {/* Rutas */}
                     <Route path="dashboard" element={<DashboardPage />} />

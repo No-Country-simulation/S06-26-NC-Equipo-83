@@ -1,5 +1,6 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect, useRef } from "react";
+import { Link, useLocation } from "react-router-dom";
 import { ArrowRight, Play, BookOpen, Briefcase, Users, HeartHandshake, Heart, User, Compass, MessageCircle, Trophy, Sparkles, Quote } from "lucide-react";
 
 const features = [
@@ -70,14 +71,37 @@ export default function Landing() {
   const [displayedSubtitle, setDisplayedSubtitle] = useState("");
   const [sectionVisible, setSectionVisible] = useState(false);
   const [isDesktop, setIsDesktop] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
   const fullTitle = "¡Craa! Soy BiT";
   const fullSubtitle = "Voy a acompañarte durante todo el camino para ayudarte a alcanzar tus objetivos.";
 
   const typewriterStartedRef = useRef(false);
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.hash) {
+      const id = location.hash.replace("#", "");
+      const el = document.getElementById(id);
+      if (el) {
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            el.scrollIntoView();
+          });
+        });
+      }
+    }
+  }, [location.hash]);
 
   useEffect(() => {
     const check = () => setIsDesktop(window.innerWidth >= 768);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth <= 477);
     check();
     window.addEventListener("resize", check);
     return () => window.removeEventListener("resize", check);
@@ -140,9 +164,9 @@ export default function Landing() {
 
         {/* Contenido */}
         <div className="relative z-10 mx-auto flex h-full max-w-[1650px] items-center px-6 pb-[15%] pt-16 md:px-12 md:py-0 lg:px-20">
-          <div className="grid w-full grid-cols-1 items-center gap-8 md:grid-cols-2">
+          <div className="grid w-full grid-cols-1 items-center gap-8 min-[950px]:grid-cols-2">
             {/* Columna derecha (arriba en mobile): ave volando */}
-            <div className="relative hidden h-full items-center justify-center md:order-2 md:flex md:justify-end">
+            <div className="relative hidden h-full items-center justify-center min-[950px]:order-2 min-[950px]:flex min-[950px]:justify-end">
               <motion.div
                 initial={{ x: "120vw", opacity: 0 }}
                 animate={{ x: 0, opacity: 1 }}
@@ -174,22 +198,23 @@ export default function Landing() {
               transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1], delay: 0.2 }}
               className="w-full md:order-1"
             >
-              <h1 className="font-display font-bold leading-[1.1] tracking-tight text-4xl md:text-6xl lg:text-[64px]" style={{ color: "#002F68", letterSpacing: "-0.02em" }}>
+              <h1 className="font-display font-bold leading-[1.1] tracking-tight text-4xl md:text-5xl min-[1110px]:text-[64px]" style={{ color: "#002F68", letterSpacing: "-0.02em" }}>
                 Cada pequeño paso te acerca a tu <span style={{ color: "#2F75DC" }}>futuro</span>.
               </h1>
-              <p className="mt-8 font-sans leading-[1.6] text-base md:text-xl" style={{ color: "#002F68" }}>
+              <p className="mt-8 font-sans leading-[1.6] text-base md:text-lg min-[1100px]:text-xl" style={{ color: "#002F68" }}>
                 Te acompañamos con aprendizaje, mentorías, oportunidades y
                 bienestar para que crezcas a tu ritmo.
               </p>
 
               <div className="mt-8 flex flex-col gap-4 sm:flex-row">
-                <a
-                  href="/register"
+                <Link
+                  to="/register"
+                  onClick={() => window.scrollTo(0, 0)}
                   className="inline-flex items-center justify-center gap-2 rounded-full bg-[#2F75DC] px-7 py-3.5 text-base font-semibold text-white shadow-ambient transition-all hover:bg-[#004A9E] hover:shadow-ambient-lg"
                 >
                   Comienza tu camino
                   <ArrowRight className="h-5 w-5" />
-                </a>
+                </Link>
                 <a
                   href="#como-funciona"
                   className="inline-flex items-center justify-center gap-2 rounded-full bg-white px-7 py-3.5 text-base font-semibold shadow-[inset_0_0_0_1px_#2F75DC] transition-all hover:bg-[#2F75DC]/10"
@@ -261,13 +286,13 @@ export default function Landing() {
                   <feature.icon className="h-8 w-8 sm:h-10 sm:w-10 md:h-12 md:w-12" style={{ color: feature.color }} />
                 </div>
                 <h3
-                  className="font-display text-xl font-bold"
+                  className="font-display text-base font-bold sm:text-lg md:text-xl lg:text-base min-[1350px]:text-xl"
                   style={{ color: "#002F68" }}
                 >
                   {feature.title}
                 </h3>
                 <p
-                  className="mt-3 max-w-[20ch] font-sans leading-relaxed text-baseext-sm"
+                  className="mt-3 max-w-[20ch] font-sans text-xs leading-relaxed sm:text-sm md:text-base lg:text-xs min-[1350px]:text-base"
                   style={{ color: "#424753" }}
                 >
                   {feature.description}
@@ -288,152 +313,124 @@ export default function Landing() {
           transition={{ duration: 0.6 }}
           className="mx-auto max-w-[1650px] px-6 md:px-12 lg:px-20"
         >
-          <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
-            {/* Columna 1: No estás solo */}
-            <div
-              className="relative flex min-h-[360px] flex-col items-center overflow-hidden rounded-3xl md:min-h-[440px] md:justify-center"
-              style={{ backgroundColor: "#F5F0FF" }}
-            >
-              {/* Mobile layout: diálogo → pet → badge */}
-              <div className="relative flex w-full flex-col items-center px-6 pb-[270px] pt-4 sm:pb-[370px] md:hidden">
-                <div
-                  className="w-full rounded-2xl bg-white px-5 py-4"
-                  style={{ boxShadow: "0 4px 20px -2px rgba(30, 41, 59, 0.15)" }}
-                >
-                  <h2
-                    className="font-display text-xl font-bold"
-                    style={{ color: "#002F68", letterSpacing: "-0.02em" }}
-                  >
-                    {displayedTitle}
-                  </h2>
-                  <p
-                    className="mt-1 font-sans text-sm leading-relaxed"
-                    style={{ color: "#424753" }}
-                  >
-                    {displayedSubtitle}
-                  </p>
-                </div>
-                <img
-                  src="/pet-2.webp"
-                  alt="Mascota de apoyo"
-                  className="absolute bottom-0 left-0 h-[260px] w-auto object-contain sm:h-[360px]"
-                />
-                <div className="absolute bottom-6 left-6 right-6 flex justify-center">
-                  <div className="inline-flex items-center gap-3 rounded-2xl px-4 py-2"
-                  style={{ backgroundColor: "#E5DAFF" }}
-                >
-                  <Sparkles className="h-5 w-5 shrink-0" style={{ color: "#7C3AED" }} />
-                  <p className="text-left text-sm leading-relaxed" style={{ color: "#7C3AED" }}>
-                    BiT es un asistente de IA especializado en garantizar tu bienestar y ayudarte a cumplir tus metas.
-                  </p>
-                </div>
-                </div>
-              </div>
-
-              {/* Desktop layout: pet behind, diálogo + badge a la derecha */}
-              <div className="hidden md:flex md:h-full md:w-full">
-                <img
-                  src="/pet-2.webp"
-                  alt="Mascota de apoyo"
-                  className="absolute bottom-0 left-0 h-[90%] w-auto object-contain"
-                />
-                <div className="relative z-10 flex w-full flex-col justify-center px-8 py-4 md:ml-auto md:max-w-[55%] md:px-12 md:text-left">
-                  <div
-                    className="relative rounded-2xl bg-white px-5 py-4"
-                    style={{ boxShadow: "0 4px 20px -2px rgba(30, 41, 59, 0.15)" }}
-                  >
-                    <div
-                      className="absolute bottom-3 left-[-8px]"
-                      style={{
-                        width: 0,
-                        height: 0,
-                        borderTop: "8px solid transparent",
-                        borderBottom: "8px solid transparent",
-                        borderRight: "8px solid white",
-                      }}
-                    />
-                    <h2
-                      className="font-display text-xl font-bold md:text-2xl lg:text-3xl"
-                      style={{ color: "#002F68", letterSpacing: "-0.02em" }}
-                    >
-                      {displayedTitle}
-                    </h2>
-                    <p
-                      className="mt-1 font-sans leading-relaxed text-sm md:text-base"
-                      style={{ color: "#424753" }}
-                    >
-                      {displayedSubtitle}
-                    </p>
-                  </div>
-                  <div
-                    className="mt-6 inline-flex items-center gap-3 rounded-2xl px-4 py-2"
-                    style={{ backgroundColor: "#E5DAFF" }}
-                  >
-                    <Sparkles className="h-5 w-5 shrink-0" style={{ color: "#7C3AED" }} />
-                    <p className="text-left text-sm leading-relaxed" style={{ color: "#7C3AED" }}>
-                      BiT es un asistente de IA especializado en garantizar tu bienestar y ayudarte a cumplir tus metas.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Columna 2: Testimonios */}
-            <div className="flex h-full flex-col rounded-3xl px-6 py-6 sm:px-10 md:px-20 md:py-10" style={{ backgroundColor: "#FFFBEB" }}>
-              <div className="flex-1">
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={currentTestimonial}
-                  initial={{ opacity: 0, y: 12 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -12 }}
-                  transition={{ duration: 0.3 }}
-                  className="flex flex-col text-left"
-                >
-                  <Quote className="mb-3 h-6 w-6" style={{ color: "#D97706" }} />
-                  <p
-                    className="font-sans leading-relaxed italic text-base md:text-lg"
-                    style={{ color: "#002F68" }}
-                  >
-                    {testimonials[currentTestimonial].quote}
-                  </p>
-                  <div className="mt-6 flex items-center gap-4">
-                    <img
-                      src={`/${testimonials[currentTestimonial].avatar}`}
-                      alt={testimonials[currentTestimonial].name}
-                      className="h-16 w-16 rounded-full sm:h-20 sm:w-20"
-                    />
-                    <div className="text-left">
-                      <p
-                        className="font-display font-bold text-lgext-base"
-                        style={{ color: "#002F68" }}
-                      >
-                        {testimonials[currentTestimonial].name}, {testimonials[currentTestimonial].location}
-                      </p>
-                      <p className="leading-relaxed text-baseext-sm" style={{ color: "#424753" }}>
-                        {testimonials[currentTestimonial].role}
-                      </p>
+          <div className="sobre-bit-container">
+            <div className="grid h-full grid-cols-1 min-[1000px]:grid-cols-2 sobre-bit-grid">
+              {/* Columna 1: No estás solo */}
+              <div className={`flex ${isMobile ? 'aspect-[18/16]' : 'aspect-video'} flex-col overflow-hidden rounded-3xl sb-dialog-bubble`} style={{ backgroundColor: "#F5F0FF" }}>
+                {isMobile ? (
+                  <div className="grid h-full w-full" style={{ gridTemplateRows: 'auto 1fr' }}>
+                    <div className="flex flex-col px-4 pt-4">
+                      <div className="relative rounded-2xl bg-white sb-dialog" style={{ boxShadow: "0 4px 20px -2px rgba(30, 41, 59, 0.15)" }}>
+                        <h2 className="font-display font-bold sb-title" style={{ color: "#002F68", letterSpacing: "-0.02em" }}>
+                          {displayedTitle}
+                        </h2>
+                        <p className="mt-1 font-sans leading-relaxed sb-body" style={{ color: "#424753" }}>
+                          {displayedSubtitle}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="relative">
+                      <img
+                        src="/pet-2.webp"
+                        alt="Mascota de apoyo"
+                        className="absolute bottom-0 left-0 h-full w-full object-contain object-left-bottom"
+                      />
+                      <div className="absolute bottom-0 left-0 right-0 px-4 pb-4">
+                        <div className="inline-flex items-center rounded-2xl sb-badge" style={{ backgroundColor: "#E5DAFF" }}>
+                          <Sparkles className="shrink-0" style={{ color: "#7C3AED", width: "clamp(0.875rem, 2.2cqi, 1.25rem)", height: "clamp(0.875rem, 2.2cqi, 1.25rem)" }} />
+                          <p className="text-left sb-body" style={{ color: "#7C3AED" }}>
+                            BiT es un asistente de IA especializado en garantizar tu bienestar y ayudarte a cumplir tus metas.
+                          </p>
+                        </div>
+                      </div>
                     </div>
                   </div>
-                </motion.div>
-              </AnimatePresence>
+                ) : (
+                  <div className="grid h-full w-full items-end" style={{ gridTemplateAreas: '"pet dialog"', gridTemplateColumns: '45% 55%' }}>
+                    <img
+                      src="/pet-2.webp"
+                      alt="Mascota de apoyo"
+                      className="h-full w-full object-contain object-left-bottom"
+                      style={{ gridArea: "pet" }}
+                    />
+                    <div className="flex flex-col justify-center self-center px-4 py-2 md:px-[8%]" style={{ gridArea: "dialog" }}>
+                      <div className="relative rounded-2xl bg-white sb-dialog" style={{ boxShadow: "0 4px 20px -2px rgba(30, 41, 59, 0.15)" }}>
+                        {isDesktop && (
+                          <div
+                            className="absolute bottom-3 left-[-8px]"
+                            style={{
+                              width: 0,
+                              height: 0,
+                              borderTop: "8px solid transparent",
+                              borderBottom: "8px solid transparent",
+                              borderRight: "8px solid white",
+                            }}
+                          />
+                        )}
+                        <h2 className="font-display font-bold sb-title" style={{ color: "#002F68", letterSpacing: "-0.02em" }}>
+                          {displayedTitle}
+                        </h2>
+                        <p className="mt-1 font-sans leading-relaxed sb-body" style={{ color: "#424753" }}>
+                          {displayedSubtitle}
+                        </p>
+                      </div>
+                      <div className="mt-4 inline-flex items-center rounded-2xl sb-badge" style={{ backgroundColor: "#E5DAFF" }}>
+                        <Sparkles className="shrink-0" style={{ color: "#7C3AED", width: "clamp(0.875rem, 2.2cqi, 1.25rem)", height: "clamp(0.875rem, 2.2cqi, 1.25rem)" }} />
+                        <p className="text-left sb-body" style={{ color: "#7C3AED" }}>
+                          BiT es un asistente de IA especializado en garantizar tu bienestar y ayudarte a cumplir tus metas.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
 
-              {/* Dots */}
-              <div className="mt-8 flex items-center justify-center gap-3">
-                {testimonials.map((_, i) => (
-                  <button
-                    key={i}
-                    onClick={() => setCurrentTestimonial(i)}
-                    className="rounded-full transition-all duration-300"
-                    style={{
-                      width: i === currentTestimonial ? "24px" : "10px",
-                      height: "10px",
-                      backgroundColor: i === currentTestimonial ? "#D97706" : "#FDE68A",
-                    }}
-                    aria-label={`Testimonio ${i + 1}`}
-                  />
-                ))}
+              {/* Columna 2: Testimonios */}
+              <div className="flex aspect-video flex-col rounded-3xl sb-testimonial-col" style={{ backgroundColor: "#FFFBEB" }}>
+                <div className="flex-1 flex items-center">
+                  <AnimatePresence mode="wait">
+                    <motion.div
+                      key={currentTestimonial}
+                      initial={{ opacity: 0, y: 12 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -12 }}
+                      transition={{ duration: 0.3 }}
+                      className="flex flex-col text-left"
+                    >
+                      <Quote className="sb-quote-icon" style={{ color: "#D97706" }} />
+                      <p className="font-sans italic leading-relaxed sb-testimonial-quote" style={{ color: "#002F68" }}>
+                        {testimonials[currentTestimonial].quote}
+                      </p>
+                      <div className="mt-6 flex items-center" style={{ gap: "clamp(0.5rem, 2cqi, 1rem)" }}>
+                        <img
+                          src={`/${testimonials[currentTestimonial].avatar}`}
+                          alt={testimonials[currentTestimonial].name}
+                          className="rounded-full sb-avatar object-cover"
+                        />
+                        <div className="text-left">
+                          <p className="font-display font-bold sb-testimonial-name" style={{ color: "#002F68" }}>
+                            {testimonials[currentTestimonial].name}, {testimonials[currentTestimonial].location}
+                          </p>
+                          <p className="sb-testimonial-role" style={{ color: "#424753" }}>
+                            {testimonials[currentTestimonial].role}
+                          </p>
+                        </div>
+                      </div>
+                    </motion.div>
+                  </AnimatePresence>
+                </div>
+
+                <div className="mt-4 flex items-center justify-center" style={{ gap: "clamp(0.25rem, 1cqi, 0.75rem)" }}>
+                  {testimonials.map((_, i) => (
+                    <button
+                      key={i}
+                      onClick={() => setCurrentTestimonial(i)}
+                      className={`rounded-full transition-all duration-300 ${i === currentTestimonial ? 'sb-dot-active' : 'sb-dot-inactive'}`}
+                      style={{ backgroundColor: i === currentTestimonial ? "#D97706" : "#FDE68A" }}
+                      aria-label={`Testimonio ${i + 1}`}
+                    />
+                  ))}
+                </div>
               </div>
             </div>
           </div>
@@ -449,7 +446,7 @@ export default function Landing() {
           transition={{ duration: 0.6 }}
           className="mx-auto max-w-[1650px] px-6 md:px-12 lg:px-20"
         >
-          <div className="rounded-3xl bg-[#EBF3FF] px-6 py-4 md:px-12 md:py-6">
+          <div className="rounded-3xl bg-[#EBF3FF] px-6 py-4 md:px-4 md:py-6 min-[836px]:px-12">
             <h2
               className="font-display text-center text-xl font-bold md:text-2xl lg:text-3xl"
               style={{ color: "#002F68", letterSpacing: "-0.02em" }}
@@ -465,11 +462,11 @@ export default function Landing() {
               className="mx-auto mt-8 flex w-full flex-col items-center gap-6 md:flex-row md:justify-between md:gap-0"
             >
               <motion.div variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.4 } } }} className="flex flex-col items-center">
-                <div className="flex h-16 w-16 items-center justify-center rounded-full sm:h-20 sm:w-20 bg-[#E5DAFF]">
-                  <User className="h-8 w-8 sm:h-10 sm:w-10 text-[#7C3AED]" />
+                <div className="flex h-10 w-10 items-center justify-center rounded-full sm:h-12 sm:w-12 md:h-14 md:w-14 lg:h-20 lg:w-20 bg-[#E5DAFF]">
+                  <User className="h-5 w-5 sm:h-6 sm:w-6 md:h-7 md:w-7 lg:h-10 lg:w-10 text-[#7C3AED]" />
                 </div>
-                <span className="mt-3 w-24 text-center font-display text-sm font-bold md:text-base" style={{ color: "#002F68" }}>
-                  Crea tu perfil
+                <span className="mt-3 block w-24 text-center font-display text-sm font-bold sm:text-sm md:text-xs lg:text-base min-h-[1.75rem]" style={{ color: "#002F68" }}>
+                  Crea tu<br />perfil
                 </span>
               </motion.div>
               <motion.div variants={{ hidden: { opacity: 0 }, visible: { opacity: 1, transition: { duration: 0.4 } } }} className="hidden md:flex md:h-16 md:flex-1 md:items-center">
@@ -486,11 +483,11 @@ export default function Landing() {
               </motion.div>
 
               <motion.div variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.4 } } }} className="flex flex-col items-center">
-                <div className="flex h-16 w-16 items-center justify-center rounded-full sm:h-20 sm:w-20 bg-[#C8EDD5]">
-                  <Compass className="h-8 w-8 sm:h-10 sm:w-10 text-[#006D34]" />
+                <div className="flex h-10 w-10 items-center justify-center rounded-full sm:h-12 sm:w-12 md:h-14 md:w-14 lg:h-20 lg:w-20 bg-[#C8EDD5]">
+                  <Compass className="h-5 w-5 sm:h-6 sm:w-6 md:h-7 md:w-7 lg:h-10 lg:w-10 text-[#006D34]" />
                 </div>
-                <span className="mt-3 w-28 text-center font-display text-sm font-bold md:text-base" style={{ color: "#002F68" }}>
-                  Descubre tu camino
+                <span className="mt-3 block w-28 text-center font-display text-sm font-bold sm:text-sm md:text-xs lg:text-base min-h-[1.75rem]" style={{ color: "#002F68" }}>
+                  Descubre tu<br />camino
                 </span>
               </motion.div>
               <motion.div variants={{ hidden: { opacity: 0 }, visible: { opacity: 1, transition: { duration: 0.4 } } }} className="hidden md:flex md:h-16 md:flex-1 md:items-center">
@@ -507,11 +504,11 @@ export default function Landing() {
               </motion.div>
 
               <motion.div variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.4 } } }} className="flex flex-col items-center">
-                <div className="flex h-16 w-16 items-center justify-center rounded-full sm:h-20 sm:w-20 bg-[#C4DDFB]">
-                  <BookOpen className="h-8 w-8 sm:h-10 sm:w-10 text-[#2F75DC]" />
+                <div className="flex h-10 w-10 items-center justify-center rounded-full sm:h-12 sm:w-12 md:h-14 md:w-14 lg:h-20 lg:w-20 bg-[#C4DDFB]">
+                  <BookOpen className="h-5 w-5 sm:h-6 sm:w-6 md:h-7 md:w-7 lg:h-10 lg:w-10 text-[#2F75DC]" />
                 </div>
-                <span className="mt-3 w-28 text-center font-display text-sm font-bold md:text-base" style={{ color: "#002F68" }}>
-                  Aprende y desarrolla
+                <span className="mt-3 block w-28 text-center font-display text-sm font-bold sm:text-sm md:text-xs lg:text-base min-h-[1.75rem]" style={{ color: "#002F68" }}>
+                  Aprende y<br />desarrolla
                 </span>
               </motion.div>
               <motion.div variants={{ hidden: { opacity: 0 }, visible: { opacity: 1, transition: { duration: 0.4 } } }} className="hidden md:flex md:h-16 md:flex-1 md:items-center">
@@ -528,11 +525,11 @@ export default function Landing() {
               </motion.div>
 
               <motion.div variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.4 } } }} className="flex flex-col items-center">
-                <div className="flex h-16 w-16 items-center justify-center rounded-full sm:h-20 sm:w-20 bg-[#FDE68A]">
-                  <MessageCircle className="h-8 w-8 sm:h-10 sm:w-10 text-[#D97706]" />
+                <div className="flex h-10 w-10 items-center justify-center rounded-full sm:h-12 sm:w-12 md:h-14 md:w-14 lg:h-20 lg:w-20 bg-[#FDE68A]">
+                  <MessageCircle className="h-5 w-5 sm:h-6 sm:w-6 md:h-7 md:w-7 lg:h-10 lg:w-10 text-[#D97706]" />
                 </div>
-                <span className="mt-3 w-28 text-center font-display text-sm font-bold md:text-base" style={{ color: "#002F68" }}>
-                  Conecta con mentores
+                <span className="mt-3 block w-28 text-center font-display text-sm font-bold sm:text-sm md:text-xs lg:text-base min-h-[1.75rem]" style={{ color: "#002F68" }}>
+                  Conecta con<br />mentores
                 </span>
               </motion.div>
               <motion.div variants={{ hidden: { opacity: 0 }, visible: { opacity: 1, transition: { duration: 0.4 } } }} className="hidden md:flex md:h-16 md:flex-1 md:items-center">
@@ -549,11 +546,11 @@ export default function Landing() {
               </motion.div>
 
               <motion.div variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.4 } } }} className="flex flex-col items-center">
-                <div className="flex h-16 w-16 items-center justify-center rounded-full sm:h-20 sm:w-20 bg-[#C4DDFB]">
-                  <Briefcase className="h-8 w-8 sm:h-10 sm:w-10 text-[#2F75DC]" />
+                <div className="flex h-10 w-10 items-center justify-center rounded-full sm:h-12 sm:w-12 md:h-14 md:w-14 lg:h-20 lg:w-20 bg-[#C4DDFB]">
+                  <Briefcase className="h-5 w-5 sm:h-6 sm:w-6 md:h-7 md:w-7 lg:h-10 lg:w-10 text-[#2F75DC]" />
                 </div>
-                <span className="mt-3 w-24 text-center font-display text-sm font-bold md:text-base" style={{ color: "#002F68" }}>
-                  Aplica a trabajos
+                <span className="mt-3 block w-24 text-center font-display text-sm font-bold sm:text-sm md:text-xs lg:text-base min-h-[1.75rem]" style={{ color: "#002F68" }}>
+                  Aplica a<br />trabajos
                 </span>
               </motion.div>
               <motion.div variants={{ hidden: { opacity: 0 }, visible: { opacity: 1, transition: { duration: 0.4 } } }} className="hidden md:flex md:h-16 md:flex-1 md:items-center">
@@ -570,11 +567,11 @@ export default function Landing() {
               </motion.div>
 
               <motion.div variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.4 } } }} className="flex flex-col items-center">
-                <div className="flex h-16 w-16 items-center justify-center rounded-full sm:h-20 sm:w-20 bg-[#C8EDD5]">
-                  <Trophy className="h-8 w-8 sm:h-10 sm:w-10 text-[#006D34]" />
+                <div className="flex h-10 w-10 items-center justify-center rounded-full sm:h-12 sm:w-12 md:h-14 md:w-14 lg:h-20 lg:w-20 bg-[#C8EDD5]">
+                  <Trophy className="h-5 w-5 sm:h-6 sm:w-6 md:h-7 md:w-7 lg:h-10 lg:w-10 text-[#006D34]" />
                 </div>
-                <span className="mt-3 w-28 text-center font-display text-sm font-bold md:text-base" style={{ color: "#002F68" }}>
-                  Celebra tus logros
+                <span className="mt-3 block w-28 text-center font-display text-sm font-bold sm:text-sm md:text-xs lg:text-base min-h-[1.75rem]" style={{ color: "#002F68" }}>
+                  Celebra tus<br />logros
                 </span>
               </motion.div>
             </motion.div>
@@ -602,7 +599,7 @@ export default function Landing() {
             <motion.img
               src="/pet-3.webp"
               alt="Mascota BiT"
-              className="h-auto w-[320px] object-contain lg:w-[400px]"
+              className="h-auto w-[160px] object-contain sm:w-[200px] md:w-[260px] lg:w-[320px] min-[1261px]:w-[400px]"
               whileHover={{ rotate: -6, scale: 1.05 }}
               transition={{ type: "spring", stiffness: 200, damping: 15 }}
             />
@@ -610,24 +607,25 @@ export default function Landing() {
 
           <div className="flex flex-col items-center text-center md:items-start md:text-left">
             <h2
-              className="font-display font-bold text-3xl md:text-4xl lg:text-5xl"
+              className="font-display font-bold text-2xl sm:text-3xl md:text-4xl lg:text-4xl min-[1261px]:text-5xl"
               style={{ color: "#002F68", letterSpacing: "-0.02em" }}
             >
               Tu camino empieza ahora.
             </h2>
             <p
-              className="mt-4 max-w-md leading-relaxed text-base md:text-lg"
+              className="mt-4 max-w-md leading-relaxed text-sm sm:text-base md:text-base min-[1261px]:text-lg"
               style={{ color: "#424753" }}
             >
               ¿Qué estás esperando? Comienza ahora y descubre todo lo que tenemos preparado para ti.
             </p>
-            <a
-              href="/register"
-              className="mt-6 inline-flex items-center justify-center gap-2 rounded-full bg-[#2F75DC] px-8 py-3.5 text-base font-semibold text-white shadow-ambient transition-all hover:bg-[#004A9E] hover:shadow-ambient-lg"
+            <Link
+              to="/register"
+              onClick={() => window.scrollTo(0, 0)}
+              className="mt-6 inline-flex items-center justify-center gap-2 rounded-full bg-[#2F75DC] px-8 py-3.5 text-sm font-semibold text-white shadow-ambient transition-all hover:bg-[#004A9E] hover:shadow-ambient-lg sm:text-base"
             >
               Comenzar mi camino
               <ArrowRight className="h-5 w-5" />
-            </a>
+            </Link>
           </div>
           </div>
         </motion.div>

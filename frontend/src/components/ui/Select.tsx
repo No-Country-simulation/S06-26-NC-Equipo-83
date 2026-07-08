@@ -32,17 +32,17 @@ const Select = forwardRef<HTMLSelectElement, SelectProps>(
             rounded-xl
             border
             border-transparent
-            bg-stone-100
+            bg-slate-100
             px-4
             text-sm
             text-stone-700
-            autofill:bg-stone-100
+            autofill:bg-slate-100
             autofill:shadow-[inset_0_0_0px_1000px_#f5f5f4]
             autofill:[-webkit-text-fill-color:#292524]
-            focus:border-[#99462A]
+            focus:border-[var(--color-primary)]
             focus:outline-none
             focus:ring-2
-            focus:ring-[#99462A]/20
+            focus:ring-[var(--color-primary)]/20
             transition-colors
             ${error ? "border-red-400 focus:border-red-500 focus:ring-red-500/20" : ""}
             ${className ?? ""}
