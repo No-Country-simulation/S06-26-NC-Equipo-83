@@ -7,6 +7,7 @@ import {
 import { useSaludStore } from "../../store/useSaludStore";
 import { Mood } from "../../types/api";
 import { PageBackground } from "../../components/layout/PageBackground";
+import SEOHead from "../../components/SEOHead";
 import { useTranslation } from 'react-i18next';
 import i18n from '../../i18n';
 
@@ -82,6 +83,12 @@ export const MentalHealthPage: React.FC = () => {
 
   return (
     <PageBackground className="px-4 sm:px-6">
+      <SEOHead
+        lang={i18n.language}
+        title={t('app:seo.mentalHealth.title')}
+        description={t('app:seo.mentalHealth.description')}
+        canonicalPath="/mental-health"
+      />
       <div className="max-w-[750px] mx-auto space-y-8 py-6 md:py-10">
         <motion.div
         initial={{ opacity: 0, y: 16 }}

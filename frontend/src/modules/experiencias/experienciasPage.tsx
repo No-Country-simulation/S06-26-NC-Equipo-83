@@ -8,7 +8,9 @@ import {
 import { useExperienciasStore } from "../../store/useExperienciasStore";
 import { useAuthStore } from "../../store/useAuthStore";
 import { PageBackground } from "../../components/layout/PageBackground";
+import SEOHead from "../../components/SEOHead";
 import { useTranslation } from 'react-i18next';
+import i18n from "../../i18n";
 
 const COBERTURA_STYLES: Record<string, { label: string; color: string; bg: string; icon: React.ElementType }> = {
   buena: { label: "Buena", color: "text-emerald-700", bg: "bg-emerald-100/70", icon: Signal },
@@ -122,6 +124,12 @@ export const ExperienciasPage: React.FC = () => {
 
   return (
     <PageBackground>
+      <SEOHead
+        lang={i18n.language}
+        title={t('app:seo.experiencias.title')}
+        description={t('app:seo.experiencias.description')}
+        canonicalPath="/experiencias"
+      />
       <main className="min-h-screen py-6 px-4 font-sans antialiased text-gray-800 sm:px-6 md:py-10 lg:px-8">
         <div className="max-w-[1024px] mx-auto space-y-6 md:space-y-8">
 

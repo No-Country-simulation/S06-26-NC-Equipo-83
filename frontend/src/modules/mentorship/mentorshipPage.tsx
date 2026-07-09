@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { Calendar, Video, User, Star, X, Search } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import SEOHead from '../../components/SEOHead';
+import i18n from '../../i18n';
 
 interface Mentor {
     id: number;
@@ -37,6 +39,12 @@ export const MentorshipPage = () => {
 
     return (
         <div className="min-h-screen bg-[#FDFBF7] p-4 md:p-8 font-sans text-gray-900">
+            <SEOHead
+                lang={i18n.language}
+                title={t('app:seo.mentorship.title')}
+                description={t('app:seo.mentorship.description')}
+                canonicalPath="/mentorship"
+            />
             <header className="max-w-7xl mx-auto mb-8">
                 <h1 className="text-black text-3xl font-bold mb-2">{t('app:mentorship.title')}</h1>
                 <p className="text-gray-600">{t('app:mentorship.subtitle')}</p>

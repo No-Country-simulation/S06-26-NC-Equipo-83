@@ -128,11 +128,12 @@ class UserCreate(SQLModel):
     @field_validator("gender")
     @classmethod
     def gender_validator(cls, value:str) -> str:
-        if value != "female" and value != "male":
-            raise ValueError("Genero incorrecto")
-        
         if cls.is_empty_string_validator(value):
-            raise ValueError("Genero no puede estar vacio") 
+            raise ValueError("Genero no puede estar vacio")
+
+        VALID_GENDERS = {"female", "male", "non-binary", "other"}
+        if value not in VALID_GENDERS:
+            raise ValueError("Genero incorrecto")
 
         return value
     

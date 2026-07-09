@@ -10,6 +10,8 @@ import { useAuthStore } from "../../store/useAuthStore";
 import { useDashboardStore } from "../../store/useDashboardStore";
 import type { CourseRecommendation } from "../../types/api";
 import { PageBackground } from "../../components/layout/PageBackground";
+import SEOHead from "../../components/SEOHead";
+import i18n from "../../i18n";
 
 const CourseCard = ({ course }: { course: CourseRecommendation }) => (
   <div className="flex-shrink-0 w-[220px] bg-white rounded-xl border border-gray-100 p-3.5 flex flex-col gap-2.5 hover:border-[var(--color-primary-light)] transition-colors duration-200 group">
@@ -53,6 +55,12 @@ export const DashboardPage: React.FC = () => {
 
   return (
     <PageBackground>
+      <SEOHead
+        lang={i18n.language}
+        title={t("app:seo.dashboard.title")}
+        description={t("app:seo.dashboard.description")}
+        canonicalPath="/dashboard"
+      />
       <div className="max-w-[900px] mx-auto space-y-8 py-6 md:py-10">
         <header className="space-y-1">
         <h1 className="font-display text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-[var(--color-heading)]"

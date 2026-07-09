@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { ArrowLeft, Video, MapPin, Monitor, Save, Loader2, Link, MapPinned } from "lucide-react";
 import { eventsService } from "../../services/eventsService";
 import { useTranslation } from 'react-i18next';
+import SEOHead from "../../components/SEOHead";
+import i18n from "../../i18n";
 
 const CATEGORIAS = [
   { value: "crecimiento", label: "Crecimiento" },
@@ -80,6 +82,12 @@ export const CreateEventPage: React.FC = () => {
 
   return (
     <main className="min-h-screen py-6 px-4 max-w-lg mx-auto">
+      <SEOHead
+        lang={i18n.language}
+        title={t('app:seo.createEvent.title')}
+        description={t('app:seo.createEvent.description')}
+        canonicalPath="/experiencias/crear"
+      />
       <div className="flex items-center gap-3 mb-6">
         <button
           onClick={() => navigate("/experiencias")}

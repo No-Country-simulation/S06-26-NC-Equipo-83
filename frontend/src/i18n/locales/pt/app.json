@@ -219,6 +219,36 @@
     "footerNote": "Qualquer pessoa pode ver este evento na seção Experiências.",
     "errorCreating": "Erro ao criar o evento. Tente novamente."
   },
+  "seo": {
+    "dashboard": {
+      "title": "Início",
+      "description": "Painel principal do App BiT. Gerencie seu crescimento profissional, revise seus objetivos de carreira e acesse seu plano de aprendizado personalizado."
+    },
+    "mentalHealth": {
+      "title": "Bem-estar",
+      "description": "Espaço seguro para seu bem-estar emocional. Registre como você se sente, faça check-in diário e receba recomendações personalizadas da nossa IA."
+    },
+    "orientation": {
+      "title": "Orientação Profissional",
+      "description": "Descubra vagas personalizadas de acordo com seu perfil. Analisamos suas habilidades, interesses e experiência para recomendar as melhores oportunidades de trabalho."
+    },
+    "mentorship": {
+      "title": "Mentorias",
+      "description": "Conecte-se com mentores profissionais que irão guiar você no seu crescimento tecnológico. Agende sessões e acelere sua carreira."
+    },
+    "experiencias": {
+      "title": "Experiências",
+      "description": "Descubra eventos, workshops e experiências perto de você. Conecte-se com sua comunidade e expanda suas oportunidades profissionais."
+    },
+    "createEvent": {
+      "title": "Criar Evento",
+      "description": "Crie um evento para compartilhar com a comunidade do App BiT. Workshops, palestras, networking e mais."
+    },
+    "profile": {
+      "title": "Meu Perfil",
+      "description": "Gerencie seu perfil profissional no App BiT. Atualize seus dados pessoais, interesses, nível educacional e preferências de idioma."
+    }
+  },
   "profile": {
     "premiumBadge": "Plano Premium",
     "languageSectionTitle": "Configuração de Idioma",

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { User, MapPin, Briefcase, FileText, Settings, Lock, Bell, Eye, Trash2, Globe, Calendar, Check, Camera, Loader2, Pencil, X } from "lucide-react";
 import { useAuthStore } from "../../store/useAuthStore";
 import { profileService } from "../../services/profileService";
+import SEOHead from "../../components/SEOHead";
 import { useTranslation } from 'react-i18next';
 import i18n from '../../i18n';
 
@@ -66,6 +67,12 @@ export const UserProfilePage: React.FC = () => {
 
   return (
     <main className="min-h-screen bg-[#F9F6F0]/40 pb-24 py-8 px-4 sm:px-6 lg:px-8 font-sans antialiased text-gray-800">
+      <SEOHead
+        lang={i18n.language}
+        title={t('app:seo.profile.title')}
+        description={t('app:seo.profile.description')}
+        canonicalPath="/profile"
+      />
       <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         <aside className="lg:col-span-4 space-y-6 w-full">
           <article className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 flex flex-col items-center text-center">

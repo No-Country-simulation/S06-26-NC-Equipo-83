@@ -8,6 +8,7 @@ import { useOrientarStore } from "../../store/useOrientarStore";
 import { useAuthStore } from "../../store/useAuthStore";
 import { OrientationJobCard } from "../../components/orientation/OrientationJobCard";
 import { PageBackground } from "../../components/layout/PageBackground";
+import SEOHead from "../../components/SEOHead";
 import i18n from "../../i18n";
 import { INTEREST_AREAS } from "../../lib/registrationData";
 
@@ -113,6 +114,12 @@ export const OrientationPage: React.FC = () => {
 
   return (
     <PageBackground>
+      <SEOHead
+        lang={i18n.language}
+        title={t("app:seo.orientation.title")}
+        description={t("app:seo.orientation.description")}
+        canonicalPath="/orientation"
+      />
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
