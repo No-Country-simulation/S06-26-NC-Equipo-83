@@ -6,14 +6,14 @@ import { z } from "zod";
 export const loginSchema = z.object({
   email: z
     .string()
-    .min(1, "El correo electrónico es obligatorio")
-    .email("Ingresá un correo electrónico válido"),
+    .min(1, "auth:validation.emailRequired")
+    .email("auth:validation.emailInvalid"),
   password: z
     .string()
-    .min(8, "La contraseña debe tener al menos 8 caracteres")
-    .regex(/[A-Z]/, "Debe incluir al menos una letra mayúscula")
-    .regex(/[0-9]/, "Debe incluir al menos un número")
-    .regex(/[\p{P}\p{S}]/u, "Debe incluir al menos un símbolo"),
+    .min(8, "auth:validation.passwordMinLength")
+    .regex(/[A-Z]/, "auth:validation.passwordUppercase")
+    .regex(/[0-9]/, "auth:validation.passwordNumber")
+    .regex(/[\p{P}\p{S}]/u, "auth:validation.passwordSymbol"),
 });
 
 export type LoginFormData = z.infer<typeof loginSchema>;
@@ -24,28 +24,28 @@ export type LoginFormData = z.infer<typeof loginSchema>;
 export const registerStep1Schema = z.object({
   fullName: z
     .string()
-    .min(2, "El nombre debe tener al menos 2 caracteres")
-    .max(100, "El nombre no puede superar los 100 caracteres"),
+    .min(2, "auth:validation.nameMinLength")
+    .max(100, "auth:validation.nameMaxLength"),
   email: z
     .string()
-    .min(1, "El correo electrónico es obligatorio")
-    .email("Ingresá un correo electrónico válido"),
+    .min(1, "auth:validation.emailRequired")
+    .email("auth:validation.emailInvalid"),
   password: z
     .string()
-    .min(8, "La contraseña debe tener al menos 8 caracteres")
-    .regex(/[A-Z]/, "Debe incluir al menos una letra mayúscula")
-    .regex(/[0-9]/, "Debe incluir al menos un número")
-    .regex(/[\p{P}\p{S}]/u, "Debe incluir al menos un símbolo"),
-  confirmPassword: z.string().min(1, "Confirmá tu contraseña"),
+    .min(8, "auth:validation.passwordMinLength")
+    .regex(/[A-Z]/, "auth:validation.passwordUppercase")
+    .regex(/[0-9]/, "auth:validation.passwordNumber")
+    .regex(/[\p{P}\p{S}]/u, "auth:validation.passwordSymbol"),
+  confirmPassword: z.string().min(1, "auth:validation.confirmPasswordRequired"),
   birthDate: z
     .string()
-    .min(1, "La fecha de nacimiento es obligatoria")
+    .min(1, "auth:validation.birthDateRequired")
     .refine(
       (val) => !isNaN(Date.parse(val)) && /^\d{4}-\d{2}-\d{2}$/.test(val),
-      { message: "Ingresá una fecha válida" },
+      { message: "auth:validation.birthDateInvalid" },
     )
     .refine((val) => new Date(val) <= new Date(), {
-      message: "La fecha no puede ser posterior a hoy",
+      message: "auth:validation.birthDateFuture",
     })
     .refine(
       (val) => {
@@ -56,7 +56,7 @@ export const registerStep1Schema = z.object({
         if (m < 0 || (m === 0 && today.getDate() < birth.getDate())) age--;
         return age >= 16;
       },
-      { message: "Debés tener al menos 16 años para registrarte" },
+      { message: "auth:validation.birthDateUnderage" },
     )
     .refine(
       (val) => {
@@ -67,38 +67,38 @@ export const registerStep1Schema = z.object({
         if (m < 0 || (m === 0 && today.getDate() < birth.getDate())) age--;
         return age <= 120;
       },
-      { message: "Ingresá una fecha de nacimiento válida" },
+      { message: "auth:validation.birthDateImpossible" },
     ),
-  gender: z.string().min(1, "Seleccioná tu género"),
-  educationLevel: z.string().min(1, "Seleccioná tu nivel educativo"),
+  gender: z.string().min(1, "auth:validation.genderRequired"),
+  educationLevel: z.string().min(1, "auth:validation.educationRequired"),
 });
 
 export const registerStep2Schema = z.object({
-  continentCode: z.string().length(2, "Seleccioná un continente"),
+  continentCode: z.string().length(2, "auth:validation.continentRequired"),
   continentName: z.string().min(1),
-  countryCode: z.string().length(2, "Seleccioná un país"),
+  countryCode: z.string().length(2, "auth:validation.countryRequired"),
   countryName: z.string().min(1),
-  stateCode: z.string().min(1, "Seleccioná una provincia o estado"),
+  stateCode: z.string().min(1, "auth:validation.stateRequired"),
   stateName: z.string().min(1),
-  cityName: z.string().min(1, "Seleccioná o escribí tu ciudad"),
+  cityName: z.string().min(1, "auth:validation.cityRequired"),
   whatsapp: z
     .string()
-    .regex(/^\+[1-9]\d{6,14}$/, "Ingresá un número de WhatsApp válido, por ejemplo: +549112345678"),
+    .regex(/^\+[1-9]\d{6,14}$/, "auth:validation.whatsappInvalid"),
 });
 
 export const registerStep3Schema = z.object({
-  currentSituation: z.string().min(1, "Seleccioná tu situación actual"),
+  currentSituation: z.string().min(1, "auth:validation.situationRequired"),
   workSector: z.string().optional(),
   seniority: z.string().optional(),
   interestAreas: z
     .array(z.string())
-    .min(1, "Seleccioná al menos un área de interés"),
-  currentSearch: z.string().min(1, "Seleccioná qué estás buscando"),
+    .min(1, "auth:validation.interestAreasMin"),
+  currentSearch: z.string().min(1, "auth:validation.currentSearchRequired"),
   knownTechnologies: z
     .array(z.object({ name: z.string(), is_custom: z.boolean() }))
     .optional()
     .default([]),
-  bio: z.string().max(500, "La biografía no puede superar los 500 caracteres").optional().default(""),
+  bio: z.string().max(500, "auth:validation.bioMaxLength").optional().default(""),
 });
 
 export type RegisterFormData = z.infer<typeof registerStep1Schema> &

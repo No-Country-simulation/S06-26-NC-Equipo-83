@@ -1,6 +1,7 @@
 import React from 'react';
 import { Home, Compass, Heart, Sparkles } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 interface NavItem {
     id: string;
@@ -10,18 +11,19 @@ interface NavItem {
 }
 
 export const BottomNavbar: React.FC = () => {
+    const { t } = useTranslation('common');
     const location = useLocation();
 
     const navItems: NavItem[] = [
-        { id: 'inicio', label: 'Inicio', path: '/dashboard', icon: Home },
-        { id: 'experiencias', label: 'Experiencias', path: '/experiencias', icon: Sparkles },
-        { id: 'orientacion', label: 'Orientación', path: '/orientation', icon: Compass },
-        { id: 'bienestar', label: 'Bienestar', path: '/mental-health', icon: Heart },
+        { id: 'inicio', label: t('common:nav.dashboard'), path: '/dashboard', icon: Home },
+        { id: 'experiencias', label: t('common:nav.experiencias'), path: '/experiencias', icon: Sparkles },
+        { id: 'orientacion', label: t('common:nav.orientation'), path: '/orientation', icon: Compass },
+        { id: 'bienestar', label: t('common:nav.bienestar'), path: '/mental-health', icon: Heart },
     ];
 
     return (
         <nav
-            aria-label="Navegación principal inferior"
+            aria-label={t('common:bottomNavbar.ariaLabel')}
             className="bg-white border-t border-gray-100 fixed bottom-0 w-full z-40 h-16 px-2 flex items-center lg:hidden"
             style={{ boxShadow: "0 -4px 12px rgba(0,0,0,0.03)" }}>
             <ul className="flex items-center justify-between w-full h-full max-w-md mx-auto">

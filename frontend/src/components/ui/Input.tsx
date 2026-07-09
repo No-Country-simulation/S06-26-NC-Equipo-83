@@ -1,6 +1,7 @@
 import { forwardRef, useRef, useState } from "react";
 import type { InputHTMLAttributes } from "react";
 import { User, Mail, Lock, Calendar, Eye, EyeOff } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 const iconMap = {
   person: User,
@@ -19,6 +20,7 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
 
 const Input = forwardRef<HTMLInputElement, InputProps>(
   ({ label, icon, id, error, className, showPasswordToggle, required, ...props }, ref) => {
+    const { t } = useTranslation('common');
     const IconComponent = icon ? iconMap[icon] : null;
     const [passwordVisible, setPasswordVisible] = useState(false);
     const inputRef = useRef<HTMLInputElement | null>(null);
@@ -102,7 +104,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
               type="button"
               onClick={() => setPasswordVisible((v) => !v)}
               className="absolute right-4 top-1/2 -translate-y-1/2 text-[var(--color-primary)] hover:opacity-70 z-10"
-              aria-label={passwordVisible ? "Ocultar contraseña" : "Mostrar contraseña"}
+              aria-label={passwordVisible ? t('common:ui.passwordHide') : t('common:ui.passwordShow')}
             >
               {passwordVisible ? (
                 <EyeOff size={20} />

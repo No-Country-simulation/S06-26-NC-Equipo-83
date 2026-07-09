@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { useTranslation } from "react-i18next";
 import Logo from "../ui/Logo";
 
 interface Props {
@@ -6,13 +7,14 @@ interface Props {
 }
 
 export default function AuthLayout({ children }: Props) {
+  const { t } = useTranslation("auth");
   return (
     <main className="min-h-screen bg-background">
       <section className="mx-auto flex min-h-screen max-w-7xl overflow-hidden bg-white lg:my-6 lg:rounded-3xl lg:shadow-xl">
         <aside className="relative hidden w-1/2 lg:flex">
           <img
             src="/images/auth/login-cover.webp"
-            alt="Personas colaborando en un espacio de trabajo"
+            alt={t('auth:layout.imageAlt')}
             className="absolute inset-0 h-full w-full object-cover"
           />
 
@@ -24,11 +26,11 @@ export default function AuthLayout({ children }: Props) {
 
           <div className="absolute bottom-10 left-10 right-10 rounded-2xl bg-white/80 p-6 backdrop-blur">
             <h2 className="mb-2 text-3xl font-bold text-primary">
-              Bienvenido de nuevo
+              {t('auth:layout.heading')}
             </h2>
 
             <p className="text-gray-700">
-              Un espacio diseñado para impulsar tu crecimiento personal y profesional.
+              {t('auth:layout.description')}
             </p>
           </div>
         </aside>

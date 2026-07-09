@@ -1,5 +1,6 @@
 import Select from "react-select";
 import CreatableSelect from "react-select/creatable";
+import i18n from "../../i18n";
 import {
   selectStyles,
   selectStylesMulti,
@@ -32,7 +33,7 @@ interface SearchableSelectProps {
 
 export default function SearchableSelect({
   id, options, value, onChange, onBlur,
-  placeholder = "Seleccioná...",
+  placeholder = i18n.t('common:ui.selectPlaceholder'),
   isMulti = false, isCreatable = false,
   isDisabled = false, isLoading = false,
   error, label, required,
@@ -44,7 +45,7 @@ export default function SearchableSelect({
     options, value, onChange, onBlur, placeholder,
     isDisabled, isLoading,
     isClearable: true,
-    noOptionsMessage: () => noOptionsMessage ?? "Sin resultados",
+    noOptionsMessage: () => noOptionsMessage ?? i18n.t('common:ui.selectNoResults'),
     styles: isMulti ? (selectStylesMulti as any) : (selectStyles as any),
   };
 
@@ -61,7 +62,7 @@ export default function SearchableSelect({
         <CreatableSelect
           {...commonProps}
           isMulti={isMulti}
-          formatCreateLabel={formatCreateLabel ?? ((input) => `Agregar "${input}"`)}
+          formatCreateLabel={formatCreateLabel ?? ((input) => i18n.t('common:ui.createLabel', { input }))}
           onCreateOption={onCreateOption}
         />
       ) : (

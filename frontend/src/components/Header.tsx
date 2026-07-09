@@ -2,6 +2,8 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Bell, Settings, User, LogOut, X, Home, Compass, Heart, Sparkles } from 'lucide-react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuthStore } from '../store/useAuthStore';
+import { useTranslation } from 'react-i18next';
+import i18n from '../i18n';
 
 const ICON_BASE = "w-5 h-5 stroke-[1.5]";
 const BTN_BASE = "p-2 rounded-full transition-colors duration-200 focus:outline-none";
@@ -13,14 +15,8 @@ interface NavLink {
     icon: React.ComponentType<any>;
 }
 
-const DESKTOP_LINKS: NavLink[] = [
-    { label: 'Inicio', path: '/dashboard', icon: Home },
-    { label: 'Experiencias', path: '/experiencias', icon: Sparkles },
-    { label: 'Orientación', path: '/orientation', icon: Compass },
-    { label: 'Bienestar', path: '/mental-health', icon: Heart },
-];
-
 export const Header: React.FC = () => {
+    const { t } = useTranslation('common');
     const location = useLocation();
     const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
     const menuRef = useRef<HTMLLIElement>(null);
@@ -55,6 +51,12 @@ export const Header: React.FC = () => {
         navigate('/login', { replace: true });
     };
 
+    const currentLang = i18n.language;
+    const changeLang = (lang: "es" | "pt") => {
+        i18n.changeLanguage(lang);
+        localStorage.setItem("appLanguage", lang);
+    };
+
     const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
 
     const [notifications] = useState<NotificationItem[]>([
@@ -65,6 +67,13 @@ export const Header: React.FC = () => {
 
     const unreadCount = notifications.filter(n => n.unread).length;
 
+    const DESKTOP_LINKS: NavLink[] = [
+        { label: t('common:nav.dashboard'), path: '/dashboard', icon: Home },
+        { label: t('common:nav.experiencias'), path: '/experiencias', icon: Sparkles },
+        { label: t('common:nav.orientation'), path: '/orientation', icon: Compass },
+        { label: t('common:nav.bienestar'), path: '/mental-health', icon: Heart },
+    ];
+
     return (
         <header className="bg-white border-b border-gray-100 fixed top-0 w-full z-40 h-16"
             style={{ boxShadow: "0 1px 3px rgba(0,0,0,0.04)" }}>
@@ -73,13 +82,13 @@ export const Header: React.FC = () => {
 
                 <div className="flex items-center gap-3 flex-shrink-0">
                     <Link to='/dashboard' className="flex items-center gap-2.5">
-                        <img src="/logo-bit.webp" alt="BiT App Logo" className="w-9 h-9 object-contain rounded-lg" />
+                        <img src="/logo-bit.webp" alt={t('common:header.logoAlt')} className="w-9 h-9 object-contain rounded-lg" />
                         <span className="font-display font-extrabold text-[var(--color-heading)] text-lg hidden sm:block"
                             style={{ letterSpacing: "-0.02em" }}>BiT</span>
                     </Link>
                 </div>
 
-                <nav aria-label="Enlaces principales" className="hidden lg:flex items-center gap-1">
+                <nav aria-label={t('common:header.primaryLinks')} className="hidden lg:flex items-center gap-1">
                     {DESKTOP_LINKS.map((link) => {
                         const isActive = location.pathname === link.path;
                         return (
@@ -97,14 +106,40 @@ export const Header: React.FC = () => {
                     })}
                 </nav>
 
-                <nav aria-label="Acciones de usuario" className="flex items-center flex-shrink-0">
+                <nav aria-label={t('common:header.userActions')} className="flex items-center flex-shrink-0">
                     <ul className="flex items-center gap-1 sm:gap-2 h-full">
+
+                        <li className="hidden sm:flex items-center gap-0.5">
+                            <button
+                                onClick={() => changeLang("es")}
+                                className={`text-[10px] font-bold px-1.5 py-1 rounded transition-colors ${
+                                    currentLang === "es"
+                                        ? "text-[var(--color-primary)] bg-[var(--color-primary-lighter)]"
+                                        : "text-[var(--color-muted)] hover:text-[var(--color-primary)]"
+                                }`}
+                                aria-label={t("common:language.spanish")}
+                            >
+                                ES
+                            </button>
+                            <span className="text-[10px] text-[var(--color-muted)]">/</span>
+                            <button
+                                onClick={() => changeLang("pt")}
+                                className={`text-[10px] font-bold px-1.5 py-1 rounded transition-colors ${
+                                    currentLang === "pt"
+                                        ? "text-[var(--color-primary)] bg-[var(--color-primary-lighter)]"
+                                        : "text-[var(--color-muted)] hover:text-[var(--color-primary)]"
+                                }`}
+                                aria-label={t("common:language.portuguese")}
+                            >
+                                PT
+                            </button>
+                        </li>
 
                         <li>
                             <button
                                 onClick={() => setIsNotificationsOpen(true)}
                                 className={BTN_DEFAULT}
-                                aria-label="Ver notificaciones"
+                                aria-label={t('common:header.notifications')}
                             >
                                 <Bell className={ICON_BASE} />
                             </button>
@@ -114,7 +149,7 @@ export const Header: React.FC = () => {
                             <button
                                 onClick={handleSettingsClick}
                                 className={BTN_DEFAULT}
-                                aria-label="Ir a ajustes de perfil"
+                                aria-label={t('common:header.settings')}
                             >
                                 <Settings className={ICON_BASE} />
                             </button>
@@ -127,12 +162,12 @@ export const Header: React.FC = () => {
                                 style={{ borderColor: "var(--color-primary-light)" }}
                                 aria-expanded={isProfileMenuOpen}
                                 aria-haspopup="menu"
-                                aria-label="Menú de usuario"
+                                aria-label={t('common:header.userMenu')}
                             >
                                 <figure className="w-full h-full">
                                     <img
                                         src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=100&h=100&q=80"
-                                        alt="Avatar del usuario logueado"
+                                        alt={t('common:header.avatarAlt')}
                                         className="w-full h-full object-cover"
                                     />
                                 </figure>
@@ -149,7 +184,7 @@ export const Header: React.FC = () => {
                                         className="w-full px-4 py-2.5 text-left text-sm text-[var(--color-body)] hover:bg-[var(--color-primary-lighter)] hover:text-[var(--color-primary)] flex items-center gap-2.5 transition-colors focus:outline-none"
                                     >
                                         <User className="w-4 h-4" />
-                                        <span>Ver perfil</span>
+                                        <span>{t('common:header.viewProfile')}</span>
                                     </button>
 
                                     <hr className="border-gray-100 my-1" role="presentation" />
@@ -160,7 +195,7 @@ export const Header: React.FC = () => {
                                         className="w-full px-4 py-2.5 text-left text-sm text-red-600 hover:bg-red-50 flex items-center gap-2.5 transition-colors focus:outline-none"
                                     >
                                         <LogOut className="w-4 h-4 text-red-500" />
-                                        <span>Cerrar sesión</span>
+                                        <span>{t('common:header.logout')}</span>
                                     </button>
                                 </div>
                             )}
@@ -184,17 +219,17 @@ export const Header: React.FC = () => {
                         <div className="px-5 py-3 border-b border-gray-100 flex items-center justify-between flex-shrink-0">
                             <h2 id="modal-title" className="text-sm font-display font-bold text-[var(--color-heading)] flex items-center gap-2"
                                 style={{ letterSpacing: "-0.02em" }}>
-                                Notificaciones
+                                {t('common:header.notificationsTitle')}
                                 {unreadCount > 0 && (
                                     <span className="text-[11px] font-medium px-2 py-0.5 bg-[var(--color-primary-lighter)] text-[var(--color-primary)] rounded-full">
-                                        {unreadCount} nuevas
+                                        {t('common:header.unreadCount', { count: unreadCount })}
                                     </span>
                                 )}
                             </h2>
                             <button
                                 onClick={() => setIsNotificationsOpen(false)}
                                 className="p-1.5 text-[var(--color-muted)] hover:text-[var(--color-body)] hover:bg-[var(--color-primary-lighter)] rounded-lg transition-colors focus:outline-none"
-                                aria-label="Cerrar modal"
+                                aria-label={t('common:header.closeModal')}
                             >
                                 <X className="w-4 h-4" />
                             </button>
@@ -220,7 +255,7 @@ export const Header: React.FC = () => {
                                 </ul>
                             ) : (
                                 <div className="py-10 text-center">
-                                    <p className="text-sm text-[var(--color-muted)]">No tienes notificaciones por el momento.</p>
+                                    <p className="text-sm text-[var(--color-muted)]">{t('common:header.noNotifications')}</p>
                                 </div>
                             )}
                         </div>
@@ -230,7 +265,7 @@ export const Header: React.FC = () => {
                                 onClick={() => setIsNotificationsOpen(false)}
                                 className="text-xs font-semibold text-[var(--color-primary)] hover:text-[var(--color-primary-hover)] px-3 py-1.5 rounded-lg hover:bg-[var(--color-primary-lighter)] transition-colors"
                             >
-                                Marcar todas como leídas
+                                {t('common:header.markAllRead')}
                             </button>
                         </div>
 

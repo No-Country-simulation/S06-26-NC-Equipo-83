@@ -155,6 +155,7 @@ export interface SaludRequest {
   humor: Mood;
   nota_semanal: number;
   contexto?: string | null;
+  language_code?: string | null;
 }
 
 export interface SaludResponse {

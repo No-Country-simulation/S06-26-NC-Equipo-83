@@ -24,7 +24,8 @@ class IAAgent:
         self.model = settings.GROQ_MODEL
 
     async def generar_respuesta_emocional(
-        self, humor: str, nota: int, contexto: str | None
+        self, humor: str, nota: int, contexto: str | None,
+        idioma: str | None = None,
     ) -> dict[str, str]:
         """Genera un mensaje empático y acción concreta usando Groq.
 
@@ -33,11 +34,13 @@ class IAAgent:
             nota: Bienestar 1-10. SOLO se reciben valores >= 4.
                   La validación nota < 4 → crisis la hace SaludService.
             contexto: Info adicional opcional.
+            idioma: Idioma explícito ("español", "portugués", "inglés").
+                    Si no se proporciona, se detecta del contexto.
 
         Returns:
             dict con claves "mensaje" y "accion".
         """
-        messages = self._construir_messages(humor, nota, contexto)
+        messages = self._construir_messages(humor, nota, contexto, idioma)
 
         try:
             response = await self.client.chat.completions.create(
@@ -62,11 +65,12 @@ class IAAgent:
     # ------------------------------------------------------------------
 
     def _construir_messages(
-        self, humor: str, nota: int, contexto: str | None
+        self, humor: str, nota: int, contexto: str | None,
+        idioma_explicito: str | None = None,
     ) -> list[dict[str, str]]:
         """Construye la lista de mensajes system + user para Groq."""
         contexto_str = contexto or "No proporcionado"
-        idioma = self._detectar_idioma(contexto) if contexto else "español"
+        idioma = idioma_explicito or (self._detectar_idioma(contexto) if contexto else "español")
 
         system = (
             "Eres BiT, un simpático guacamayo y la mascota oficial de App BiT. "
@@ -75,9 +79,10 @@ class IAAgent:
             "médico; eres un compañero cercano que escucha, comprende y ayuda a descubrir "
             "recursos que puedan inspirar, motivar, tranquilizar o hacer sentir mejor al usuario.\n\n"
             "IDIOMA: El mensaje del usuario incluye un campo \"Idioma detectado\" que indica "
-            "en qué idioma DEBES responder. Respeta SIEMPRE ese idioma. Si dice \"portugués\", "
-            "TODO tu mensaje y acción deben estar en portugués, sin mezclar español. "
-            "Si dice \"español\", todo en español. Si dice \"inglés\", todo en inglés.\n\n"
+            "en qué idioma DEBES responder. Respeta SIEMPRE ese idioma sin analizar ni "
+            "detectar nada por tu cuenta. Si dice \"portugués\", TODO tu mensaje y acción "
+            "deben estar en portugués. Si dice \"español\", todo en español. "
+            "Si dice \"inglés\", todo en inglés. No mezcles idiomas.\n\n"
             "ATENCIÓN: Las CLAVES del JSON de respuesta NUNCA cambian de idioma. "
             "Siempre deben ser EXACTAMENTE \"mensaje\" y \"accion\", sin importar "
             "el idioma en que respondas. Son identificadores técnicos fijos.\n\n"

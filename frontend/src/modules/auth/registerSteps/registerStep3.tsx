@@ -12,8 +12,8 @@ import {
   CURRENT_SEARCH_OPTIONS,
   PREDEFINED_TECHNOLOGIES,
 } from "../../../lib/registrationData";
-
 import { SKILL_LABELS } from "../../../lib/skillLabels";
+import { useTranslation } from "react-i18next";
 
 // ── Tipos ───────────────────────────────────────────────────────────────────
 
@@ -23,10 +23,10 @@ interface RegisterStep3Props {
 
 // ── Helpers para KnownTechnology ↔ Option ──────────────────────────────────
 
-function techsToOptions(techs: KnownTechnology[]): Option[] {
+function techsToOptions(techs: KnownTechnology[], getLabel: (key: string) => string): Option[] {
   return techs.map((t) => ({
     value: t.name,
-    label: SKILL_LABELS[t.name] ?? t.name,
+    label: getLabel(t.name),
   }));
 }
 
@@ -39,10 +39,10 @@ function optionsToTechs(newOpts: Option[], existing: KnownTechnology[]): KnownTe
   });
 }
 
-function buildTechOptions(selected: KnownTechnology[]): Option[] {
+function buildTechOptions(selected: KnownTechnology[], getLabel: (key: string) => string): Option[] {
   const predefined = PREDEFINED_TECHNOLOGIES.map((t) => ({
     value: t,
-    label: SKILL_LABELS[t] ?? t,
+    label: getLabel(t),
   }));
   const customOpts = selected
     .filter((t) => t.is_custom)
@@ -60,6 +60,21 @@ export default function RegisterStep3({ form }: RegisterStep3Props) {
     setValue,
     formState: { errors },
   } = form;
+  const { t } = useTranslation(['auth', 'common']);
+
+  const getSkillLabel = (key: string) => {
+    const raw = SKILL_LABELS[key];
+    if (raw && raw.startsWith('__')) {
+      return String(t(raw.slice(2)));
+    }
+    return raw ?? key;
+  };
+
+  const translatedSituationOptions = CURRENT_SITUATION_OPTIONS.map((o) => ({ value: o.value, label: String(t(o.labelKey)) }));
+  const translatedSeniorityOptions = SENIORITY_OPTIONS.map((o) => ({ value: o.value, label: String(t(o.labelKey)) }));
+  const translatedCurrentSearchOptions = CURRENT_SEARCH_OPTIONS.map((o) => ({ value: o.value, label: String(t(o.labelKey)) }));
+  const translatedWorkSectors = WORK_SECTORS.map((o) => ({ value: o.value, label: String(t(o.labelKey)) }));
+  const translatedInterestAreas = INTEREST_AREAS.map((o) => ({ value: o.value, label: String(t(o.labelKey)) }));
 
   const currentSituation = watch("currentSituation");
   const bio = watch("bio") ?? "";
@@ -73,15 +88,15 @@ export default function RegisterStep3({ form }: RegisterStep3Props) {
         render={({ field }) => (
           <SearchableSelect
             id="currentSituation"
-            label="Situación actual"
+            label={t('auth:step3.currentSituationLabel')}
             required
-            options={CURRENT_SITUATION_OPTIONS as unknown as Option[]}
+            options={translatedSituationOptions}
             value={
               field.value
                 ? {
                     value: field.value,
                     label:
-                      (CURRENT_SITUATION_OPTIONS as unknown as Option[]).find(
+                      translatedSituationOptions.find(
                         (o) => o.value === field.value,
                       )?.label ?? field.value,
                   }
@@ -95,7 +110,7 @@ export default function RegisterStep3({ form }: RegisterStep3Props) {
                 setValue("seniority", "", { shouldValidate: false });
               }
             }}
-            error={errors.currentSituation?.message}
+            error={errors.currentSituation?.message ? String(t(errors.currentSituation.message)) : undefined}
           />
         )}
       />
@@ -108,23 +123,23 @@ export default function RegisterStep3({ form }: RegisterStep3Props) {
           render={({ field }) => (
             <SearchableSelect
               id="workSector"
-              label="Sector laboral"
+              label={t('auth:step3.workSectorLabel')}
               required
               isCreatable
-              options={WORK_SECTORS}
+              options={translatedWorkSectors}
               value={
                 field.value
                   ? {
                       value: field.value,
                       label:
-                        WORK_SECTORS.find((s) => s.value === field.value)?.label ??
+                        translatedWorkSectors.find((s) => s.value === field.value)?.label ??
                         field.value,
                     }
                   : null
               }
               onChange={(opt: Option | null) => field.onChange(opt?.value ?? "")}
               onCreateOption={(input) => field.onChange(input)}
-              error={errors.workSector?.message}
+              error={errors.workSector?.message ? String(t(errors.workSector.message)) : undefined}
             />
           )}
         />
@@ -138,22 +153,22 @@ export default function RegisterStep3({ form }: RegisterStep3Props) {
           render={({ field }) => (
             <SearchableSelect
               id="seniority"
-              label="Seniority"
+              label={t('auth:step3.seniorityLabel')}
               required
-              options={SENIORITY_OPTIONS as unknown as Option[]}
+              options={translatedSeniorityOptions}
               value={
                 field.value
                   ? {
                       value: field.value,
                       label:
-                        (SENIORITY_OPTIONS as unknown as Option[]).find(
+                        translatedSeniorityOptions.find(
                           (o) => o.value === field.value,
                         )?.label ?? field.value,
                     }
                   : null
               }
               onChange={(opt: Option | null) => field.onChange(opt?.value ?? "")}
-              error={errors.seniority?.message}
+              error={errors.seniority?.message ? String(t(errors.seniority.message)) : undefined}
             />
           )}
         />
@@ -166,15 +181,15 @@ export default function RegisterStep3({ form }: RegisterStep3Props) {
         render={({ field }) => (
           <SearchableSelect
             id="interestAreas"
-            label="Áreas de interés"
+            label={t('auth:step3.interestAreasLabel')}
             required
             isMulti
             isCreatable
-            options={INTEREST_AREAS}
+            options={translatedInterestAreas}
             value={field.value.map((v: string) => ({
               value: v,
               label:
-                INTEREST_AREAS.find((a) => a.value === v)?.label ?? v,
+                translatedInterestAreas.find((a) => a.value === v)?.label ?? v,
             }))}
             onChange={(opts: any) =>
               field.onChange(
@@ -185,14 +200,14 @@ export default function RegisterStep3({ form }: RegisterStep3Props) {
               const current: string[] = field.value;
               field.onChange([...current, input]);
             }}
-            noOptionsMessage="Escribí para agregar un área"
-            formatCreateLabel={(input) => `Agregar "${input}"`}
-            error={errors.interestAreas?.message}
+            noOptionsMessage={t('auth:step3.interestAreasNoOptions')}
+            formatCreateLabel={(input) => t('auth:step3.interestAreasCreateLabel', { input })}
+            error={errors.interestAreas?.message ? String(t(errors.interestAreas.message)) : undefined}
           />
         )}
       />
       <p className="text-xs text-stone-400 -mt-3">
-        Seleccioná una o más áreas. Podés escribir para crear una nueva.
+        {t('auth:step3.interestAreasHelp')}
       </p>
 
       {/* ── ¿Qué estás buscando? ──────────────────────────────────────── */}
@@ -202,22 +217,22 @@ export default function RegisterStep3({ form }: RegisterStep3Props) {
         render={({ field }) => (
           <SearchableSelect
             id="currentSearch"
-            label="¿Qué estás buscando?"
+            label={t('auth:step3.currentSearchLabel')}
             required
-            options={CURRENT_SEARCH_OPTIONS as unknown as Option[]}
+            options={translatedCurrentSearchOptions}
             value={
               field.value
                 ? {
                     value: field.value,
                     label:
-                      (CURRENT_SEARCH_OPTIONS as unknown as Option[]).find(
+                      translatedCurrentSearchOptions.find(
                         (o) => o.value === field.value,
                       )?.label ?? field.value,
                   }
                 : null
             }
             onChange={(opt: Option | null) => field.onChange(opt?.value ?? "")}
-            error={errors.currentSearch?.message}
+            error={errors.currentSearch?.message ? String(t(errors.currentSearch.message)) : undefined}
           />
         )}
       />
@@ -229,11 +244,11 @@ export default function RegisterStep3({ form }: RegisterStep3Props) {
         render={({ field }) => (
           <SearchableSelect
             id="knownTechnologies"
-            label="Tecnologías que conocés"
+            label={t('auth:step3.knownTechnologiesLabel')}
             isMulti
             isCreatable
-            options={buildTechOptions(field.value ?? [])}
-            value={techsToOptions(field.value ?? [])}
+            options={buildTechOptions(field.value ?? [], getSkillLabel)}
+            value={techsToOptions(field.value ?? [], getSkillLabel)}
             onChange={(opts: any) => {
               const newOpts: Option[] = Array.isArray(opts) ? opts : [];
               field.onChange(optionsToTechs(newOpts, field.value ?? []));
@@ -244,15 +259,15 @@ export default function RegisterStep3({ form }: RegisterStep3Props) {
               if (already) return;
               field.onChange([...current, { name: input, is_custom: true }]);
             }}
-            noOptionsMessage="Escribí para agregar una tecnología"
-            formatCreateLabel={(input) => `Agregar "${input}"`}
+            noOptionsMessage={t('auth:step3.knownTechnologiesNoOptions')}
+            formatCreateLabel={(input) => t('auth:step3.knownTechnologiesCreateLabel', { input })}
             isDisabled={false}
-            error={errors.knownTechnologies?.message}
+            error={errors.knownTechnologies?.message ? String(t(errors.knownTechnologies.message)) : undefined}
           />
         )}
       />
       <p className="text-xs text-stone-400 -mt-3">
-        Seleccioná una o más tecnologías. Podés escribir para agregar las tuyas.
+        {t('auth:step3.knownTechnologiesHelp')}
       </p>
 
       {/* ── Bio ───────────────────────────────────────────────────────── */}
@@ -261,7 +276,7 @@ export default function RegisterStep3({ form }: RegisterStep3Props) {
           htmlFor="bio"
           className="text-sm font-medium text-stone-800"
         >
-          Contanos sobre vos
+          {t('auth:step3.bioLabel')}
         </label>
         <Controller
           name="bio"
@@ -273,7 +288,7 @@ export default function RegisterStep3({ form }: RegisterStep3Props) {
               focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]/30 focus:border-[var(--color-primary)]/40
               disabled:opacity-50 disabled:cursor-not-allowed
               resize-none"
-              placeholder="Describí brevemente tu experiencia, tus intereses y qué te motiva..."
+              placeholder={t('auth:step3.bioPlaceholder')}
               maxLength={500}
               {...field}
             />
@@ -281,7 +296,7 @@ export default function RegisterStep3({ form }: RegisterStep3Props) {
         />
         <CharCounter current={bio.length} max={500} />
         {errors.bio && (
-          <p className="text-xs text-red-600 font-medium">{errors.bio.message}</p>
+          <p className="text-xs text-red-600 font-medium">{errors.bio?.message ? String(t(errors.bio.message)) : undefined}</p>
         )}
       </div>
     </div>

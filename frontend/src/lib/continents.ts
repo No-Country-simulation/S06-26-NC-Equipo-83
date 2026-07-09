@@ -13,12 +13,13 @@
 export interface ContinentOption {
   code: string;
   name: string;
+  labelKey: string;
 }
 
 export const CONTINENTS: ContinentOption[] = [
-  { code: "AM", name: "América" },
-  { code: "EU", name: "Europa" },
-  { code: "AF", name: "África" },
-  { code: "AS", name: "Asia" },
-  { code: "OC", name: "Oceanía" },
+  { code: "AM", name: "América", labelKey: "auth:data.continents.AM" },
+  { code: "EU", name: "Europa", labelKey: "auth:data.continents.EU" },
+  { code: "AF", name: "África", labelKey: "auth:data.continents.AF" },
+  { code: "AS", name: "Asia", labelKey: "auth:data.continents.AS" },
+  { code: "OC", name: "Oceanía", labelKey: "auth:data.continents.OC" },
 ];

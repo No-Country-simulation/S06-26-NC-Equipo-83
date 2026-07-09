@@ -1,3 +1,5 @@
+import i18n from "../i18n";
+
 function flattenErrors(obj: any, prefix = ""): string[] {
   if (!obj || typeof obj !== "object") return [];
   if (Array.isArray(obj)) {
@@ -38,7 +40,7 @@ export function extractErrorMessage(err: any): string {
   const data = err?.response?.data;
   if (!data) {
     if (err?.message) return String(err.message);
-    return "Error inesperado. Intentá de nuevo.";
+    return i18n.t("common:error.unexpected");
   }
 
   if (typeof data === "string") return data;
@@ -46,5 +48,5 @@ export function extractErrorMessage(err: any): string {
   const messages = flattenErrors(data);
   return messages.length > 0
     ? messages.join(". ")
-    : "Error inesperado. Intentá de nuevo.";
+    : i18n.t("common:error.unexpected");
 }

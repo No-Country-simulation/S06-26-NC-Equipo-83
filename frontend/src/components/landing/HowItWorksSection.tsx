@@ -1,23 +1,26 @@
-const steps = [
-  {
-    title: "Completa tu perfil",
-    number: "01",
-  },
-  {
-    title: "Analizamos tu situación",
-    number: "02",
-  },
-  {
-    title: "Recibe orientación",
-    number: "03",
-  },
-  {
-    title: "Avanza con confianza",
-    number: "04",
-  },
-];
+import { useTranslation } from 'react-i18next';
 
 export default function HowItWorksSection() {
+  const { t } = useTranslation('landing');
+
+  const steps = [
+    {
+      title: t('landing:howItWorks.step1'),
+      number: "01",
+    },
+    {
+      title: t('landing:howItWorks.step2'),
+      number: "02",
+    },
+    {
+      title: t('landing:howItWorks.step3'),
+      number: "03",
+    },
+    {
+      title: t('landing:howItWorks.step4'),
+      number: "04",
+    },
+  ];
   return (
     <section
       id="como-funciona"
@@ -25,7 +28,7 @@ export default function HowItWorksSection() {
     >
       <div className="mx-auto max-w-7xl px-6">
         <h2 className="mb-12 text-center text-4xl font-bold">
-          ¿Cómo funciona?
+          {t('landing:howItWorks.heading')}
         </h2>
 
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">

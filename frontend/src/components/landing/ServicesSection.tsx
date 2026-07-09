@@ -1,27 +1,30 @@
-const services = [
-  {
-    icon: "🎓",
-    title: "Formación",
-  },
-  {
-    icon: "💼",
-    title: "Empleabilidad",
-  },
-  {
-    icon: "🎤",
-    title: "Experiencias",
-  },
-  {
-    icon: "🤝",
-    title: "Mentorías",
-  },
-  {
-    icon: "🧠",
-    title: "Salud Mental",
-  },
-];
+import { useTranslation } from 'react-i18next';
 
 export default function ServicesSection() {
+  const { t } = useTranslation('landing');
+
+  const services = [
+    {
+      icon: "🎓",
+      title: t('landing:services.service1'),
+    },
+    {
+      icon: "💼",
+      title: t('landing:services.service2'),
+    },
+    {
+      icon: "🎤",
+      title: t('landing:services.service3'),
+    },
+    {
+      icon: "🤝",
+      title: t('landing:services.service4'),
+    },
+    {
+      icon: "🧠",
+      title: t('landing:services.service5'),
+    },
+  ];
   return (
     <section
       id="servicios"
@@ -29,7 +32,7 @@ export default function ServicesSection() {
     >
       <div className="mx-auto max-w-7xl px-6">
         <h2 className="mb-12 text-center text-4xl font-bold">
-          Los 5 pilares de App BiT
+          {t('landing:services.heading')}
         </h2>
 
         <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-5">

@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useEffect } from "react";
 import { useAuthStore } from "../store/useAuthStore";
+import i18n from "../i18n";
 
 interface AuthContextType {
   isAuthenticated: boolean;
@@ -35,7 +36,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {
-    throw new Error("useAuth debe ser usado dentro de un AuthProvider");
+    throw new Error(i18n.t("common:error.unexpected"));
   }
   return context;
 };

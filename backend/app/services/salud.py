@@ -105,10 +105,13 @@ class SaludService:
         request.humor es un enum (Mood.ANXIOUS).
         request.humor.value devuelve el string ("anxious") que espera el agente.
         """
+        idioma_map = {"es": "español", "pt": "portugués", "en": "inglés"}
+        idioma_explicito = idioma_map.get(request.language_code) if request.language_code else None
         respuesta_ia = await self.ia_agent.generar_respuesta_emocional(
             humor=request.humor.value,  # .value = string del enum
             nota=request.nota_semanal,
             contexto=request.contexto,
+            idioma=idioma_explicito,
         )
 
         log = MentalHealthLog(

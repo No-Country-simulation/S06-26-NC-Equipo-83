@@ -10,6 +10,7 @@ class SaludRequest(SQLModel):
     humor: Mood
     nota_semanal: int = Field(ge=1, le=10)
     contexto: str | None = None
+    language_code: str | None = None
 
 
 class SaludResponse(SQLModel):

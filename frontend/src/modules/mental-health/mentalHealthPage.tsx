@@ -7,6 +7,8 @@ import {
 import { useSaludStore } from "../../store/useSaludStore";
 import { Mood } from "../../types/api";
 import { PageBackground } from "../../components/layout/PageBackground";
+import { useTranslation } from 'react-i18next';
+import i18n from '../../i18n';
 
 interface MoodOption {
   id: string;
@@ -30,10 +32,22 @@ const CARD_SHADOW = { boxShadow: "0 4px 20px -4px rgba(30,41,59,0.08)" };
 
 export const MentalHealthPage: React.FC = () => {
   const { currentResponse: saludData, isLoading, error, sendCheckin, clearResponse } = useSaludStore();
+  const { t } = useTranslation('app');
   const [selectedMood, setSelectedMood] = useState<string | null>(null);
   const [weeklyScore, setWeeklyScore] = useState<number>(7);
   const [contexto, setContexto] = useState<string>("");
   const [isSubmitted, setIsSubmitted] = useState(false);
+
+  const moodLabels: Record<string, string> = {
+    [Mood.HAPPY]: t('app:mentalHealth.mood.happy'),
+    [Mood.TIRED]: t('app:mentalHealth.mood.tired'),
+    [Mood.SAD]: t('app:mentalHealth.mood.sad'),
+    [Mood.ANXIOUS]: t('app:mentalHealth.mood.anxious'),
+    [Mood.OVERWHELMED]: t('app:mentalHealth.mood.overwhelmed'),
+    [Mood.STRESSED]: t('app:mentalHealth.mood.stressed'),
+    [Mood.ANGRY]: t('app:mentalHealth.mood.angry'),
+    [Mood.DEPRESSED]: t('app:mentalHealth.mood.depressed'),
+  };
 
   const isCrisisScore = weeklyScore < 4;
 
@@ -43,6 +57,7 @@ export const MentalHealthPage: React.FC = () => {
       humor: selectedMood as typeof Mood.HAPPY,
       nota_semanal: weeklyScore,
       contexto: contexto.trim() || null,
+      language_code: i18n.language,
     });
     setIsSubmitted(true);
   };
@@ -60,6 +75,7 @@ export const MentalHealthPage: React.FC = () => {
       humor: Mood.DEPRESSED,
       nota_semanal: 1,
       contexto: "Botón de crisis activado por el usuario",
+      language_code: i18n.language,
     });
     setIsSubmitted(true);
   };
@@ -78,7 +94,7 @@ export const MentalHealthPage: React.FC = () => {
           </div>
           <h1 className="font-display text-2xl sm:text-3xl font-bold tracking-tight text-[var(--color-heading)]"
             style={{ letterSpacing: "-0.02em" }}>
-            Tu Bienestar
+            {t('app:mentalHealth.title')}
           </h1>
         </div>
         <div className="flex items-start gap-3 pt-2">
@@ -90,10 +106,10 @@ export const MentalHealthPage: React.FC = () => {
           <div className="flex-1 min-w-0">
             <div className="bg-white rounded-2xl rounded-tl-md p-4 border border-gray-200 shadow-sm">
               <p className="text-sm text-[var(--color-body)] leading-relaxed">
-                Este es un espacio seguro para escucharte. Tomate un momento para respirar, registrar cómo te sentís y recibir una recomendación pensada para vos.
+                {t('app:mentalHealth.welcome')}
               </p>
             </div>
-            <p className="text-[10px] text-[var(--color-muted)] mt-1.5">BiT</p>
+            <p className="text-[10px] text-[var(--color-muted)] mt-1.5">{t('app:mentalHealth.senderName')}</p>
           </div>
         </div>
       </motion.div>
@@ -108,8 +124,8 @@ export const MentalHealthPage: React.FC = () => {
 
           <div>
             <h2 className="font-display font-bold text-[var(--color-heading)] text-base"
-              style={{ letterSpacing: "-0.02em" }}>¿Cómo te sentís hoy?</h2>
-            <p className="text-xs text-[var(--color-muted)] mt-0.5">Elegí el emoji que mejor describe tu estado actual.</p>
+              style={{ letterSpacing: "-0.02em" }}>{t('app:mentalHealth.howYouFeel')}</h2>
+            <p className="text-xs text-[var(--color-muted)] mt-0.5">{t('app:mentalHealth.howYouFeelHelp')}</p>
           </div>
 
           <div className="grid grid-cols-4 gap-2.5">
@@ -126,7 +142,7 @@ export const MentalHealthPage: React.FC = () => {
                     }`}>
                   <span className="text-2xl">{mood.emoji}</span>
                   <span className={`text-[10px] font-semibold ${isCurrent ? "text-[var(--color-accent-pink)]" : "text-[var(--color-muted)]"}`}>
-                    {mood.label}
+                    {moodLabels[mood.value]}
                   </span>
                 </button>
               );
@@ -136,7 +152,7 @@ export const MentalHealthPage: React.FC = () => {
           <div className="border-t border-gray-100 pt-5 space-y-4">
             <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <label className="text-xs font-semibold text-[var(--color-body)]">¿Cómo calificás tu día?</label>
+                <label className="text-xs font-semibold text-[var(--color-body)]">{t('app:mentalHealth.dayRating')}</label>
                 <span className={`text-sm font-extrabold tabular-nums ${isCrisisScore ? "text-red-500" : "text-[var(--color-accent-pink)]"}`}>
                   {weeklyScore}/10
                 </span>
@@ -153,12 +169,12 @@ export const MentalHealthPage: React.FC = () => {
 
             <div className="space-y-2">
               <label className="text-xs font-semibold text-[var(--color-body)] block">
-                ¿Querés contarnos algo más? <span className="text-[var(--color-muted)] font-normal">(opcional)</span>
+                {t('app:mentalHealth.tellMore')} <span className="text-[var(--color-muted)] font-normal">{t('app:mentalHealth.tellMoreOptional')}</span>
               </label>
               <textarea
                 value={contexto}
                 onChange={(e) => setContexto(e.target.value)}
-                placeholder="Ej: Tuve un día complicado en el trabajo..."
+                placeholder={t('app:mentalHealth.tellMorePlaceholder')}
                 rows={3}
                 className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-[var(--color-body)] placeholder:text-[var(--color-muted)] resize-none focus:outline-none focus:border-[var(--color-accent-pink)]/40 focus:ring-2 focus:ring-[var(--color-accent-pink)]/10 transition-all" />
             </div>
@@ -177,9 +193,9 @@ export const MentalHealthPage: React.FC = () => {
               color: "var(--color-muted)",
             }}>
             {isLoading ? (
-              <><Loader2 className="w-4 h-4 animate-spin" />Analizando tu estado...</>
+              <><Loader2 className="w-4 h-4 animate-spin" />{t('app:mentalHealth.analyzing')}</>
             ) : (
-              <><Send className="w-4 h-4" />Enviar check-in</>
+              <><Send className="w-4 h-4" />{t('app:mentalHealth.send')}</>
             )}
           </button>
 
@@ -196,7 +212,6 @@ export const MentalHealthPage: React.FC = () => {
 
           {saludData && (
             <div className="bg-white rounded-2xl border border-gray-100 p-5 sm:p-6 space-y-5" style={CARD_SHADOW}>
-              {/* Diálogo del usuario */}
               {selectedMood && (
                 <div className="flex items-start gap-3 justify-end">
                   {(() => {
@@ -205,18 +220,19 @@ export const MentalHealthPage: React.FC = () => {
                       <div className="flex-1 min-w-0 flex flex-col items-end">
                         <div className="bg-sky-100 rounded-2xl rounded-tr-md p-4 border border-sky-200">
                           <p className="text-sm text-[var(--color-body)] leading-relaxed whitespace-pre-line">
-                            {`Estado de ánimo: ${moodOption?.label} ${moodOption?.emoji}\nPuntuación de la semana: ${weeklyScore}/10`}
+                            {t('app:mentalHealth.moodState', { mood: moodOption ? moodLabels[moodOption.value] : '', emoji: moodOption?.emoji ?? '' })}
+                            {'\n'}
+                            {t('app:mentalHealth.weekScore', { score: weeklyScore })}
                             {contexto?.trim() ? `\n\n${contexto.trim()}` : ""}
                           </p>
                         </div>
-                        <p className="text-[10px] text-[var(--color-muted)] mt-1.5">Tu mensaje</p>
+                        <p className="text-[10px] text-[var(--color-muted)] mt-1.5">{t('app:mentalHealth.yourMessage')}</p>
                       </div>
                     );
                   })()}
                 </div>
               )}
 
-              {/* Diálogo de BiT */}
               <div className="flex items-start gap-3">
                 <img
                   src="/pet-res.webp"
@@ -228,7 +244,7 @@ export const MentalHealthPage: React.FC = () => {
                     <p className="text-sm text-[var(--color-body)] leading-relaxed">{saludData.mensaje}</p>
                   </div>
                   <p className="text-[10px] text-[var(--color-muted)] mt-1.5">
-                    Respuesta de BiT · {new Date(saludData.created_at).toLocaleDateString()}
+                    {t('app:mentalHealth.bitResponse', { date: new Date(saludData.created_at).toLocaleDateString() })}
                   </p>
                 </div>
               </div>
@@ -237,13 +253,13 @@ export const MentalHealthPage: React.FC = () => {
                 <div className="bg-red-50 border-2 border-red-200 rounded-xl p-4 space-y-2">
                   <div className="flex items-center gap-2">
                     <Phone className="w-4 h-4 text-red-600" />
-                    <span className="text-xs font-extrabold tracking-wider text-red-600 uppercase">Derivación al CVV</span>
+                    <span className="text-xs font-extrabold tracking-wider text-red-600 uppercase">{t('app:mentalHealth.cvvBadge')}</span>
                   </div>
                   <p className="text-sm text-red-800 font-semibold leading-relaxed">
-                    Llamá al <span className="text-lg font-extrabold">188</span> — Centro de Valorización de la Vida.
+                    {t('app:mentalHealth.cvvMessage')}
                   </p>
                   <p className="text-xs text-red-600">
-                    Atención 24 horas, gratuita y confidencial.
+                    {t('app:mentalHealth.cvvInfo')}
                   </p>
                 </div>
               )}
@@ -254,7 +270,7 @@ export const MentalHealthPage: React.FC = () => {
                   <div className="flex items-center gap-1.5">
                     <Lightbulb className="w-3.5 h-3.5 text-[var(--color-accent-amber)]" />
                     <span className="text-[10px] font-extrabold tracking-wider text-[var(--color-accent-amber)] uppercase">
-                      Acción sugerida
+                      {t('app:mentalHealth.suggestedAction')}
                     </span>
                   </div>
                   <p className="text-xs text-[var(--color-body)] font-semibold leading-relaxed">{saludData.accion_sugerida}</p>
@@ -264,7 +280,7 @@ export const MentalHealthPage: React.FC = () => {
               <button
                 onClick={handleReset}
                 className="w-full py-2.5 rounded-full font-semibold text-sm transition-all duration-200 flex items-center justify-center gap-2 border border-gray-200 text-[var(--color-body)] hover:bg-gray-50 active:scale-[0.98]">
-                Hacer otro check-in
+                {t('app:mentalHealth.anotherCheckIn')}
               </button>
             </div>
           )}
@@ -283,8 +299,8 @@ export const MentalHealthPage: React.FC = () => {
             </div>
             <div>
               <h3 className="font-display font-bold text-[var(--color-heading)] text-sm"
-                style={{ letterSpacing: "-0.02em" }}>¿Necesitás ayuda inmediata?</h3>
-              <p className="text-xs text-[var(--color-muted)]">No estás solo. Activá el botón para derivación automática al CVV.</p>
+                style={{ letterSpacing: "-0.02em" }}>{t('app:mentalHealth.crisisTitle')}</h3>
+              <p className="text-xs text-[var(--color-muted)]">{t('app:mentalHealth.crisisDescription')}</p>
             </div>
           </div>
           <button
@@ -298,9 +314,9 @@ export const MentalHealthPage: React.FC = () => {
               boxShadow: "0 2px 8px -2px rgba(220,38,38,0.1)",
             }}>
             {isLoading ? (
-              <><Loader2 className="w-4 h-4 animate-spin" />Procesando...</>
+              <><Loader2 className="w-4 h-4 animate-spin" />{t('app:mentalHealth.processing')}</>
             ) : (
-              <><Phone className="w-4 h-4" />Botón de Crisis — Llamar al 188</>
+              <><Phone className="w-4 h-4" />{t('app:mentalHealth.crisisButton')}</>
             )}
           </button>
         </motion.section>

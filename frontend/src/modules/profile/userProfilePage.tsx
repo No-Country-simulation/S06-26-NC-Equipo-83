@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { User, MapPin, Briefcase, FileText, Settings, Lock, Bell, Eye, Trash2, Globe, Calendar, Check, Camera, Loader2, Pencil, X } from "lucide-react";
 import { useAuthStore } from "../../store/useAuthStore";
 import { profileService } from "../../services/profileService";
+import { useTranslation } from 'react-i18next';
+import i18n from '../../i18n';
 
 function InputField({ label, value, field, isEditing, onChange }: { label: string; value: string; field: string; isEditing: boolean; onChange: (updater: (prev: any) => any) => void }) {
   return (
@@ -23,9 +25,16 @@ function SettingsRow({ icon, iconBg, title, subtitle, action, toggle, danger }: 
 
 export const UserProfilePage: React.FC = () => {
   const user = useAuthStore((s) => s.user);
+  const { t } = useTranslation(['app', 'common']);
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [saveMessage, setSaveMessage] = useState<string | null>(null);
+
+  const currentLang = i18n.language;
+  const changeLang = (lang: 'es' | 'pt') => {
+    i18n.changeLanguage(lang);
+    localStorage.setItem('appLanguage', lang);
+  };
 
   const [formData, setFormData] = useState({
     full_name: user?.full_name || "",
@@ -49,9 +58,9 @@ export const UserProfilePage: React.FC = () => {
     setIsSaving(true); setSaveMessage(null);
     try {
       await profileService.updateProfile(user.id, formData as any);
-      setSaveMessage("Perfil actualizado correctamente."); setIsEditing(false);
+      setSaveMessage(t('app:profile.updatedOk')); setIsEditing(false);
       await useAuthStore.getState().fetchMe();
-    } catch (err: any) { setSaveMessage(err.response?.data?.detail || "Error al guardar."); }
+    } catch (err: any) { setSaveMessage(err.response?.data?.detail || t('app:profile.updateError')); }
     finally { setIsSaving(false); }
   };
 
@@ -62,47 +71,56 @@ export const UserProfilePage: React.FC = () => {
           <article className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 flex flex-col items-center text-center">
             <div className="relative group mb-4"><div className="w-28 h-28 rounded-full bg-[#A04E2D]/10 border border-amber-800/20 flex items-center justify-center overflow-hidden"><span className="text-3xl font-extrabold text-[#A04E2D]">{initials}</span></div><button className="absolute bottom-1 right-1 bg-[#A04E2D] text-white p-2 rounded-full shadow-md hover:bg-[#853F22]"><Camera className="h-3.5 w-3.5" /></button></div>
             <h1 className="text-xl font-bold text-gray-900 mb-1">{user.full_name}</h1>
-            <span className="inline-block bg-[#FDF2EC] text-[#A04E2D] text-xs font-semibold px-3 py-1 rounded-full mb-4 border border-[#F5DFD3]">Plan Premium</span>
+            <span className="inline-block bg-[#FDF2EC] text-[#A04E2D] text-xs font-semibold px-3 py-1 rounded-full mb-4 border border-[#F5DFD3]">{t('app:profile.premiumBadge')}</span>
           </article>
           <section className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-            <h2 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-4">Configuración de Idioma</h2>
+            <h2 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-4">{t('app:profile.languageSectionTitle')}</h2>
             <div className="space-y-2">
-              <button className="w-full flex items-center justify-between p-3 rounded-xl border border-[#A04E2D]/30 bg-[#FDF2EC]/40 text-[#A04E2D] font-medium text-sm"><span className="flex items-center gap-2.5"><Globe className="h-4 w-4" /> Español (ES)</span><span className="bg-[#A04E2D] text-white rounded-full p-0.5"><Check className="h-3 w-3" /></span></button>
-              <button className="w-full flex items-center p-3 rounded-xl border border-gray-200 bg-white text-gray-600 hover:bg-gray-50 text-sm"><Globe className="h-4 w-4 text-gray-400 mr-2.5" /> Português (PT)</button>
-              <button className="w-full flex items-center p-3 rounded-xl border border-gray-200 bg-white text-gray-600 hover:bg-gray-50 text-sm"><Globe className="h-4 w-4 text-gray-400 mr-2.5" /> English (EN)</button>
+              <button
+                onClick={() => changeLang('es')}
+                className={`w-full flex items-center justify-between p-3 rounded-xl border ${currentLang === 'es' ? 'border-[#A04E2D]/30 bg-[#FDF2EC]/40 text-[#A04E2D] font-medium' : 'border-gray-200 bg-white text-gray-600 hover:bg-gray-50'} text-sm`}>
+                <span className="flex items-center gap-2.5"><Globe className="h-4 w-4" /> {t('common:language.spanish')}</span>
+                {currentLang === 'es' && <span className="bg-[#A04E2D] text-white rounded-full p-0.5"><Check className="h-3 w-3" /></span>}
+              </button>
+              <button
+                onClick={() => changeLang('pt')}
+                className={`w-full flex items-center justify-between p-3 rounded-xl border ${currentLang === 'pt' ? 'border-[#A04E2D]/30 bg-[#FDF2EC]/40 text-[#A04E2D] font-medium' : 'border-gray-200 bg-white text-gray-600 hover:bg-gray-50'} text-sm`}>
+                <span className="flex items-center gap-2.5"><Globe className="h-4 w-4" /> {t('common:language.portuguese')}</span>
+                {currentLang === 'pt' && <span className="bg-[#A04E2D] text-white rounded-full p-0.5"><Check className="h-3 w-3" /></span>}
+              </button>
             </div>
           </section>
         </aside>
         <div className="lg:col-span-8 space-y-6 w-full">
           {saveMessage && <div className={`p-4 rounded-xl text-sm font-medium ${saveMessage.includes("Error") ? "bg-red-50 text-red-700 border border-red-200" : "bg-emerald-50 text-emerald-700 border border-emerald-200"}`}>{saveMessage}</div>}
           <section className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-            <header className="flex items-center justify-between border-b border-gray-100 pb-3 mb-5"><div className="flex items-center gap-2.5"><User className="text-[#A04E2D] h-5 w-5" /><h2 className="text-base font-bold text-gray-900">Datos Personales</h2></div><button onClick={() => setIsEditing(!isEditing)} className="text-xs font-bold text-[#A04E2D] hover:underline flex items-center gap-1">{isEditing ? <X className="w-3.5 h-3.5" /> : <Pencil className="w-3.5 h-3.5" />}{isEditing ? "Cancelar" : "Editar"}</button></header>
+            <header className="flex items-center justify-between border-b border-gray-100 pb-3 mb-5"><div className="flex items-center gap-2.5"><User className="text-[#A04E2D] h-5 w-5" /><h2 className="text-base font-bold text-gray-900">{t('app:profile.personalData')}</h2></div><button onClick={() => setIsEditing(!isEditing)} className="text-xs font-bold text-[#A04E2D] hover:underline flex items-center gap-1">{isEditing ? <X className="w-3.5 h-3.5" /> : <Pencil className="w-3.5 h-3.5" />}{isEditing ? t('app:profile.cancelEditButton') : t('app:profile.editButton')}</button></header>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <InputField label="Nombre completo" value={formData.full_name} field="full_name" isEditing={isEditing} onChange={setFormData} />
-              <InputField label="Correo electrónico" value={formData.email} field="email" isEditing={false} onChange={setFormData} />
-              <InputField label="WhatsApp" value={formData.whatsapp_e164} field="whatsapp_e164" isEditing={isEditing} onChange={setFormData} />
-              <div className="space-y-1"><label className="text-xs font-semibold text-gray-600">Fecha de nacimiento</label><div className="relative"><input type={isEditing ? "date" : "text"} readOnly={!isEditing} value={formData.birth_date?.split("T")[0] || ""} onChange={(e) => setFormData((prev) => ({ ...prev, birth_date: e.target.value }))} className="w-full px-4 py-2.5 bg-[#F4F1EC]/60 rounded-xl text-sm font-medium text-gray-800 outline-none" />{!isEditing && <Calendar className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 h-4 w-4" />}</div></div>
+              <InputField label={t('app:profile.fields.fullName')} value={formData.full_name} field="full_name" isEditing={isEditing} onChange={setFormData} />
+              <InputField label={t('app:profile.fields.email')} value={formData.email} field="email" isEditing={false} onChange={setFormData} />
+              <InputField label={t('app:profile.fields.whatsapp')} value={formData.whatsapp_e164} field="whatsapp_e164" isEditing={isEditing} onChange={setFormData} />
+              <div className="space-y-1"><label className="text-xs font-semibold text-gray-600">{t('app:profile.fields.birthDate')}</label><div className="relative"><input type={isEditing ? "date" : "text"} readOnly={!isEditing} value={formData.birth_date?.split("T")[0] || ""} onChange={(e) => setFormData((prev) => ({ ...prev, birth_date: e.target.value }))} className="w-full px-4 py-2.5 bg-[#F4F1EC]/60 rounded-xl text-sm font-medium text-gray-800 outline-none" />{!isEditing && <Calendar className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 h-4 w-4" />}</div></div>
             </div>
           </section>
           <section className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-            <header className="flex items-center gap-2.5 border-b border-gray-100 pb-3 mb-5"><MapPin className="text-[#A04E2D] h-5 w-5" /><h2 className="text-base font-bold text-gray-900">Ubicación</h2></header>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4"><InputField label="Continente" value={formData.continent_name} field="continent_name" isEditing={isEditing} onChange={setFormData} /><InputField label="País" value={formData.country_name} field="country_name" isEditing={isEditing} onChange={setFormData} /><InputField label="Ciudad" value={formData.city_name} field="city_name" isEditing={isEditing} onChange={setFormData} /></div>
+            <header className="flex items-center gap-2.5 border-b border-gray-100 pb-3 mb-5"><MapPin className="text-[#A04E2D] h-5 w-5" /><h2 className="text-base font-bold text-gray-900">{t('app:profile.sections.location')}</h2></header>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4"><InputField label={t('app:profile.fields.continent')} value={formData.continent_name} field="continent_name" isEditing={isEditing} onChange={setFormData} /><InputField label={t('app:profile.fields.country')} value={formData.country_name} field="country_name" isEditing={isEditing} onChange={setFormData} /><InputField label={t('app:profile.fields.city')} value={formData.city_name} field="city_name" isEditing={isEditing} onChange={setFormData} /></div>
           </section>
           <section className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-            <header className="flex items-center gap-2.5 border-b border-gray-100 pb-3 mb-5"><Briefcase className="text-[#A04E2D] h-5 w-5" /><h2 className="text-base font-bold text-gray-900">Perfil Profesional</h2></header>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4"><InputField label="Nivel Educativo" value={formData.education_level} field="education_level" isEditing={isEditing} onChange={setFormData} /><InputField label="Nivel Profesional" value={formData.professional_level} field="professional_level" isEditing={isEditing} onChange={setFormData} /><InputField label="Área Tecnológica" value={formData.tech_area} field="tech_area" isEditing={isEditing} onChange={setFormData} /><InputField label="Objetivo de Carrera" value={formData.career_objective} field="career_objective" isEditing={isEditing} onChange={setFormData} /></div>
+            <header className="flex items-center gap-2.5 border-b border-gray-100 pb-3 mb-5"><Briefcase className="text-[#A04E2D] h-5 w-5" /><h2 className="text-base font-bold text-gray-900">{t('app:profile.sections.professional')}</h2></header>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4"><InputField label={t('app:profile.fields.education')} value={formData.education_level} field="education_level" isEditing={isEditing} onChange={setFormData} /><InputField label={t('app:profile.fields.professionalLevel')} value={formData.professional_level} field="professional_level" isEditing={isEditing} onChange={setFormData} /><InputField label={t('app:profile.fields.techArea')} value={formData.tech_area} field="tech_area" isEditing={isEditing} onChange={setFormData} /><InputField label={t('app:profile.fields.careerObjective')} value={formData.career_objective} field="career_objective" isEditing={isEditing} onChange={setFormData} /></div>
           </section>
           <section className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-            <header className="flex items-center gap-2.5 border-b border-gray-100 pb-3 mb-5"><FileText className="text-[#A04E2D] h-5 w-5" /><h2 className="text-base font-bold text-gray-900">Biografía / Intereses</h2></header>
-            <div className="space-y-4"><textarea readOnly={!isEditing} rows={3} value="Apasionada por crear interfaces de usuario accesibles y centradas en el ser humano." className="w-full p-4 bg-[#F4F1EC]/60 rounded-xl text-sm font-medium text-gray-700 outline-none resize-none leading-relaxed" />{isEditing && <div className="flex justify-end"><button onClick={handleSave} disabled={isSaving} className="w-full sm:w-auto px-8 py-2.5 bg-[#A04E2D] hover:bg-[#853F22] text-white font-medium text-sm rounded-full shadow-sm disabled:opacity-70 flex items-center gap-2">{isSaving && <Loader2 className="w-4 h-4 animate-spin" />}{isSaving ? "Guardando..." : "Guardar cambios"}</button></div>}</div>
+            <header className="flex items-center gap-2.5 border-b border-gray-100 pb-3 mb-5"><FileText className="text-[#A04E2D] h-5 w-5" /><h2 className="text-base font-bold text-gray-900">{t('app:profile.sections.bio')}</h2></header>
+            <div className="space-y-4"><textarea readOnly={!isEditing} rows={3} value={t('app:profile.bioDefault')} className="w-full p-4 bg-[#F4F1EC]/60 rounded-xl text-sm font-medium text-gray-700 outline-none resize-none leading-relaxed" />{isEditing && <div className="flex justify-end"><button onClick={handleSave} disabled={isSaving} className="w-full sm:w-auto px-8 py-2.5 bg-[#A04E2D] hover:bg-[#853F22] text-white font-medium text-sm rounded-full shadow-sm disabled:opacity-70 flex items-center gap-2">{isSaving && <Loader2 className="w-4 h-4 animate-spin" />}{isSaving ? t('app:profile.saving') : t('app:profile.saveButton')}</button></div>}</div>
           </section>
           <section className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-            <header className="flex items-center gap-2.5 border-b border-gray-100 pb-3 mb-4"><Settings className="text-[#A04E2D] h-5 w-5" /><h2 className="text-base font-bold text-gray-900">Ajustes de Cuenta</h2></header>
+            <header className="flex items-center gap-2.5 border-b border-gray-100 pb-3 mb-4"><Settings className="text-[#A04E2D] h-5 w-5" /><h2 className="text-base font-bold text-gray-900">{t('app:profile.sections.account')}</h2></header>
             <div className="divide-y divide-gray-100">
-              <SettingsRow icon={<Lock className="h-4 w-4" />} iconBg="bg-emerald-50 text-emerald-600" title="Contraseña" subtitle="Cambiada hace 3 meses" action="Actualizar" />
-              <SettingsRow icon={<Bell className="h-4 w-4" />} iconBg="bg-emerald-50 text-emerald-600" title="Notificaciones" subtitle="Alertas de comunidad y mensajes" toggle />
-              <SettingsRow icon={<Eye className="h-4 w-4" />} iconBg="bg-emerald-50 text-emerald-600" title="Privacidad" subtitle="Perfil público para la comunidad" toggle />
-              <SettingsRow icon={<Trash2 className="h-4 w-4" />} iconBg="bg-rose-50 text-rose-600" title="Eliminar cuenta" subtitle="Borrar permanentemente tus datos" action="Gestionar" danger />
+              <SettingsRow icon={<Lock className="h-4 w-4" />} iconBg="bg-emerald-50 text-emerald-600" title={t('app:profile.settings.password')} subtitle={t('app:profile.settings.passwordSubtitle')} action={t('app:profile.settings.passwordAction')} />
+              <SettingsRow icon={<Bell className="h-4 w-4" />} iconBg="bg-emerald-50 text-emerald-600" title={t('app:profile.settings.notifications')} subtitle={t('app:profile.settings.notificationsSubtitle')} toggle />
+              <SettingsRow icon={<Eye className="h-4 w-4" />} iconBg="bg-emerald-50 text-emerald-600" title={t('app:profile.settings.privacy')} subtitle={t('app:profile.settings.privacySubtitle')} toggle />
+              <SettingsRow icon={<Trash2 className="h-4 w-4" />} iconBg="bg-rose-50 text-rose-600" title={t('app:profile.settings.deleteAccount')} subtitle={t('app:profile.settings.deleteSubtitle')} action={t('app:profile.settings.deleteAction')} danger />
             </div>
           </section>
         </div>

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useTranslation } from 'react-i18next';
 import { AnimatePresence, motion } from "framer-motion";
 
 import {
@@ -7,6 +8,7 @@ import {
 } from "../../mocks/testimonials";
 
 export default function TestimonialsSection() {
+  const { t } = useTranslation('landing');
   const [currentIndex, setCurrentIndex] = useState<number>(0);
 
   useEffect(() => {
@@ -34,16 +36,15 @@ export default function TestimonialsSection() {
       <div className="mx-auto max-w-4xl px-6">
         <div className="mb-14 text-center">
           <span className="mb-4 inline-block rounded-full bg-[#99462A]/10 px-4 py-2 text-sm font-medium text-[#99462A]">
-            Comunidad App BiT
+            {t('landing:testimonials.badge')}
           </span>
 
           <h2 className="text-4xl font-bold text-slate-900 md:text-5xl">
-            Historias que inspiran
+            {t('landing:testimonials.heading')}
           </h2>
 
           <p className="mt-4 text-slate-600">
-            Personas que encontraron nuevas oportunidades y
-            confianza para crecer.
+            {t('landing:testimonials.description')}
           </p>
         </div>
 
@@ -99,7 +100,7 @@ export default function TestimonialsSection() {
               key={item.id}
               type="button"
               onClick={() => setCurrentIndex(index)}
-              aria-label={`Ver testimonio ${index + 1}`}
+              aria-label={t('landing:testimonials.testimonyAria', { index: index + 1 })}
               className={`h-2.5 rounded-full transition-all ${
                 index === currentIndex
                   ? "w-8 bg-[#99462A]"

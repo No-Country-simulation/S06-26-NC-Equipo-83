@@ -22,7 +22,7 @@ export const mockOrientarResponses: OrientarResponse[] = [
         company: "Mercado Libre",
         location: "Remoto - LATAM",
         description:
-          "Construí la cara visible de la plataforma de e-commerce más grande de LATAM. Trabajamos con React, TypeScript y un design system propio. Buscamos alguien con ganas de crecer en un equipo que mueve millones de usuarios.",
+          "Construye la cara visible de la plataforma de e-commerce más grande de LATAM. Trabajamos con React, TypeScript y un design system propio. Buscamos alguien con ganas de crecer en un equipo que mueve millones de usuarios.",
         area: "frontend",
         seniority: "semi-senior",
         salary: "ARS 1.800.000 - 2.500.000",
@@ -46,7 +46,7 @@ export const mockOrientarResponses: OrientarResponse[] = [
         company: "Globant",
         location: "Remoto - Argentina",
         description:
-          "Sumate al equipo de frontend que construye experiencias digitales para clientes Fortune 500. Usamos Next.js con App Router, TypeScript y Tailwind. Valoramos la curiosidad y las ganas de aprender sobre los años de experiencia.",
+          "Súmate al equipo de frontend que construye experiencias digitales para clientes Fortune 500. Usamos Next.js con App Router, TypeScript y Tailwind. Valoramos la curiosidad y las ganas de aprender sobre los años de experiencia.",
         area: "frontend",
         seniority: "junior",
         salary: "ARS 1.500.000 - 2.200.000",
@@ -70,7 +70,7 @@ export const mockOrientarResponses: OrientarResponse[] = [
         company: "Accenture",
         location: "Remoto - LATAM",
         description:
-          "Buscamos developers con mentalidad de crecimiento para sumarse a proyectos enterprise de gran escala. Trabajamos con Angular, TypeScript y arquitecturas basadas en micro-frontends. Si tenés bases sólidas de frontend, el resto lo aprendés acá.",
+          "Buscamos developers con mentalidad de crecimiento para sumarse a proyectos enterprise de gran escala. Trabajamos con Angular, TypeScript y arquitecturas basadas en micro-frontends. Si tienes bases sólidas de frontend, el resto lo aprendes aquí.",
         area: "frontend",
         seniority: "trainee",
         salary: "USD 800 - 1.200",
@@ -118,7 +118,7 @@ export const mockOrientarResponses: OrientarResponse[] = [
         company: "Rappi",
         location: "Remoto - LATAM",
         description:
-          "Formá parte del equipo que construye la infraestructura que soporta millones de pedidos diarios. Trabajamos con Node.js, microservicios y bases de datos a escala. Buscamos personas con buenas bases de JavaScript y ganas de aprender arquitecturas distribuidas.",
+          "Forma parte del equipo que construye la infraestructura que soporta millones de pedidos diarios. Trabajamos con Node.js, microservicios y bases de datos a escala. Buscamos personas con buenas bases de JavaScript y ganas de aprender arquitecturas distribuidas.",
         area: "backend",
         seniority: "junior",
         salary: "COP 5.000.000 - 7.500.000",
@@ -154,7 +154,7 @@ export const mockOrientarResponses: OrientarResponse[] = [
         company: "Eventbrite",
         location: "Remoto - LATAM",
         description:
-          "Trabajá en la plataforma que conecta millones de personas con eventos alrededor del mundo. Nuestro stack es Python, Django, PostgreSQL y GraphQL. Valoramos la curiosidad técnica y la capacidad de resolver problemas complejos con código limpio.",
+          "Trabaja en la plataforma que conecta millones de personas con eventos alrededor del mundo. Nuestro stack es Python, Django, PostgreSQL y GraphQL. Valoramos la curiosidad técnica y la capacidad de resolver problemas complejos con código limpio.",
         area: "backend",
         seniority: "junior",
         salary: "USD 1.500 - 2.200",
@@ -190,7 +190,7 @@ export const mockOrientarResponses: OrientarResponse[] = [
         company: "Santander",
         location: "Remoto - LATAM",
         description:
-          "Sumate al equipo de ingeniería del banco más grande de LATAM. Construimos servicios bancarios core con Java, Spring Boot, SQL y Kafka. Buscamos talento con ganas de aprender y crecer en un entorno de misión crítica con mentoría dedicada.",
+          "Súmate al equipo de ingeniería del banco más grande de LATAM. Construimos servicios bancarios core con Java, Spring Boot, SQL y Kafka. Buscamos talento con ganas de aprender y crecer en un entorno de misión crítica con mentoría dedicada.",
         area: "backend",
         seniority: "trainee",
         salary: "EUR 1.800 - 2.500",

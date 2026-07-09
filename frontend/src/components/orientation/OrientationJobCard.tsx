@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { AnimatePresence, motion } from "framer-motion";
 import {
     MapPin, Star, DollarSign, ChevronDown, GraduationCap,
@@ -6,18 +7,7 @@ import {
 } from "lucide-react";
 import type { JobMatchDetail, CourseRecommendation } from "../../types/api";
 import { useDashboardStore } from "../../store/useDashboardStore";
-
-const seniorityLabel: Record<string, string> = {
-    trainee: "Trainee", junior: "Junior", "semi-senior": "Semi Senior", senior: "Senior",
-};
-
-const AREA_LABEL: Record<string, string> = {
-    frontend: "Frontend", backend: "Backend", fullstack: "Full Stack",
-    mobile: "Mobile", ai_ml: "IA / ML", data_science: "Ciencia de datos",
-    devops: "DevOps", cloud: "Cloud", cybersecurity: "Ciberseguridad",
-    qa_testing: "QA / Testing", ux_ui: "UI / UX", product_management: "Product Mgmt",
-    blockchain: "Blockchain", iot: "IoT", game_development: "Game Dev",
-};
+import { SKILL_LABELS } from "../../lib/skillLabels";
 
 const MiniDonut = ({ percent, size = 52 }: { percent: number; size?: number }) => {
     const radius = (size - 5) / 2;
@@ -73,14 +63,47 @@ const CourseRow = ({ course }: { course: CourseRecommendation }) => (
 interface Props { job: JobMatchDetail; index: number; }
 
 export const OrientationJobCard = ({ job, index: _index }: Props) => {
+    const { t } = useTranslation("app");
     const [showDetails, setShowDetails] = useState(false);
     const { selectedVacancy, selectVacancy, clearVacancy } = useDashboardStore();
     const isSelected = selectedVacancy?.id === job.id;
 
+    const getSkillLabel = (key: string): string => {
+      const raw = SKILL_LABELS[key];
+      if (!raw) return key;
+      if (raw.startsWith("__")) return t(raw.slice(2));
+      return raw;
+    };
+
+    const seniorityMap: Record<string, string> = {
+        trainee: t("app:jobCard.seniority.trainee"),
+        junior: t("app:jobCard.seniority.junior"),
+        "semi-senior": t("app:jobCard.seniority.semi_senior"),
+        senior: t("app:jobCard.seniority.senior"),
+    };
+
+    const areaMap: Record<string, string> = {
+        frontend: t("app:jobCard.areaLabels.frontend"),
+        backend: t("app:jobCard.areaLabels.backend"),
+        fullstack: t("app:jobCard.areaLabels.fullstack"),
+        mobile: t("app:jobCard.areaLabels.mobile"),
+        ai_ml: t("app:jobCard.areaLabels.ai_ml"),
+        data_science: t("app:jobCard.areaLabels.data_science"),
+        devops: t("app:jobCard.areaLabels.devops"),
+        cloud: t("app:jobCard.areaLabels.cloud"),
+        cybersecurity: t("app:jobCard.areaLabels.cybersecurity"),
+        qa_testing: t("app:jobCard.areaLabels.qa_testing"),
+        ux_ui: t("app:jobCard.areaLabels.ux_ui"),
+        product_management: t("app:jobCard.areaLabels.product_management"),
+        blockchain: t("app:jobCard.areaLabels.blockchain"),
+        iot: t("app:jobCard.areaLabels.iot"),
+        game_development: t("app:jobCard.areaLabels.game_development"),
+    };
+
     const compatPercent = Math.round(100 - job.gap_porcentual);
     const matchedCount = job.matched_skills.length;
     const requiredCount = job.required_skills.length;
-    const missingPreview = job.missing_skills.slice(0, 3);
+    const missingPreview = job.missing_skills.slice(0, 3).map(s => getSkillLabel(s));
     const extraMissing = Math.max(0, job.missing_skills.length - 3);
     const courseCount = job.recommended_courses.length;
 
@@ -98,7 +121,7 @@ export const OrientationJobCard = ({ job, index: _index }: Props) => {
                         <p className="text-[11px] font-bold text-[var(--color-primary)] uppercase tracking-wider truncate">{job.company}</p>
                         {job.area && (
                             <span className="flex-shrink-0 px-2 py-0.5 rounded-full bg-[var(--color-primary-lighter)] text-[10px] font-extrabold text-[var(--color-primary)] uppercase tracking-wider">
-                                {AREA_LABEL[job.area] ?? job.area}
+                                {areaMap[job.area] ?? job.area}
                             </span>
                         )}
                     </div>
@@ -106,22 +129,27 @@ export const OrientationJobCard = ({ job, index: _index }: Props) => {
                         style={{ letterSpacing: "-0.01em" }}>{job.title}</h3>
                     <div className="flex flex-wrap items-center gap-x-3 gap-y-0.5 mt-1.5 text-[11px] font-medium text-[var(--color-body)]">
                         <span className="inline-flex items-center gap-1"><MapPin className="w-3 h-3 text-[var(--color-muted)]" />{job.location}</span>
-                        <span className="inline-flex items-center gap-1"><Star className="w-3 h-3 text-[var(--color-muted)]" />{seniorityLabel[job.seniority] ?? job.seniority}</span>
+                        <span className="inline-flex items-center gap-1"><Star className="w-3 h-3 text-[var(--color-muted)]" />{seniorityMap[job.seniority] ?? job.seniority}</span>
                         {job.salary && <span className="inline-flex items-center gap-1"><DollarSign className="w-3 h-3 text-[var(--color-muted)]" />{job.salary}</span>}
                     </div>
                     {job.required_skills.length > 0 && (
                         <p className="mt-1.5 text-[11px] leading-relaxed text-[var(--color-body)]">
-                            <span className="font-semibold">Requisitos: </span>
+                            <span className="font-semibold">{t("app:jobCard.requirements")}</span>
                             {job.required_skills.map((s, i) => (
-                                <span key={s}>{s}{i < job.required_skills.length - 1 ? ", " : ""}</span>
+                                <span key={s}>{getSkillLabel(s)}{i < job.required_skills.length - 1 ? ", " : ""}</span>
                             ))}
                         </p>
                     )}
                     <div className="flex items-center gap-2 mt-1.5">
-                        <span className="text-[11px] font-semibold text-[var(--color-body)]">{matchedCount}/{requiredCount} skills cumplidas</span>
-                        {missingPreview.length > 0 && (
+                        <span className="text-[11px] font-semibold text-[var(--color-body)]">
+                            {t("app:jobCard.skillsMetLabel", { matched: matchedCount, required: requiredCount })}
+                        </span>
+                        {job.missing_skills.length > 0 && (
                             <span className="text-[11px] text-[var(--color-accent-amber)] font-medium truncate">
-                                · Te falta{missingPreview.length === 1 ? "" : "n"}: {missingPreview.join(", ")}{extraMissing > 0 ? ` +${extraMissing}` : ""}
+                                {job.missing_skills.length === 1
+                                    ? t("app:jobCard.missingSkills_one", { skills: `${missingPreview.join(", ")}${extraMissing > 0 ? ` +${extraMissing}` : ""}` })
+                                    : t("app:jobCard.missingSkills_other", { skills: `${missingPreview.join(", ")}${extraMissing > 0 ? ` +${extraMissing}` : ""}` })
+                                }
                             </span>
                         )}
                     </div>
@@ -138,14 +166,14 @@ export const OrientationJobCard = ({ job, index: _index }: Props) => {
                                 color: "var(--color-accent-green)",
                                 boxShadow: "inset 0 0 0 1px var(--color-accent-green-light)",
                             }}
-                            title="Click para cancelar">
+                            title={t("app:jobCard.cancelTitle")}>
                             <span className="flex items-center gap-1.5 group-hover:invisible">
                                 <CheckCircle2 className="w-3 h-3" />
-                                Seleccionada
+                                {t("app:jobCard.selectedButton")}
                             </span>
                             <span className="absolute inset-0 flex items-center justify-center gap-1.5 invisible group-hover:visible">
                                 <X className="w-3 h-3" />
-                                Cancelar
+                                {t("app:jobCard.cancelButton")}
                             </span>
                         </button>
                     ) : (
@@ -157,12 +185,12 @@ export const OrientationJobCard = ({ job, index: _index }: Props) => {
                                 boxShadow: "0 2px 8px -2px rgba(47,117,220,0.25)",
                             }}>
                             <Sparkles className="w-3 h-3" />
-                            Elegir vacante
+                            {t("app:jobCard.selectButton")}
                         </button>
                     )}
                     <button onClick={() => setShowDetails(!showDetails)}
                         className="flex items-center gap-1 text-[11px] font-medium text-[var(--color-primary)] hover:text-[var(--color-primary-hover)] transition-colors duration-200">
-                        Ver detalles
+                        {t("app:jobCard.detailsButton")}
                         <ChevronDown className={`w-3 h-3 transition-transform duration-200 ${showDetails ? "rotate-180" : ""}`} />
                     </button>
                 </div>
@@ -183,8 +211,7 @@ export const OrientationJobCard = ({ job, index: _index }: Props) => {
                             <div className="flex items-start gap-2.5">
                                 <Sparkles className="w-3 h-3 text-[var(--color-primary)] flex-shrink-0 mt-0.5" />
                                 <p className="text-[11px] text-[var(--color-body)] leading-relaxed">
-                                    Recomendada porque coincide con tus áreas de interés y tecnologías. Tu perfil tiene un{" "}
-                                    <span className="font-bold text-[var(--color-heading)]">{compatPercent}%</span> de compatibilidad.
+                                    {t("app:jobCard.recommendedDescription", { percent: compatPercent })}
                                 </p>
                             </div>
 
@@ -192,19 +219,19 @@ export const OrientationJobCard = ({ job, index: _index }: Props) => {
                                 <div className="space-y-2">
                                     <p className="text-[10px] font-extrabold text-[var(--color-accent-green)] uppercase tracking-wider flex items-center gap-1.5">
                                         <span className="w-1.5 h-1.5 rounded-full bg-[var(--color-accent-green)]" />
-                                        Ya cumplís ({matchedCount})
+                                        {t("app:jobCard.alreadyMet", { count: matchedCount })}
                                     </p>
                                     <div className="flex flex-wrap gap-1.5">
-                                        {job.matched_skills.map((s) => <SkillChip key={s} label={s} variant="matched" />)}
+                                        {job.matched_skills.map((s) => <SkillChip key={s} label={getSkillLabel(s)} variant="matched" />)}
                                     </div>
                                 </div>
                                 <div className="space-y-2">
                                     <p className="text-[10px] font-extrabold text-[var(--color-accent-amber)] uppercase tracking-wider flex items-center gap-1.5">
                                         <span className="w-1.5 h-1.5 rounded-full bg-[var(--color-accent-amber)]" />
-                                        Por desarrollar ({job.missing_skills.length})
+                                        {t("app:jobCard.toDevelop", { count: job.missing_skills.length })}
                                     </p>
                                     <div className="flex flex-wrap gap-1.5">
-                                        {job.missing_skills.map((s) => <SkillChip key={s} label={s} variant="pending" />)}
+                                        {job.missing_skills.map((s) => <SkillChip key={s} label={getSkillLabel(s)} variant="pending" />)}
                                     </div>
                                 </div>
                             </div>
@@ -213,7 +240,10 @@ export const OrientationJobCard = ({ job, index: _index }: Props) => {
                                 <div className="flex items-center gap-3 px-3 py-2.5 bg-[var(--color-primary-lighter)] rounded-xl border border-[var(--color-primary-light)]/50">
                                     <GraduationCap className="w-4 h-4 text-[var(--color-primary)] flex-shrink-0" />
                                     <p className="text-[11px] font-semibold text-[var(--color-primary)]">
-                                        Con {courseCount} {courseCount === 1 ? "curso" : "cursos"} podés cerrar este gap y postularte.
+                                        {courseCount === 1
+                                            ? t("app:jobCard.closeGap_one", { count: courseCount })
+                                            : t("app:jobCard.closeGap_other", { count: courseCount })
+                                        }
                                     </p>
                                 </div>
                             )}
@@ -222,7 +252,7 @@ export const OrientationJobCard = ({ job, index: _index }: Props) => {
                                 <div className="space-y-2.5">
                                     <p className="text-[10px] font-extrabold text-[var(--color-heading)] uppercase tracking-wider flex items-center gap-1.5 font-display"
                                         style={{ letterSpacing: "0.05em" }}>
-                                        <span className="w-1.5 h-1.5 rounded-full bg-[var(--color-primary)]" />Camino de aprendizaje
+                                        <span className="w-1.5 h-1.5 rounded-full bg-[var(--color-primary)]" />{t("app:jobCard.learningPath")}
                                     </p>
                                     <div className="space-y-2">
                                         {job.recommended_courses.map((c, i) => <CourseRow key={`${c.title}-${i}`} course={c} />)}

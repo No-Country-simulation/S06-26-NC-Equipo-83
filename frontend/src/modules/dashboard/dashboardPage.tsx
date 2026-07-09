@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 import {
   ArrowRight, Lightbulb,
   Compass, MapPin, Star,
@@ -9,10 +10,6 @@ import { useAuthStore } from "../../store/useAuthStore";
 import { useDashboardStore } from "../../store/useDashboardStore";
 import type { CourseRecommendation } from "../../types/api";
 import { PageBackground } from "../../components/layout/PageBackground";
-
-const SENIORITY_LABEL: Record<string, string> = {
-  trainee: "Trainee", junior: "Junior", "semi-senior": "Semi Senior", senior: "Senior",
-};
 
 const CourseCard = ({ course }: { course: CourseRecommendation }) => (
   <div className="flex-shrink-0 w-[220px] bg-white rounded-xl border border-gray-100 p-3.5 flex flex-col gap-2.5 hover:border-[var(--color-primary-light)] transition-colors duration-200 group">
@@ -37,6 +34,7 @@ const CourseCard = ({ course }: { course: CourseRecommendation }) => (
 );
 
 export const DashboardPage: React.FC = () => {
+  const { t } = useTranslation("app");
   const user = useAuthStore((s) => s.user);
   const { selectedVacancy, clearVacancy } = useDashboardStore();
 
@@ -46,16 +44,23 @@ export const DashboardPage: React.FC = () => {
   const requiredCount = selectedVacancy?.required_skills.length ?? 0;
   const courseCount = selectedVacancy?.recommended_courses.length ?? 0;
 
+  const seniorityMap: Record<string, string> = {
+    trainee: t("app:jobCard.seniority.trainee"),
+    junior: t("app:jobCard.seniority.junior"),
+    "semi-senior": t("app:jobCard.seniority.semi_senior"),
+    senior: t("app:jobCard.seniority.senior"),
+  };
+
   return (
     <PageBackground>
       <div className="max-w-[900px] mx-auto space-y-8 py-6 md:py-10">
         <header className="space-y-1">
         <h1 className="font-display text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-[var(--color-heading)]"
           style={{ letterSpacing: "-0.02em" }}>
-          ¡Hola{firstName ? `, ${firstName}` : ""}!
+          {t("app:dashboard.greeting", { name: firstName })}
         </h1>
         <p className="text-sm md:text-base text-[var(--color-body)]">
-          Es un buen día para seguir creciendo profesionalmente.
+          {t("app:dashboard.subtitle")}
         </p>
       </header>
 
@@ -66,12 +71,12 @@ export const DashboardPage: React.FC = () => {
               <h2 className="font-display font-bold text-sm text-[var(--color-heading)] uppercase tracking-wider flex items-center gap-2"
                 style={{ letterSpacing: "0.05em" }}>
                 <span className="w-1.5 h-1.5 rounded-full bg-[var(--color-primary)]" />
-                Tu objetivo profesional
+                {t("app:dashboard.careerObjective")}
               </h2>
               <button
                 onClick={clearVacancy}
                 className="text-xs font-medium text-[var(--color-muted)] hover:text-[var(--color-body)] transition-colors flex items-center gap-1">
-                <X className="w-3 h-3" />Cambiar
+                <X className="w-3 h-3" />{t("app:dashboard.changeButton")}
               </button>
             </div>
 
@@ -96,12 +101,12 @@ export const DashboardPage: React.FC = () => {
                       style={{ letterSpacing: "-0.01em" }}>{selectedVacancy.title}</h3>
                     <div className="flex flex-wrap items-center gap-x-3 gap-y-0.5 mt-1.5 text-[11px] font-medium text-[var(--color-body)]">
                       <span className="inline-flex items-center gap-1"><MapPin className="w-3 h-3 text-[var(--color-muted)]" />{selectedVacancy.location}</span>
-                      <span className="inline-flex items-center gap-1"><Star className="w-3 h-3 text-[var(--color-muted)]" />{SENIORITY_LABEL[selectedVacancy.seniority] ?? selectedVacancy.seniority}</span>
+                      <span className="inline-flex items-center gap-1"><Star className="w-3 h-3 text-[var(--color-muted)]" />{seniorityMap[selectedVacancy.seniority] ?? selectedVacancy.seniority}</span>
                       {selectedVacancy.salary && <span className="inline-flex items-center gap-1"><DollarSign className="w-3 h-3 text-[var(--color-muted)]" />{selectedVacancy.salary}</span>}
                     </div>
                     {selectedVacancy.required_skills.length > 0 && (
                       <p className="mt-1.5 text-[11px] leading-relaxed text-[var(--color-body)]">
-                        <span className="font-semibold">Requisitos: </span>
+                        <span className="font-semibold">{t("app:dashboard.requirements")}</span>
                         {selectedVacancy.required_skills.map((s, i) => (
                           <span key={s}>{s}{i < selectedVacancy.required_skills.length - 1 ? ", " : ""}</span>
                         ))}
@@ -112,7 +117,7 @@ export const DashboardPage: React.FC = () => {
                   <div className="flex-shrink-0 text-right">
                     <span className="text-2xl font-extrabold text-[var(--color-heading)] font-display tabular-nums"
                       style={{ letterSpacing: "-0.02em" }}>{compatPercent}%</span>
-                    <p className="text-[10px] text-[var(--color-muted)] font-medium">compatible</p>
+                    <p className="text-[10px] text-[var(--color-muted)] font-medium">{t("app:dashboard.compatible")}</p>
                   </div>
                 </div>
 
@@ -130,12 +135,14 @@ export const DashboardPage: React.FC = () => {
                   </div>
                   <div className="flex items-center justify-between text-[11px]">
                     <span className="font-semibold text-[var(--color-body)]">
-                      {matchedCount}/{requiredCount} skills cumplidas
+                      {t("app:dashboard.skillsMet", { matched: matchedCount, required: requiredCount })}
                     </span>
                     {selectedVacancy.missing_skills.length > 0 && (
                       <span className="text-[var(--color-accent-amber)] font-medium">
-                        Te falta{selectedVacancy.missing_skills.length === 1 ? "" : "n"}: {selectedVacancy.missing_skills.slice(0, 2).join(", ")}
-                        {selectedVacancy.missing_skills.length > 2 ? ` +${selectedVacancy.missing_skills.length - 2}` : ""}
+                        {selectedVacancy.missing_skills.length === 1
+                          ? t("app:dashboard.missingSkills_one", { skills: selectedVacancy.missing_skills[0] })
+                          : t("app:dashboard.missingSkills_other", { skills: `${selectedVacancy.missing_skills.slice(0, 2).join(", ")}${selectedVacancy.missing_skills.length > 2 ? ` +${selectedVacancy.missing_skills.length - 2}` : ""}` })
+                        }
                       </span>
                     )}
                   </div>
@@ -148,7 +155,10 @@ export const DashboardPage: React.FC = () => {
                     <GraduationCap className="w-4 h-4 text-[var(--color-primary)]" />
                     <p className="text-xs font-extrabold text-[var(--color-heading)] uppercase tracking-wider font-display"
                       style={{ letterSpacing: "0.05em" }}>
-                      Plan de aprendizaje · {courseCount} {courseCount === 1 ? "curso" : "cursos"}
+                      {courseCount === 1
+                        ? t("app:dashboard.learningPlan_one", { count: courseCount })
+                        : t("app:dashboard.learningPlan_other", { count: courseCount })
+                      }
                     </p>
                   </div>
                   <div className="flex gap-3 overflow-x-auto pb-1 -mx-1 px-1 scrollbar-none">
@@ -169,13 +179,13 @@ export const DashboardPage: React.FC = () => {
             </div>
             <div>
               <h2 className="font-display font-bold text-[var(--color-heading)] text-lg"
-                style={{ letterSpacing: "-0.02em" }}>Descubrí tu camino profesional</h2>
+                style={{ letterSpacing: "-0.02em" }}>{t("app:dashboard.discoverTitle")}</h2>
               <p className="text-sm text-[var(--color-body)] max-w-sm mx-auto mt-1.5">
-                Elegí una vacante en Orientación para ver tu progreso y plan de aprendizaje personalizado.
+                {t("app:dashboard.discoverDescription")}
               </p>
             </div>
             <span className="btn-primary text-sm inline-flex mx-auto">
-              Ir a Orientación <ArrowRight className="w-4 h-4" />
+              {t("app:dashboard.discoverButton")} <ArrowRight className="w-4 h-4" />
             </span>
           </Link>
         )}
@@ -190,20 +200,20 @@ export const DashboardPage: React.FC = () => {
               <Heart className="w-4 h-4 text-[var(--color-accent-pink)]" />
             </div>
             <h2 className="font-display font-bold text-[var(--color-heading)] text-sm"
-              style={{ letterSpacing: "-0.02em" }}>Check-in diario</h2>
+              style={{ letterSpacing: "-0.02em" }}>{t("app:dashboard.checkInTitle")}</h2>
           </div>
           <p className="text-sm text-[var(--color-body)] leading-relaxed mb-4">
-            Registrá cómo te sentís hoy y recibí una recomendación personalizada de nuestra IA para cuidar tu bienestar.
+            {t("app:dashboard.checkInDescription")}
           </p>
           <span className="inline-flex items-center gap-2 text-sm font-semibold text-[var(--color-accent-pink)] group-hover:gap-3 transition-all">
-            Hacer check-in <ArrowRight className="w-4 h-4" />
+            {t("app:dashboard.checkInButton")} <ArrowRight className="w-4 h-4" />
           </span>
         </Link>
 
         <div className="bg-[var(--color-primary-lighter)]/50 rounded-2xl border border-[var(--color-primary-light)]/50 p-5 flex flex-col justify-center items-center text-center space-y-3">
           <Lightbulb className="w-5 h-5 text-[var(--color-primary)]" />
           <p className="text-xs text-[var(--color-heading)] font-medium leading-relaxed italic">
-            "Pequeños pasos hoy construyen grandes futuros mañana. Tu constancia es tu mayor superpoder."
+            "{t("app:dashboard.quote")}"
           </p>
         </div>
       </section>

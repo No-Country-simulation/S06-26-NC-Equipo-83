@@ -13,6 +13,7 @@ import {
   getCitiesByState,
 } from "../../../lib/geography";
 import type { CountryOption, StateOption, CityOption } from "../../../lib/geography";
+import { useTranslation } from "react-i18next";
 
 // ── Tipos internos ──────────────────────────────────────────────────────
 
@@ -77,6 +78,7 @@ export default function RegisterStep2({ form }: RegisterStep2Props) {
     setValue,
     formState: { errors },
   } = form;
+  const { t } = useTranslation(['auth', 'common']);
 
   const continentCode = watch("continentCode");
   const countryCode = watch("countryCode");
@@ -145,11 +147,11 @@ export default function RegisterStep2({ form }: RegisterStep2Props) {
               <Select<Option, false>
                 inputId="continent-select"
                 {...SELECT_MENU_PROPS}
-                options={CONTINENTS.map((c) => ({ value: c.code, label: c.name }))}
+                options={CONTINENTS.map((c) => ({ value: c.code, label: String(t(c.labelKey)) }))}
                 value={
                 field.value
                   ? CONTINENTS.filter((c) => c.code === field.value).map(
-                      (c) => ({ value: c.code, label: c.name }),
+                      (c) => ({ value: c.code, label: String(t(c.labelKey)) }),
                     )
                   : null
               }
@@ -172,16 +174,16 @@ export default function RegisterStep2({ form }: RegisterStep2Props) {
                 setValue("cityName", "", { shouldValidate: false });
               }}
               onBlur={field.onBlur}
-              placeholder="Seleccioná un continente"
+              placeholder={t('auth:step2.continentPlaceholder')}
               styles={selectStyles}
               isClearable
-              noOptionsMessage={() => "Sin resultados"}
+              noOptionsMessage={() => String(t('auth:step2.continentNoResults'))}
             />
           )}
         />
         {errors.continentCode && (
           <p className="text-xs text-red-600 font-medium mt-1">
-            {errors.continentCode.message}
+            {errors.continentCode.message ? String(t(errors.continentCode.message)) : undefined}
           </p>
         )}
       </div>
@@ -229,18 +231,18 @@ export default function RegisterStep2({ form }: RegisterStep2Props) {
               onBlur={field.onBlur}
               placeholder={
                 continentCode
-                  ? "Seleccioná un país"
-                  : "Primero elegí un continente"
+                  ? String(t('auth:step2.countryPlaceholder'))
+                  : String(t('auth:step2.countryDisabledPlaceholder'))
               }
               styles={selectStyles}
               isClearable
-              noOptionsMessage={() => "Sin resultados"}
+              noOptionsMessage={() => String(t('auth:step2.countryNoResults'))}
             />
           )}
         />
         {errors.countryCode && (
           <p className="text-xs text-red-600 font-medium mt-1">
-            {errors.countryCode.message}
+            {errors.countryCode.message ? String(t(errors.countryCode.message)) : undefined}
           </p>
         )}
       </div>
@@ -288,18 +290,18 @@ export default function RegisterStep2({ form }: RegisterStep2Props) {
                 onBlur={field.onBlur}
                 placeholder={
                   countryCode
-                    ? "Seleccioná una provincia"
-                    : "Elegí un país primero"
+                    ? String(t('auth:step2.statePlaceholder'))
+                    : String(t('auth:step2.stateDisabledPlaceholder'))
                 }
                 styles={selectStyles}
                 isClearable
-                noOptionsMessage={() => "Sin resultados"}
+                noOptionsMessage={() => String(t('auth:step2.stateNoResults'))}
               />
             )}
           />
           {errors.stateCode && (
             <p className="text-xs text-red-600 font-medium mt-1">
-              {errors.stateCode.message}
+              {errors.stateCode.message ? String(t(errors.stateCode.message)) : undefined}
             </p>
           )}
         </div>
@@ -310,7 +312,7 @@ export default function RegisterStep2({ form }: RegisterStep2Props) {
             htmlFor="city-select"
             className="block text-sm font-medium text-stone-800 mb-1.5"
           >
-            Ciudad <span className="text-red-500">*</span>
+            {t('auth:step2.cityLabel')} <span className="text-red-500">*</span>
           </label>
           <Controller
             name="cityName"
@@ -354,27 +356,27 @@ export default function RegisterStep2({ form }: RegisterStep2Props) {
                 onBlur={field.onBlur}
                 placeholder={
                   citiesLoading
-                    ? "Cargando ciudades..."
+                    ? String(t('auth:step2.cityLoading'))
                     : stateCode
-                      ? "Seleccioná o escribí tu ciudad"
-                      : "Elegí una provincia primero"
+                      ? String(t('auth:step2.cityPlaceholder'))
+                      : String(t('auth:step2.cityDisabledPlaceholder'))
                 }
                 styles={selectStyles}
                 isClearable
                 noOptionsMessage={() =>
                   citiesLoading
-                    ? "Cargando..."
-                    : "Escribí el nombre de tu ciudad"
+                    ? String(t('auth:step2.cityLoadingNoOptions'))
+                    : String(t('auth:step2.cityNoResults'))
                 }
                 formatCreateLabel={(input) =>
-                  `Usar "${input}"`
+                  t('auth:step2.cityCreateLabel', { input })
                 }
               />
             )}
           />
           {errors.cityName && (
             <p className="text-xs text-red-600 font-medium mt-1">
-              {errors.cityName.message}
+              {errors.cityName.message ? String(t(errors.cityName.message)) : undefined}
             </p>
           )}
         </div>
@@ -383,7 +385,7 @@ export default function RegisterStep2({ form }: RegisterStep2Props) {
       {/* ── WhatsApp ─────────────────────────────────────────────────── */}
       <div>
         <label className="block text-sm font-medium text-stone-800 mb-1.5">
-          WhatsApp <span className="text-red-500">*</span>
+          {t('auth:step2.whatsappLabel')} <span className="text-red-500">*</span>
         </label>
         <Controller
           name="whatsapp"
@@ -419,7 +421,7 @@ export default function RegisterStep2({ form }: RegisterStep2Props) {
         />
         {errors.whatsapp && (
           <p className="text-xs text-red-600 font-medium mt-1">
-            {errors.whatsapp.message}
+            {errors.whatsapp.message ? String(t(errors.whatsapp.message)) : undefined}
           </p>
         )}
       </div>

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft, Video, MapPin, Monitor, Save, Loader2, Link, MapPinned } from "lucide-react";
 import { eventsService } from "../../services/eventsService";
+import { useTranslation } from 'react-i18next';
 
 const CATEGORIAS = [
   { value: "crecimiento", label: "Crecimiento" },
@@ -21,6 +22,7 @@ const TIPOS = [
 
 export const CreateEventPage: React.FC = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation('app');
   const [saving, setSaving] = useState(false);
   const [form, setForm] = useState({
     title: "",
@@ -34,6 +36,22 @@ export const CreateEventPage: React.FC = () => {
     max_participants: 100,
   });
   const [error, setError] = useState("");
+
+  const typeLabels: Record<string, string> = {
+    online: t('app:createEvent.type.Online'),
+    presencial: t('app:createEvent.type.Presencial'),
+    grabado: t('app:createEvent.type.Grabado'),
+  };
+
+  const categoryLabels: Record<string, string> = {
+    crecimiento: t('app:createEvent.category.Crecimiento'),
+    diversidad: t('app:createEvent.category.Diversidad'),
+    habilidades: t('app:createEvent.category.Habilidades'),
+    liderazgo: t('app:createEvent.category.Liderazgo'),
+    networking: t('app:createEvent.category.Networking'),
+    carrera: t('app:createEvent.category.Carrera'),
+    cambio: t('app:createEvent.category.Cambio'),
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -54,7 +72,7 @@ export const CreateEventPage: React.FC = () => {
       });
       navigate("/experiencias");
     } catch {
-      setError("Error al crear el evento. Intentá de nuevo.");
+      setError(t('app:createEvent.errorCreating'));
     } finally {
       setSaving(false);
     }
@@ -70,7 +88,7 @@ export const CreateEventPage: React.FC = () => {
           <ArrowLeft className="w-5 h-5 text-stone-600" />
         </button>
         <h1 className="text-xl sm:text-2xl font-extrabold text-stone-900 tracking-tight">
-          Crear evento
+          {t('app:createEvent.title')}
         </h1>
       </div>
 
@@ -83,65 +101,65 @@ export const CreateEventPage: React.FC = () => {
       <form onSubmit={handleSubmit} className="space-y-5">
         <div className="space-y-2">
           <label className="text-sm font-medium text-stone-800">
-            Título del evento <span className="text-red-500 ml-0.5">*</span>
+            {t('app:createEvent.titleLabel')} <span className="text-red-500 ml-0.5">*</span>
           </label>
           <input
             type="text"
             value={form.title}
             onChange={(e) => setForm({ ...form, title: e.target.value })}
             className="h-14 w-full rounded-xl border border-transparent bg-slate-100 px-4 text-sm transition text-stone-700 placeholder:text-stone-500 focus:border-[#99462A] focus:outline-none focus:ring-2 focus:ring-[#99462A]/20"
-            placeholder="Ej: Charla: Cómo entrar a tecnología"
+            placeholder={t('app:createEvent.titlePlaceholder')}
             required
           />
         </div>
 
         <div className="space-y-2">
-          <label className="text-sm font-medium text-stone-800">Descripción</label>
+          <label className="text-sm font-medium text-stone-800">{t('app:createEvent.descriptionLabel')}</label>
           <textarea
             value={form.description}
             onChange={(e) => setForm({ ...form, description: e.target.value })}
             className="h-32 w-full rounded-xl border border-transparent bg-slate-100 px-4 py-3 text-sm transition text-stone-700 placeholder:text-stone-500 focus:border-[#99462A] focus:outline-none focus:ring-2 focus:ring-[#99462A]/20 resize-none"
             rows={3}
-            placeholder="Contá de qué trata el evento..."
+            placeholder={t('app:createEvent.descriptionPlaceholder')}
           />
         </div>
 
         <div className="space-y-2">
-          <label className="text-sm font-medium text-stone-800">Tipo</label>
+          <label className="text-sm font-medium text-stone-800">{t('app:createEvent.typeLabel')}</label>
           <div className="flex gap-2">
-            {TIPOS.map(({ value: t, label, icon: Icon }) => (
+            {TIPOS.map(({ value: tv, icon: Icon }) => (
               <button
-                key={t}
+                key={tv}
                 type="button"
-                onClick={() => setForm({ ...form, tipo: t })}
+                onClick={() => setForm({ ...form, tipo: tv })}
                 className={`flex items-center gap-1.5 h-14 px-4 rounded-xl text-sm font-semibold transition-all flex-1 ${
-                  form.tipo === t
+                  form.tipo === tv
                     ? "bg-[#99462A] text-white shadow-sm"
                     : "bg-stone-100 text-stone-600 hover:bg-stone-200"
                 }`}
               >
                 <Icon className="w-4 h-4" />
-                {label}
+                {typeLabels[tv]}
               </button>
             ))}
           </div>
         </div>
 
         <div className="space-y-2">
-          <label className="text-sm font-medium text-stone-800">Categoría</label>
+          <label className="text-sm font-medium text-stone-800">{t('app:createEvent.categoryLabel')}</label>
           <select
             value={form.categoria}
             onChange={(e) => setForm({ ...form, categoria: e.target.value })}
             className="h-14 w-full rounded-xl border border-transparent bg-stone-100 px-4 text-sm text-stone-700 transition-colors focus:border-[#99462A] focus:outline-none focus:ring-2 focus:ring-[#99462A]/20"
           >
             {CATEGORIAS.map((c) => (
-              <option key={c.value} value={c.value}>{c.label}</option>
+              <option key={c.value} value={c.value}>{categoryLabels[c.value]}</option>
             ))}
           </select>
         </div>
 
         <div className="space-y-2">
-          <label className="text-sm font-medium text-stone-800">Fecha y hora del evento</label>
+          <label className="text-sm font-medium text-stone-800">{t('app:createEvent.dateLabel')}</label>
           <input
             type="datetime-local"
             value={form.event_date}
@@ -151,7 +169,7 @@ export const CreateEventPage: React.FC = () => {
         </div>
 
         <div className="space-y-2">
-          <label className="text-sm font-medium text-stone-800">Link de reunión (opcional)</label>
+          <label className="text-sm font-medium text-stone-800">{t('app:createEvent.meetingUrlLabel')}</label>
           <div className="relative">
             <div className="absolute left-4 top-1/2 -translate-y-1/2 text-[#99462A]">
               <Link className="w-5 h-5" />
@@ -161,25 +179,25 @@ export const CreateEventPage: React.FC = () => {
               value={form.meeting_url}
               onChange={(e) => setForm({ ...form, meeting_url: e.target.value })}
               className="h-14 w-full rounded-xl border border-transparent bg-slate-100 pl-12 pr-4 text-sm transition text-stone-700 placeholder:text-stone-500 focus:border-[#99462A] focus:outline-none focus:ring-2 focus:ring-[#99462A]/20"
-              placeholder="https://meet.google.com/xxx o https://meet.jit.si/mi-sala"
+              placeholder={t('app:createEvent.meetingUrlPlaceholder')}
             />
           </div>
-          <p className="text-xs text-stone-400">Si no ponés link, se genera una sala de Jitsi automática.</p>
+          <p className="text-xs text-stone-400">{t('app:createEvent.meetingUrlHelp')}</p>
         </div>
 
         <div className="space-y-2">
-          <label className="text-sm font-medium text-stone-800">Ubicación (ciudad/zona)</label>
+          <label className="text-sm font-medium text-stone-800">{t('app:createEvent.locationLabel')}</label>
           <input
             type="text"
             value={form.location}
             onChange={(e) => setForm({ ...form, location: e.target.value })}
             className="h-14 w-full rounded-xl border border-transparent bg-slate-100 px-4 text-sm transition text-stone-700 placeholder:text-stone-500 focus:border-[#99462A] focus:outline-none focus:ring-2 focus:ring-[#99462A]/20"
-            placeholder="Ej: Florianópolis, SC"
+            placeholder={t('app:createEvent.locationPlaceholder')}
           />
         </div>
 
         <div className="space-y-2">
-          <label className="text-sm font-medium text-stone-800">Dirección (para eventos presenciales)</label>
+          <label className="text-sm font-medium text-stone-800">{t('app:createEvent.addressLabel')}</label>
           <div className="relative">
             <div className="absolute left-4 top-3 text-[#99462A]">
               <MapPinned className="w-5 h-5" />
@@ -188,13 +206,13 @@ export const CreateEventPage: React.FC = () => {
               value={form.address}
               onChange={(e) => setForm({ ...form, address: e.target.value })}
               className="h-20 w-full rounded-xl border border-transparent bg-slate-100 pl-12 pr-4 py-3 text-sm transition text-stone-700 placeholder:text-stone-500 focus:border-[#99462A] focus:outline-none focus:ring-2 focus:ring-[#99462A]/20 resize-none"
-              placeholder="Calle, número, barrio, punto de referencia..."
+              placeholder={t('app:createEvent.addressPlaceholder')}
             />
           </div>
         </div>
 
         <div className="space-y-2">
-          <label className="text-sm font-medium text-stone-800">Participantes máximos</label>
+          <label className="text-sm font-medium text-stone-800">{t('app:createEvent.maxParticipantsLabel')}</label>
           <input
             type="number"
             value={form.max_participants}
@@ -212,18 +230,18 @@ export const CreateEventPage: React.FC = () => {
           {saving ? (
             <>
               <Loader2 className="w-4 h-4 animate-spin" />
-              Guardando...
+              {t('app:createEvent.saving')}
             </>
           ) : (
             <>
               <Save className="w-4 h-4" />
-              Crear evento
+              {t('app:createEvent.saveButton')}
             </>
           )}
         </button>
 
         <p className="text-xs text-stone-400 text-center">
-          Cualquier persona puede ver este evento en la sección Experiencias.
+          {t('app:createEvent.footerNote')}
         </p>
       </form>
     </main>

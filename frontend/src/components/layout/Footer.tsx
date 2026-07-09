@@ -1,29 +1,31 @@
 import { Link, useLocation } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
-
-const footerLinks = {
-  producto: [
-    { label: "Pilares", to: "#pilares" },
-    { label: "Cómo funciona", to: "#como-funciona" },
-    { label: "Sobre BiT", to: "#sobre-bit" },
-  ],
-  recursos: [
-    { label: "Blog", to: "#" },
-    { label: "Centro de ayuda", to: "#" },
-    { label: "Comunidad", to: "#" },
-  ],
-  legal: [
-    { label: "Privacidad", to: "#" },
-    { label: "Términos", to: "#" },
-    { label: "Cookies", to: "#" },
-  ],
-};
+import { useTranslation } from "react-i18next";
 
 const authPaths = ["/login", "/register"];
 
 export default function Footer() {
+  const { t } = useTranslation("common");
   const { pathname } = useLocation();
   const isAuth = authPaths.includes(pathname);
+
+  const footerLinks = {
+    producto: [
+      { label: t('common:footer.links.pillars'), to: "#pilares" },
+      { label: t('common:footer.links.howItWorks'), to: "#como-funciona" },
+      { label: t('common:footer.links.about'), to: "#sobre-bit" },
+    ],
+    recursos: [
+      { label: t('common:footer.links.blog'), to: "#" },
+      { label: t('common:footer.links.helpCenter'), to: "#" },
+      { label: t('common:footer.links.community'), to: "#" },
+    ],
+    legal: [
+      { label: t('common:footer.links.privacy'), to: "#" },
+      { label: t('common:footer.links.terms'), to: "#" },
+      { label: t('common:footer.links.cookies'), to: "#" },
+    ],
+  };
 
   const renderLink = (link: { label: string; to: string }, className: string) => {
     if (link.to === "#" || link.to === "#!") {
@@ -55,7 +57,7 @@ export default function Footer() {
             <Link to="/" className="flex items-center gap-2">
               <img
                 src="/logo-bit.webp"
-                alt="App BiT"
+                alt={t('common:footer.logoAlt')}
                 className="h-8 w-8 rounded-lg object-contain"
               />
               <span className="font-display text-xl font-extrabold tracking-tight" style={{ color: "#002F68" }}>
@@ -63,7 +65,7 @@ export default function Footer() {
               </span>
             </Link>
             <p className="mt-3 max-w-xs text-sm leading-relaxed" style={{ color: "#424753" }}>
-              Te acompañamos con aprendizaje, mentorías, oportunidades y bienestar para que crezcas a tu ritmo.
+              {t('common:footer.description')}
             </p>
             <Link
               to="/register"
@@ -71,7 +73,7 @@ export default function Footer() {
               className="mt-4 inline-flex items-center gap-2 text-sm font-semibold transition-colors hover:underline"
               style={{ color: "#2F75DC" }}
             >
-                Comenzar ahora
+                {t('common:nav.startNow')}
               <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
@@ -79,7 +81,7 @@ export default function Footer() {
           {Object.entries(footerLinks).map(([title, links]) => (
             <div key={title}>
               <h4 className="text-xs font-extrabold uppercase tracking-wider" style={{ color: "#002F68" }}>
-                {title}
+                {t(`common:footer.sections.${title}`)}
               </h4>
               <ul className="mt-4 space-y-2.5">
                 {links.map((link) => (
@@ -93,7 +95,7 @@ export default function Footer() {
         </div>
 
         <div className="mt-12 border-t pt-6 text-center text-xs md:mt-16" style={{ borderTopColor: "#E8E4DD", color: "#94A3B8" }}>
-          © {new Date().getFullYear()} App BiT. Todos los derechos reservados.
+          {t('common:footer.copyright', { year: new Date().getFullYear() })}
         </div>
       </div>
     </footer>

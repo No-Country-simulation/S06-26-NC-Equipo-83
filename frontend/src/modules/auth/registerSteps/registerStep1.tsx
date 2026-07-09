@@ -4,6 +4,7 @@ import Input from "../../../components/ui/Input";
 import Select from "../../../components/ui/Select";
 import DateInput from "../../../components/ui/DateInput";
 import { authService } from "../../../services/authService";
+import { useTranslation } from "react-i18next";
 
 const REQ_MIN_8 = /^.{8,}$/;
 const REQ_UPPER = /[A-Z]/;
@@ -48,25 +49,26 @@ export default function RegisterStep1({
   birthDate,
   setValue,
 }: RegisterStep1Props) {
+  const { t } = useTranslation(['auth', 'common']);
   const { min: birthMin, max: birthMax } = computeDateRange();
   return (
     <div className="space-y-3">
       <Input
         id="fullName"
-        label="Nombre completo"
+        label={t('auth:step1.fullNameLabel')}
         icon="person"
-        placeholder="Ej. Ana García"
+        placeholder={t('auth:step1.fullNamePlaceholder')}
         required
         {...register("fullName", { onBlur: () => trigger("fullName") })}
-        error={errors.fullName?.message}
+        error={errors.fullName?.message ? String(t(errors.fullName.message)) : undefined}
       />
 
       <Input
         id="email"
         type="email"
-        label="Correo electrónico"
+        label={t('auth:step1.emailLabel')}
         icon="mail"
-        placeholder="nombre@ejemplo.com"
+        placeholder={t('auth:step1.emailPlaceholder')}
         required
         {...register("email", {
           onBlur: () => trigger("email"),
@@ -75,99 +77,99 @@ export default function RegisterStep1({
             if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) return true;
             try {
               const taken = await authService.checkEmail(value);
-              return taken ? "Este email ya está registrado" : true;
+              return taken ? "auth:step1.emailRegistered" : true;
             } catch {
               return true;
             }
           },
         })}
-        error={errors.email?.message}
+        error={errors.email?.message ? String(t(errors.email.message)) : undefined}
       />
 
       <div>
         <Input
           id="password"
           type="password"
-          label="Contraseña"
+          label={t('auth:step1.passwordLabel')}
           icon="lock"
-          placeholder="Mínimo 8 caracteres"
+          placeholder={t('auth:step1.passwordPlaceholder')}
           showPasswordToggle
           required
           {...register("password", { onBlur: () => trigger("password") })}
-          error={errors.password?.message}
+          error={errors.password?.message ? String(t(errors.password.message)) : undefined}
         />
 
         <div className="flex flex-wrap gap-x-4 gap-y-1 mt-2">
-          <ReqLine met={REQ_MIN_8.test(password ?? "")} label="Mínimo 8 caracteres" />
-          <ReqLine met={REQ_UPPER.test(password ?? "")} label="Al menos 1 mayúscula" />
-          <ReqLine met={REQ_NUMBER.test(password ?? "")} label="Al menos 1 número" />
-          <ReqLine met={REQ_SPECIAL.test(password ?? "")} label="Al menos 1 símbolo" />
+          <ReqLine met={REQ_MIN_8.test(password ?? "")} label={t('auth:step1.passwordRequirementLength')} />
+          <ReqLine met={REQ_UPPER.test(password ?? "")} label={t('auth:step1.passwordRequirementUpper')} />
+          <ReqLine met={REQ_NUMBER.test(password ?? "")} label={t('auth:step1.passwordRequirementNumber')} />
+          <ReqLine met={REQ_SPECIAL.test(password ?? "")} label={t('auth:step1.passwordRequirementSymbol')} />
         </div>
       </div>
 
       <Input
         id="confirmPassword"
         type="password"
-        label="Confirmar contraseña"
+        label={t('auth:step1.confirmPasswordLabel')}
         icon="lock"
-        placeholder="Repetí tu contraseña"
+        placeholder={t('auth:step1.confirmPasswordPlaceholder')}
         showPasswordToggle
         required
         {...register("confirmPassword", { onBlur: () => trigger("confirmPassword") })}
         error={
           password && confirmPassword && password === confirmPassword
             ? undefined
-            : errors.confirmPassword?.message
+            : errors.confirmPassword?.message ? String(t(errors.confirmPassword.message)) : undefined
         }
       />
 
       {password && confirmPassword && password === confirmPassword && (
         <p className="text-xs text-green-600 font-medium flex items-center gap-1">
-          {"\u2713"} Las contraseñas coinciden
+          {"\u2713"} {t('auth:register.passwordsMatch')}
         </p>
       )}
 
       <div className="grid gap-3 md:grid-cols-2">
         <DateInput
           id="birthDate"
-          label="Fecha de nacimiento"
+          label={t('auth:step1.birthDateLabel')}
           required
           min={birthMin}
           max={birthMax}
           value={birthDate}
-          error={errors.birthDate?.message}
+          error={errors.birthDate?.message ? String(t(errors.birthDate.message)) : undefined}
           onChange={(val) => setValue("birthDate", val, { shouldValidate: true })}
           onBlur={() => trigger("birthDate")}
         />
 
         <Select
           id="gender"
-          label="Género"
+          label={t('auth:step1.genderLabel')}
           required
           {...register("gender", { onChange: () => trigger("gender") })}
-          error={errors.gender?.message}
+          error={errors.gender?.message ? String(t(errors.gender.message)) : undefined}
           options={[
-            { value: "", label: "Seleccionar" },
-            { value: "female", label: "Femenino" },
-            { value: "male", label: "Masculino" },
-            { value: "non-binary", label: "No binario" },
-            { value: "other", label: "Otro / Prefiero no decir" },
+            { value: "", label: t('auth:step1.genderSelect') },
+            { value: "female", label: t('auth:step1.genderFemale') },
+            { value: "male", label: t('auth:step1.genderMale') },
+            { value: "non-binary", label: t('auth:step1.genderNonBinary') },
+            { value: "other", label: t('auth:step1.genderOther') },
           ]}
         />
       </div>
 
       <Select
         id="educationLevel"
-        label="Nivel educativo"
+        label={t('auth:step1.educationLabel')}
         required
         {...register("educationLevel")}
-        error={errors.educationLevel?.message}
+        error={errors.educationLevel?.message ? String(t(errors.educationLevel.message)) : undefined}
         options={[
-          { value: "", label: "Seleccionar" },
-          { value: "secundario", label: "Secundario" },
-          { value: "terciario", label: "Terciario / Técnico" },
-          { value: "universitario", label: "Universitario" },
-          { value: "posgrado", label: "Posgrado / Máster" },
+          { value: "", label: t('auth:step1.educationSelect') },
+          { value: "secundario", label: t('auth:step1.educationSecondary') },
+          { value: "terciario", label: t('auth:step1.educationTertiary') },
+          { value: "universitario", label: t('auth:step1.educationUniversity') },
+          { value: "posgrado", label: t('auth:step1.educationPostgraduate') },
         ]}
       />
     </div>

@@ -2,19 +2,55 @@ import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Menu, X } from "lucide-react";
-
-const navLinks = [
-  { label: "Pilares", to: "#pilares" },
-  { label: "Sobre BiT", to: "#sobre-bit" },
-  { label: "Cómo funciona", to: "#como-funciona" },
-];
+import { useTranslation } from "react-i18next";
+import i18n from "../../i18n";
 
 const authPaths = ["/login", "/register"];
 
 export default function Navbar() {
+  const { t } = useTranslation("common");
   const [open, setOpen] = useState(false);
   const { pathname } = useLocation();
   const isAuth = authPaths.includes(pathname);
+
+  const currentLang = i18n.language;
+  const changeLang = (lang: "es" | "pt") => {
+    i18n.changeLanguage(lang);
+    localStorage.setItem("appLanguage", lang);
+  };
+
+  const LangToggle = ({ mobile }: { mobile?: boolean }) => (
+    <div className={`flex items-center gap-1 ${mobile ? "justify-center py-1" : ""}`}>
+      <button
+        onClick={() => changeLang("es")}
+        className={`text-xs font-semibold px-2.5 py-1.5 rounded-full transition-all duration-200 ${
+          currentLang === "es"
+            ? "bg-[#2F75DC] text-white shadow-sm"
+            : "text-[#64748B] hover:text-[#2F75DC] hover:bg-[#2F75DC]/5"
+        }`}
+        aria-label={t("common:language.spanish")}
+      >
+        ES
+      </button>
+      <button
+        onClick={() => changeLang("pt")}
+        className={`text-xs font-semibold px-2.5 py-1.5 rounded-full transition-all duration-200 ${
+          currentLang === "pt"
+            ? "bg-[#2F75DC] text-white shadow-sm"
+            : "text-[#64748B] hover:text-[#2F75DC] hover:bg-[#2F75DC]/5"
+        }`}
+        aria-label={t("common:language.portuguese")}
+      >
+        PT
+      </button>
+    </div>
+  );
+
+  const navLinks = [
+    { label: t('common:nav.pillars'), to: "#pilares" },
+    { label: t('common:nav.about'), to: "#sobre-bit" },
+    { label: t('common:nav.howItWorks'), to: "#como-funciona" },
+  ];
 
   const navContent = (
     <>
@@ -22,7 +58,7 @@ export default function Navbar() {
         <Link to="/" className="flex items-center gap-3">
           <img
             src="/logo-bit.webp"
-            alt="App BiT"
+            alt={t('common:header.logoAlt')}
             className="h-10 w-10 rounded-lg object-contain md:h-12 md:w-12"
           />
           <span
@@ -57,26 +93,27 @@ export default function Navbar() {
       </div>
 
       <div className="hidden items-center gap-4 md:flex md:gap-6 ml-auto">
+        <LangToggle />
         <Link
           to="/login"
           onClick={() => window.scrollTo(0, 0)}
           className="rounded-full bg-white px-6 py-2.5 text-sm font-semibold text-[#2F75DC] shadow-[inset_0_0_0_1px_#2F75DC] transition-all hover:bg-[#2F75DC]/10"
         >
-          Iniciar sesión
+          {t('common:nav.login')}
         </Link>
         <Link
           to="/register"
           onClick={() => window.scrollTo(0, 0)}
           className="rounded-full bg-[#2F75DC] px-6 py-2.5 text-sm font-semibold text-white shadow-ambient transition-all hover:bg-[#004A9E]"
         >
-          Comenzar
+          {t('common:nav.getStarted')}
         </Link>
       </div>
 
       <button
         onClick={() => setOpen(!open)}
         className="ml-auto p-1.5 text-[#002F68] md:hidden"
-        aria-label={open ? "Cerrar menú" : "Abrir menú"}
+        aria-label={open ? t("common:mobileMenu.close") : t("common:mobileMenu.open")}
       >
         {open ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
       </button>
@@ -108,19 +145,20 @@ export default function Navbar() {
           ),
         )}
         <div className="mt-3 flex flex-col gap-2 border-t border-stone-100 pt-4">
+          <LangToggle mobile />
           <Link
             to="/login"
             onClick={() => { setOpen(false); window.scrollTo({ top: 0, behavior: "instant" as ScrollBehavior }); }}
             className="rounded-full bg-white px-6 py-2.5 text-center text-sm font-semibold text-[#2F75DC] shadow-[inset_0_0_0_1px_#2F75DC]"
           >
-            Iniciar sesión
+            {t('common:nav.login')}
           </Link>
           <Link
             to="/register"
             onClick={() => { setOpen(false); window.scrollTo({ top: 0, behavior: "instant" as ScrollBehavior }); }}
             className="rounded-full bg-[#2F75DC] px-6 py-2.5 text-center text-sm font-semibold text-white shadow-ambient"
           >
-            Comenzar
+            {t('common:nav.getStarted')}
           </Link>
         </div>
       </div>

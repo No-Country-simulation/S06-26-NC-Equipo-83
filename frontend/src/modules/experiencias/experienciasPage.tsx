@@ -8,6 +8,7 @@ import {
 import { useExperienciasStore } from "../../store/useExperienciasStore";
 import { useAuthStore } from "../../store/useAuthStore";
 import { PageBackground } from "../../components/layout/PageBackground";
+import { useTranslation } from 'react-i18next';
 
 const COBERTURA_STYLES: Record<string, { label: string; color: string; bg: string; icon: React.ElementType }> = {
   buena: { label: "Buena", color: "text-emerald-700", bg: "bg-emerald-100/70", icon: Signal },
@@ -32,13 +33,14 @@ export const ExperienciasPage: React.FC = () => {
   const user = useAuthStore((s) => s.user);
   const { data, isLoading, error, fetchRecomendaciones, clearData } = useExperienciasStore();
   const [locationError, setLocationError] = useState<string | null>(null);
+  const { t } = useTranslation('app');
 
   const getLocationAndFetch = () => {
     setLocationError(null);
     clearData();
 
     if (!navigator.geolocation) {
-      setLocationError("Tu navegador no soporta geolocalización.");
+      setLocationError(t('app:experiencias.geoError'));
       return;
     }
 
@@ -61,7 +63,7 @@ export const ExperienciasPage: React.FC = () => {
         });
       },
       (_err) => {
-        setLocationError("No pudimos obtener tu ubicación. Activá el GPS e intentá de nuevo.");
+        setLocationError(t('app:experiencias.geoLocationError'));
       },
       { enableHighAccuracy: true, timeout: 10000 },
     );
@@ -77,8 +79,8 @@ export const ExperienciasPage: React.FC = () => {
         <main className="min-h-screen flex items-center justify-center">
           <div className="text-center space-y-3">
             <Loader2 className="w-10 h-10 animate-spin text-[#A04E2D] mx-auto" />
-            <p className="text-sm text-gray-500 font-medium">Buscando experiencias cerca de ti...</p>
-            <p className="text-xs text-gray-400">Usando dataset Vísent CDRView</p>
+            <p className="text-sm text-gray-500 font-medium">{t('app:experiencias.loading')}</p>
+            <p className="text-xs text-gray-400">{t('app:experiencias.loadingSubtitle')}</p>
           </div>
         </main>
       </PageBackground>
@@ -92,7 +94,7 @@ export const ExperienciasPage: React.FC = () => {
           <div className="text-center space-y-4 max-w-sm">
             <AlertCircle className="w-10 h-10 text-red-400 mx-auto" />
             <p className="text-sm text-red-600 font-medium">{error}</p>
-            <button onClick={getLocationAndFetch} className="px-6 py-2.5 bg-[#A04E2D] text-white font-semibold text-sm rounded-xl shadow-sm">Reintentar</button>
+            <button onClick={getLocationAndFetch} className="px-6 py-2.5 bg-[#A04E2D] text-white font-semibold text-sm rounded-xl shadow-sm">{t('app:experiencias.retry')}</button>
           </div>
         </main>
       </PageBackground>
@@ -106,7 +108,7 @@ export const ExperienciasPage: React.FC = () => {
           <div className="text-center space-y-4 max-w-sm">
             <MapPin className="w-10 h-10 text-amber-400 mx-auto" />
             <p className="text-sm text-amber-700 font-medium">{locationError}</p>
-            <button onClick={getLocationAndFetch} className="px-6 py-2.5 bg-[#A04E2D] text-white font-semibold text-sm rounded-xl shadow-sm">Intentar de nuevo</button>
+            <button onClick={getLocationAndFetch} className="px-6 py-2.5 bg-[#A04E2D] text-white font-semibold text-sm rounded-xl shadow-sm">{t('app:experiencias.retryAlt')}</button>
           </div>
         </main>
       </PageBackground>
@@ -125,8 +127,8 @@ export const ExperienciasPage: React.FC = () => {
 
         <header className="flex items-center justify-between">
           <div>
-            <h1 className="text-xl md:text-2xl font-bold text-gray-900 tracking-tight">Experiencias</h1>
-            <p className="text-xs md:text-sm text-gray-500 mt-0.5">Basado en tu ubicación y perfil</p>
+            <h1 className="text-xl md:text-2xl font-bold text-gray-900 tracking-tight">{t('app:experiencias.title')}</h1>
+            <p className="text-xs md:text-sm text-gray-500 mt-0.5">{t('app:experiencias.subtitle')}</p>
           </div>
           <div className="flex items-center gap-2">
             <button
@@ -134,11 +136,11 @@ export const ExperienciasPage: React.FC = () => {
               className="px-3 py-1.5 bg-[#A04E2D] hover:bg-[#853F22] text-white text-xs font-bold rounded-lg transition-colors flex items-center gap-1 shadow-sm"
             >
               <Plus className="w-3.5 h-3.5" />
-              Crear
+              {t('app:experiencias.createButton')}
             </button>
             <button onClick={getLocationAndFetch} className="px-3 py-1.5 bg-gray-100 hover:bg-gray-200 text-gray-600 text-xs font-semibold rounded-lg transition-colors flex items-center gap-1">
               <Navigation className="w-3.5 h-3.5" />
-              Actualizar
+              {t('app:experiencias.refreshButton')}
             </button>
           </div>
         </header>
@@ -151,24 +153,24 @@ export const ExperienciasPage: React.FC = () => {
             </div>
             <span className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold ${coberturaStyle.bg} ${coberturaStyle.color}`}>
               <CoberturaIcon className="w-3.5 h-3.5" />
-              {coberturaStyle.label}
+              {t(`app:experiencias.coverage.${coberturaStyle.label}` as any)}
             </span>
           </div>
           <div className="grid grid-cols-3 gap-3 text-center text-xs">
             <div className="bg-gray-50 rounded-xl p-3">
               <Users className="w-4 h-4 mx-auto text-gray-500 mb-1" />
               <span className="font-bold text-gray-800 block">{data.cobertura.n_usuarios.toLocaleString()}</span>
-              <span className="text-gray-400">personas</span>
+              <span className="text-gray-400">{t('app:experiencias.peopleLabel')}</span>
             </div>
             <div className="bg-gray-50 rounded-xl p-3">
               <Wifi className="w-4 h-4 mx-auto text-gray-500 mb-1" />
               <span className="font-bold text-gray-800 block">{(data.cobertura.drop_pct * 100).toFixed(1)}%</span>
-              <span className="text-gray-400">caída</span>
+              <span className="text-gray-400">{t('app:experiencias.dropLabel')}</span>
             </div>
             <div className="bg-gray-50 rounded-xl p-3">
               <Signal className="w-4 h-4 mx-auto text-gray-500 mb-1" />
               <span className="font-bold text-gray-800 block">{(data.cobertura.congestion * 100).toFixed(0)}%</span>
-              <span className="text-gray-400">congestión</span>
+              <span className="text-gray-400">{t('app:experiencias.congestionLabel')}</span>
             </div>
           </div>
         </section>
@@ -177,22 +179,23 @@ export const ExperienciasPage: React.FC = () => {
           <>
             <section className="space-y-3">
               <h2 className="text-base md:text-lg font-bold text-gray-900 tracking-tight px-0.5">
-                Eventos {data.cobertura.calidad === "buena" ? "cerca de ti" : "recomendados"}
+                {t('app:experiencias.eventsHeading', { location: data.cobertura.calidad === "buena" ? t('app:experiencias["cerca de ti"]') : t('app:experiencias.recomendados') })}
               </h2>
               <div className="space-y-2.5">
                 {data.eventos_cercanos.map((ev, idx) => {
                   const tipoStyle = TIPO_EVENTO_STYLES[ev.tipo] || TIPO_EVENTO_STYLES.grabado;
-                  const linkReal = ev.meeting_url || ev.url; // meeting_url > auto Jitsi
+                  const linkReal = ev.meeting_url || ev.url;
                   const abrirEvento = () => {
                     if (linkReal) window.open(linkReal, "_blank", "noopener,noreferrer");
                   };
+                  const eventTypeLabel = t(`app:experiencias.eventType.${tipoStyle.label}` as any);
                   return (
                     <article key={idx} className="bg-white rounded-xl border border-gray-100 p-4 shadow-sm hover:shadow-md transition-shadow">
                       <div className="flex justify-between items-start gap-3">
                         <div className="flex-1 min-w-0 space-y-1.5">
                           <h3 className="font-bold text-sm md:text-base text-gray-800 leading-snug">{ev.titulo}</h3>
                           <div className="flex flex-wrap items-center gap-2">
-                            <span className={`px-2 py-0.5 rounded-md text-[10px] font-bold ${tipoStyle.color}`}>{tipoStyle.label}</span>
+                            <span className={`px-2 py-0.5 rounded-md text-[10px] font-bold ${tipoStyle.color}`}>{eventTypeLabel}</span>
                             <span className="text-[10px] text-gray-400 font-medium">{ev.categoria}</span>
                           </div>
                           <div className="flex items-center gap-3 text-xs text-gray-500">
@@ -206,7 +209,7 @@ export const ExperienciasPage: React.FC = () => {
                             className="flex-shrink-0 px-3 py-2 bg-[#A04E2D] hover:bg-[#853F22] text-white text-xs font-bold rounded-xl transition-colors flex items-center gap-1.5 shadow-sm"
                           >
                             <Video className="w-3.5 h-3.5" />
-                            {ev.tipo === "grabado" ? "Ver" : "Unirse"}
+                            {ev.tipo === "grabado" ? t('app:experiencias.viewButton') : t('app:experiencias.joinButton')}
                           </button>
                         ) : (
                           <span className="flex-shrink-0 p-2 bg-gray-50 rounded-xl">
@@ -224,7 +227,7 @@ export const ExperienciasPage: React.FC = () => {
 
         {data.destinos_populares.length > 0 && (
           <section className="space-y-3">
-            <h2 className="text-base md:text-lg font-bold text-gray-900 tracking-tight px-0.5">Destinos populares desde tu zona</h2>
+            <h2 className="text-base md:text-lg font-bold text-gray-900 tracking-tight px-0.5">{t('app:experiencias.popularDestinations')}</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
               {data.destinos_populares.map((dest, idx) => (
                 <div key={idx} className="bg-white rounded-xl border border-gray-100 p-4 shadow-sm flex items-center justify-between gap-3">
@@ -246,9 +249,9 @@ export const ExperienciasPage: React.FC = () => {
           <section className="space-y-3">
             <div className="flex items-center gap-2 px-0.5">
               <WifiOff className="w-4 h-4 text-amber-600" />
-              <h2 className="text-base md:text-lg font-bold text-gray-900 tracking-tight">Contenido offline disponible</h2>
+              <h2 className="text-base md:text-lg font-bold text-gray-900 tracking-tight">{t('app:experiencias.offlineContent')}</h2>
             </div>
-            <p className="text-xs text-gray-500 -mt-2 px-0.5">La cobertura en tu zona es baja. Disfrutá este contenido sin conexión.</p>
+            <p className="text-xs text-gray-500 -mt-2 px-0.5">{t('app:experiencias.offlineHelp')}</p>
             <div className="space-y-2.5">
               {data.contenido_offline.map((item, idx) => {
                 const Icon = OFFLINE_ICONS[item.tipo] || BookOpen;
@@ -264,7 +267,7 @@ export const ExperienciasPage: React.FC = () => {
                     </div>
                     <button className="flex-shrink-0 px-3 py-1.5 bg-amber-50 hover:bg-amber-100 text-amber-700 text-xs font-bold rounded-lg transition-colors flex items-center gap-1">
                       <ExternalLink className="w-3 h-3" />
-                      Ver
+                      {t('app:experiencias.viewButton')}
                     </button>
                   </div>
                 );
@@ -275,10 +278,10 @@ export const ExperienciasPage: React.FC = () => {
 
         <section className="bg-gray-50 rounded-2xl p-4 md:p-6 text-center">
           <p className="text-xs text-gray-400 font-medium">
-            Datos de concentración y cobertura del dataset Vísent CDRView
+            {t('app:experiencias.footerData')}
           </p>
           <p className="text-[10px] text-gray-300 mt-1">
-            Antenas Anatel • Región Metropolitana de Florianópolis
+            {t('app:experiencias.footerAntena')}
           </p>
         </section>
       </div>
