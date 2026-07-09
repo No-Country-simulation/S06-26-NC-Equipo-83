@@ -4,26 +4,29 @@ import { Loader2, ArrowRight } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import Input from "../../components/ui/Input";
 import { useAuthStore } from "../../store/useAuthStore";
+import { useTranslation } from "react-i18next";
+import SEOHead from "../../components/SEOHead";
 
 export default function Login() {
   const navigate = useNavigate();
   const loginAction = useAuthStore((s) => s.login);
   const storeError = useAuthStore((s) => s.error);
   const clearError = useAuthStore((s) => s.clearError);
+  const { t, i18n } = useTranslation(['auth', 'common']);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [localError, setLocalError] = useState<string | null>(null);
+  const [localErrorKey, setLocalErrorKey] = useState<string | null>(null);
 
-  const errorMessage = localError || storeError;
+  const errorMessage = localErrorKey ? t(localErrorKey) : storeError;
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    setLocalError(null);
+    setLocalErrorKey(null);
     clearError();
-    if (!email.trim()) { setLocalError("Ingresá tu correo electrónico."); return; }
-    if (password.length < 8) { setLocalError("La contraseña debe tener al menos 8 caracteres."); return; }
+    if (!email.trim()) { setLocalErrorKey('auth:validation.emailRequired'); return; }
+    if (password.length < 8) { setLocalErrorKey('auth:validation.passwordMinLength'); return; }
     setIsSubmitting(true);
     try {
       await loginAction(email, password);
@@ -33,6 +36,12 @@ export default function Login() {
 
   return (
     <>
+      <SEOHead
+        lang={i18n.language}
+        title={t('auth:login.heading')}
+        description={t('auth:login.subtitle')}
+        canonicalPath="/login"
+      />
       <div
         className="min-h-full flex items-center justify-center px-6 sm:px-8 relative overflow-hidden"
         style={{
@@ -64,10 +73,10 @@ export default function Login() {
               className="font-display text-[2rem] font-bold tracking-tight"
               style={{ color: "#002F68", letterSpacing: "-0.02em" }}
             >
-              Iniciar sesión
+              {t('auth:login.heading')}
             </h1>
             <p className="mt-2 text-sm" style={{ color: "#424753" }}>
-              Ingresá tus credenciales para continuar.
+              {t('auth:login.subtitle')}
             </p>
           </div>
 
@@ -85,20 +94,20 @@ export default function Login() {
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <Input
-              id="email" label="Correo electrónico" type="email"
-              placeholder="nombre@ejemplo.com" icon="mail"
+              id="email" label={t('auth:login.emailLabel')} type="email"
+              placeholder={t('auth:login.emailPlaceholder')} icon="mail"
               value={email} onChange={(e) => setEmail(e.target.value)} required
             />
             <div>
               <Input
-                id="password" label="Contraseña" type="password"
-                placeholder="Escribe tu contraseña" icon="lock"
+                id="password" label={t('auth:login.passwordLabel')} type="password"
+                placeholder={t('auth:login.passwordPlaceholder')} icon="lock"
                 showPasswordToggle value={password}
                 onChange={(e) => setPassword(e.target.value)} required
               />
               <div className="flex justify-end mt-1.5">
                 <Link to="/forgot-password" onClick={() => window.scrollTo(0, 0)} className="text-xs font-medium hover:underline transition-colors" style={{ color: "var(--color-primary)" }}>
-                  ¿Olvidaste tu contraseña?
+                  {t('auth:login.forgotPassword')}
                 </Link>
               </div>
             </div>
@@ -110,18 +119,18 @@ export default function Login() {
               style={{ background: "linear-gradient(135deg, #2F75DC 0%, #4B8FEA 100%)" }}
             >
               {isSubmitting ? (
-                <span className="flex items-center gap-2"><Loader2 className="w-4 h-4 animate-spin" />Iniciando sesión...</span>
+                <span className="flex items-center gap-2"><Loader2 className="w-4 h-4 animate-spin" />{t('auth:login.loggingIn')}</span>
               ) : (
-                <span className="flex items-center gap-2">Entrar<ArrowRight className="w-4 h-4" /></span>
+                <span className="flex items-center gap-2">{t('auth:login.loginButton')}<ArrowRight className="w-4 h-4" /></span>
               )}
             </motion.button>
 
           </form>
 
           <p className="text-center text-sm mt-8" style={{ color: "#424753" }}>
-            ¿No tenés una cuenta?{" "}
+            {t('auth:login.noAccount')}{" "}
             <Link to="/register" onClick={() => window.scrollTo(0, 0)} className="font-semibold hover:underline transition-colors" style={{ color: "var(--color-primary)" }}>
-              Crear una cuenta
+              {t('auth:login.createAccount')}
             </Link>
           </p>
         </motion.div>

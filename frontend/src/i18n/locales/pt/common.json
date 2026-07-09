@@ -1,0 +1,79 @@
+{
+  "nav": {
+    "dashboard": "Início",
+    "experiencias": "Experiências",
+    "orientation": "Orientação",
+    "bienestar": "Bem-estar",
+    "pillars": "Pilares",
+    "about": "Sobre BiT",
+    "howItWorks": "Como funciona",
+    "login": "Entrar",
+    "getStarted": "Começar",
+    "startNow": "Começar agora"
+  },
+  "header": {
+    "brand": "App BiT",
+    "logoAlt": "Logo do App BiT",
+    "primaryLinks": "Links principais",
+    "userActions": "Ações do usuário",
+    "notifications": "Ver notificações",
+    "settings": "Ir para configurações do perfil",
+    "userMenu": "Menu do usuário",
+    "avatarAlt": "Avatar do usuário logado",
+    "viewProfile": "Ver perfil",
+    "logout": "Sair",
+    "closeModal": "Fechar modal",
+    "markAllRead": "Marcar todas como lidas",
+    "noNotifications": "Você não tem notificações no momento.",
+    "unreadCount": "{{count}} novas",
+    "notificationsTitle": "Notificações"
+  },
+  "bottomNavbar": {
+    "ariaLabel": "Navegação principal inferior"
+  },
+  "footer": {
+    "logoAlt": "App BiT",
+    "description": "Acompanhamos você com aprendizado, mentorias, oportunidades e bem-estar para que você cresça no seu ritmo.",
+    "copyright": "© {{year}} App BiT. Todos os direitos reservados.",
+    "sections": {
+      "producto": "produto",
+      "recursos": "recursos",
+      "legal": "legal"
+    },
+    "links": {
+      "pillars": "Pilares",
+      "howItWorks": "Como funciona",
+      "about": "Sobre BiT",
+      "blog": "Blog",
+      "helpCenter": "Central de ajuda",
+      "community": "Comunidade",
+      "privacy": "Privacidade",
+      "terms": "Termos",
+      "cookies": "Cookies"
+    }
+  },
+  "mobileMenu": {
+    "close": "Fechar menu",
+    "open": "Abrir menu"
+  },
+  "ui": {
+    "passwordShow": "Mostrar senha",
+    "passwordHide": "Ocultar senha",
+    "selectPlaceholder": "Selecionar...",
+    "selectNoResults": "Sem resultados",
+    "createLabel": "Adicionar \"{{input}}\"",
+    "switchToSpanish": "Espanhol",
+    "switchToPortuguese": "Português"
+  },
+  "language": {
+    "spanish": "Español",
+    "portuguese": "Português",
+    "sectionTitle": "Configuração de Idioma"
+  },
+  "error": {
+    "sessionExpired": "Sua sessão expirou. Faça login novamente.",
+    "forbidden": "Você não tem permissão para realizar esta ação.",
+    "networkError": "Não foi possível conectar ao servidor. Verifique sua conexão.",
+    "unexpected": "Erro inesperado. Tente novamente."
+  }
+}

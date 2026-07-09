@@ -3,6 +3,7 @@ import { Toaster } from "react-hot-toast";
 import { AuthProvider } from "./context/authContext";
 import { Layout } from "./components/Layout";
 import { Publiclayout } from "./components/Publiclayout";
+import LangSync from "./components/LangSync";
 import Landing from "./modules/landing/Landing";
 import Login from "./modules/auth/login";
 import Register from "./modules/auth/register";
@@ -11,6 +12,7 @@ export default function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
+        <LangSync />
         <Routes>
           {/* Rutas Públicas: Landing es la raíz */}
           <Route element={<Publiclayout />}>

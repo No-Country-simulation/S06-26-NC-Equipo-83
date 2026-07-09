@@ -4,6 +4,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowLeft, ArrowRight, Loader2, Check } from "lucide-react";
+import { useTranslation } from "react-i18next";
+import SEOHead from "../../components/SEOHead";
 
 import RegisterStep1 from "./registerSteps/registerStep1";
 import RegisterStep2 from "./registerSteps/registerStep2";
@@ -18,7 +20,7 @@ import {
 
 const fullSchema = registerStep1Schema.merge(registerStep2Schema).merge(registerStep3Schema)
   .refine((data) => data.password === data.confirmPassword, {
-    message: "Las contraseñas no coinciden", path: ["confirmPassword"],
+    message: "auth:register.passwordMismatch", path: ["confirmPassword"],
   });
 
 const stepFields: Record<number, (keyof RegisterFormData)[]> = {
@@ -28,9 +30,9 @@ const stepFields: Record<number, (keyof RegisterFormData)[]> = {
 };
 
 const steps = [
-  { title: "Datos personales", desc: "Nombre, email y contraseña" },
-  { title: "Ubicación y contacto", desc: "País, ciudad y WhatsApp" },
-  { title: "Perfil profesional", desc: "Experiencia e intereses" },
+  { titleKey: "auth:register.stepTitles.step1", descKey: "auth:register.stepDescriptions.step1" },
+  { titleKey: "auth:register.stepTitles.step2", descKey: "auth:register.stepDescriptions.step2" },
+  { titleKey: "auth:register.stepTitles.step3", descKey: "auth:register.stepDescriptions.step3" },
 ];
 
 export default function Register() {
@@ -38,6 +40,7 @@ export default function Register() {
   const registerAction = useAuthStore((s) => s.register);
   const storeError = useAuthStore((s) => s.error);
   const clearError = useAuthStore((s) => s.clearError);
+  const { t, i18n } = useTranslation(['auth', 'common']);
 
   const [step, setStep] = useState(1);
   const [isValidating, setIsValidating] = useState(false);
@@ -83,8 +86,8 @@ export default function Register() {
     clearError();
     if (data.currentSituation === "employed") {
       let hasError = false;
-      if (!data.workSector) { setError("workSector", { message: "Seleccioná tu sector laboral" }); hasError = true; }
-      if (!data.seniority) { setError("seniority", { message: "Seleccioná tu seniority" }); hasError = true; }
+      if (!data.workSector) { setError("workSector", { message: "auth:validation.sectorRequired" }); hasError = true; }
+      if (!data.seniority) { setError("seniority", { message: "auth:validation.seniorityRequired" }); hasError = true; }
       if (hasError) return;
     }
     setIsSubmitting(true);
@@ -99,6 +102,12 @@ export default function Register() {
       className="min-h-full flex items-center justify-center px-6 sm:px-8 relative overflow-hidden"
       style={{ background: "radial-gradient(ellipse 80% 60% at 50% -20%, #D6E8FF 0%, #EBF3FF 35%, #fffffe 100%)" }}
     >
+      <SEOHead
+        lang={i18n.language}
+        title={t('auth:register.heading')}
+        description={t('auth:register.subtitle')}
+        canonicalPath="/register"
+      />
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
         <motion.div
           initial={{ opacity: 0 }}
@@ -119,13 +128,13 @@ export default function Register() {
       >
         <div className="mb-7">
           <p className="text-[11px] font-semibold tracking-[0.15em] uppercase mb-3" style={{ color: "#94A3B8" }}>
-            Paso {step} de 3 — {["Tu identidad", "Tu ubicación", "Tu perfil"][currentStepIndex]}
+            {t('auth:register.stepIndicator', { step, title: t([`auth:register.steps.step1`, `auth:register.steps.step2`, `auth:register.steps.step3`][currentStepIndex]) })}
           </p>
           <h1
             className="font-display text-[1.85rem] font-bold tracking-tight"
             style={{ color: "#002F68", letterSpacing: "-0.02em" }}
           >
-            {steps[currentStepIndex].title}
+            {t(steps[currentStepIndex].titleKey)}
           </h1>
         </div>
 
@@ -150,17 +159,17 @@ export default function Register() {
             <motion.button type="button" onClick={previousStep} whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.98 }}
               className="w-[40%] h-12 flex items-center justify-center gap-2 rounded-full font-semibold text-sm transition-all duration-200"
               style={{ color: "var(--color-primary)", border: "1px solid var(--color-primary)", backgroundColor: "#ffffff" }}>
-              <ArrowLeft className="w-4 h-4" />Volver
+              <ArrowLeft className="w-4 h-4" />{t('auth:register.back')}
             </motion.button>
           )}
           <motion.button type="button" onClick={step === 3 ? handleSubmit(onSubmit) : nextStep}
             disabled={isValidating || isSubmitting} whileHover={{ y: -1 }} whileTap={{ y: 0, scale: 0.985 }}
             className={`h-12 flex items-center justify-center gap-2 rounded-full font-semibold text-sm text-white transition-shadow duration-200 shadow-[0_4px_14px_-2px_rgba(47,117,220,0.35)] hover:shadow-[0_8px_24px_-4px_rgba(47,117,220,0.5)] disabled:opacity-60 disabled:cursor-not-allowed ${step > 1 ? "w-[60%]" : "w-full"}`}
             style={{ background: "linear-gradient(135deg, #2F75DC 0%, #4B8FEA 100%)" }}>
-            {isSubmitting ? <><Loader2 className="w-4 h-4 animate-spin" />Creando cuenta...</>
-             : isValidating ? <><Loader2 className="w-4 h-4 animate-spin" />Verificando...</>
-             : step === 3 ? "Finalizar registro"
-             : <span className="flex items-center gap-2">Siguiente paso <ArrowRight className="w-4 h-4" /></span>}
+            {isSubmitting ? <><Loader2 className="w-4 h-4 animate-spin" />{t('auth:register.creating')}</>
+             : isValidating ? <><Loader2 className="w-4 h-4 animate-spin" />{t('auth:register.verifying')}</>
+             : step === 3 ? t('auth:register.finish')
+             : <span className="flex items-center gap-2">{t('auth:register.next')} <ArrowRight className="w-4 h-4" /></span>}
           </motion.button>
         </div>
 
@@ -180,9 +189,9 @@ export default function Register() {
         </div>
 
         <p className="text-center text-xs mt-6" style={{ color: "#424753" }}>
-          ¿Ya tenés una cuenta?{" "}
+          {t('auth:register.hasAccount')}{" "}
           <Link to="/login" onClick={() => window.scrollTo(0, 0)} className="font-bold hover:underline transition-colors" style={{ color: "var(--color-primary)" }}>
-            Iniciar sesión
+            {t('auth:register.loginLink')}
           </Link>
         </p>
       </motion.div>

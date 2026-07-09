@@ -1,71 +1,78 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect, useRef } from "react";
+import { useTranslation } from 'react-i18next';
 import { Link, useLocation } from "react-router-dom";
 import { ArrowRight, Play, BookOpen, Briefcase, Users, HeartHandshake, Heart, User, Compass, MessageCircle, Trophy, Sparkles, Quote } from "lucide-react";
+import SEOHead from "../../components/SEOHead";
 
-const features = [
-  {
-    icon: BookOpen,
-    title: "Aprende",
-    description: "Rutas de aprendizaje personalizadas para desarrollar tus habilidades.",
-    color: "#7C3AED",
-    bgColor: "#F3EAFF",
-  },
-  {
-    icon: Briefcase,
-    title: "Oportunidades",
-    description: "Encuentra empleos que se ajusten a tus habilidades.",
-    color: "#006D34",
-    bgColor: "#E8F8EE",
-  },
-  {
-    icon: Users,
-    title: "Mentorías",
-    description: "Conecta con mentores que te inspiran y te guían.",
-    color: "#D97706",
-    bgColor: "#FEF3C7",
-  },
-  {
-    icon: HeartHandshake,
-    title: "Comunidad",
-    description: "Comparte, aprende y crece junto a otras personas.",
-    color: "#2F75DC",
-    bgColor: "#E8F1FC",
-  },
-  {
-    icon: Heart,
-    title: "Bienestar",
-    description: "Cuida tu salud emocional con ayuda y recursos pensados para ti",
-    color: "#DB2777",
-    bgColor: "#FCE7F3",
-  },
-];
 
-const testimonials = [
-  {
-    quote: "BiT me ayudó a entender qué habilidades necesitaba mejorar y me dio una ruta clara para avanzar. Hoy me siento mucho más segura y motivada para alcanzar mi primer empleo.",
-    name: "Julia",
-    location: "Brasil",
-    role: "Desarrolladora Frontend",
-    avatar: "julia.svg",
-  },
-  {
-    quote: "No solo encontré cursos y oportunidades, también recuperé la confianza en mí mismo. Tener una guía personalizada hizo que cada paso fuera mucho más fácil.",
-    name: "José",
-    location: "Perú",
-    role: "Desarrollador Full Stack",
-    avatar: "jose.svg",
-  },
-  {
-    quote: "Con BiT dejé de sentir que estaba avanzando sin rumbo. Ahora sé exactamente cuál es mi siguiente objetivo y cada día estoy más cerca de conseguir el trabajo que quiero.",
-    name: "Ousmane",
-    location: "Angola",
-    role: "Estudiante",
-    avatar: "ousmande.svg",
-  },
-];
+
 
 export default function Landing() {
+  const { t, i18n } = useTranslation('landing');
+
+  const features = [
+    {
+      icon: BookOpen,
+      title: t('landing:advanced.features.learn'),
+      description: t('landing:advanced.features.learnDesc'),
+      color: "#7C3AED",
+      bgColor: "#F3EAFF",
+    },
+    {
+      icon: Briefcase,
+      title: t('landing:advanced.features.opportunities'),
+      description: t('landing:advanced.features.opportunitiesDesc'),
+      color: "#006D34",
+      bgColor: "#E8F8EE",
+    },
+    {
+      icon: Users,
+      title: t('landing:advanced.features.mentorship'),
+      description: t('landing:advanced.features.mentorshipDesc'),
+      color: "#D97706",
+      bgColor: "#FEF3C7",
+    },
+    {
+      icon: HeartHandshake,
+      title: t('landing:advanced.features.community'),
+      description: t('landing:advanced.features.communityDesc'),
+      color: "#2F75DC",
+      bgColor: "#E8F1FC",
+    },
+    {
+      icon: Heart,
+      title: t('landing:advanced.features.wellness'),
+      description: t('landing:advanced.features.wellnessDesc'),
+      color: "#DB2777",
+      bgColor: "#FCE7F3",
+    },
+  ];
+
+  const testimonials = [
+    {
+      quote: t('landing:advanced.testimonial1.quote'),
+      name: t('landing:advanced.testimonial1.name'),
+      location: t('landing:advanced.testimonial1.country'),
+      role: t('landing:advanced.testimonial1.role'),
+      avatar: "julia.svg",
+    },
+    {
+      quote: t('landing:advanced.testimonial2.quote'),
+      name: t('landing:advanced.testimonial2.name'),
+      location: t('landing:advanced.testimonial2.country'),
+      role: t('landing:advanced.testimonial2.role'),
+      avatar: "jose.svg",
+    },
+    {
+      quote: t('landing:advanced.testimonial3.quote'),
+      name: t('landing:advanced.testimonial3.name'),
+      location: t('landing:advanced.testimonial3.country'),
+      role: t('landing:advanced.testimonial3.role'),
+      avatar: "ousmande.svg",
+    },
+  ];
+
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
   const [displayedTitle, setDisplayedTitle] = useState("");
   const [displayedSubtitle, setDisplayedSubtitle] = useState("");
@@ -73,8 +80,8 @@ export default function Landing() {
   const [isDesktop, setIsDesktop] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 
-  const fullTitle = "¡Craa! Soy BiT";
-  const fullSubtitle = "Voy a acompañarte durante todo el camino para ayudarte a alcanzar tus objetivos.";
+  const fullTitle = t('landing:advanced.typewriter.title');
+  const fullSubtitle = t('landing:advanced.typewriter.subtitle');
 
   const typewriterStartedRef = useRef(false);
   const location = useLocation();
@@ -116,29 +123,38 @@ export default function Landing() {
   }, [sectionVisible, currentTestimonial]);
 
   useEffect(() => {
+    typewriterStartedRef.current = false;
+    setDisplayedTitle("");
+    setDisplayedSubtitle("");
+  }, [fullTitle, fullSubtitle]);
+
+  useEffect(() => {
     if (!sectionVisible || typewriterStartedRef.current) return;
     typewriterStartedRef.current = true;
     let titleIndex = 0;
     let subtitleIndex = 0;
     const timeouts: ReturnType<typeof setTimeout>[] = [];
 
+    const safeFullTitle = fullTitle;
+    const safeFullSubtitle = fullSubtitle;
+
     const typeTitle = () => {
-      if (titleIndex < fullTitle.length) {
-        const t = setTimeout(() => {
-          setDisplayedTitle(fullTitle.slice(0, titleIndex + 1));
+      if (titleIndex < safeFullTitle.length) {
+        const to = setTimeout(() => {
+          setDisplayedTitle(safeFullTitle.slice(0, titleIndex + 1));
           titleIndex++;
           typeTitle();
         }, 40);
-        timeouts.push(t);
+        timeouts.push(to);
       } else {
         const typeSubtitle = () => {
-          if (subtitleIndex < fullSubtitle.length) {
-            const t = setTimeout(() => {
-              setDisplayedSubtitle(fullSubtitle.slice(0, subtitleIndex + 1));
+          if (subtitleIndex < safeFullSubtitle.length) {
+            const ts = setTimeout(() => {
+              setDisplayedSubtitle(safeFullSubtitle.slice(0, subtitleIndex + 1));
               subtitleIndex++;
               typeSubtitle();
             }, 25);
-            timeouts.push(t);
+            timeouts.push(ts);
           }
         };
         typeSubtitle();
@@ -147,10 +163,16 @@ export default function Landing() {
 
     typeTitle();
     return () => timeouts.forEach(clearTimeout);
-  }, [sectionVisible]);
+  }, [sectionVisible, fullTitle, fullSubtitle]);
 
   return (
     <div className="relative min-h-screen w-full overflow-hidden font-sans text-on-surface" style={{ backgroundColor: "#fffffe" }}>
+      <SEOHead
+        lang={i18n.language}
+        title={t('landing:hero.title')}
+        description={t('landing:advanced.description')}
+        canonicalPath="/landing"
+      />
       {/* Hero */}
       <section className="relative w-full overflow-hidden md:h-[90vh]">
         {/* Fondo */}
@@ -178,7 +200,7 @@ export default function Landing() {
               >
                 <motion.img
                   src="/pet-hero.webp"
-                  alt="Mascota guacamaya"
+                  alt={t('landing:advanced.petAlt')}
                   animate={{ y: [0, -20, 0] }}
                   transition={{
                     duration: 4,
@@ -199,11 +221,11 @@ export default function Landing() {
               className="w-full md:order-1"
             >
               <h1 className="font-display font-bold leading-[1.1] tracking-tight text-4xl md:text-5xl min-[1110px]:text-[64px]" style={{ color: "#002F68", letterSpacing: "-0.02em" }}>
-                Cada pequeño paso te acerca a tu <span style={{ color: "#2F75DC" }}>futuro</span>.
+                {t('landing:advanced.heading1')}{' '}
+                <span style={{ color: "#2F75DC" }}>{t('landing:advanced.headingFuturo')}</span>.
               </h1>
               <p className="mt-8 font-sans leading-[1.6] text-base md:text-lg min-[1100px]:text-xl" style={{ color: "#002F68" }}>
-                Te acompañamos con aprendizaje, mentorías, oportunidades y
-                bienestar para que crezcas a tu ritmo.
+                {t('landing:advanced.description')}
               </p>
 
               <div className="mt-8 flex flex-col gap-4 sm:flex-row">
@@ -212,7 +234,7 @@ export default function Landing() {
                   onClick={() => window.scrollTo(0, 0)}
                   className="inline-flex items-center justify-center gap-2 rounded-full bg-[#2F75DC] px-7 py-3.5 text-base font-semibold text-white shadow-ambient transition-all hover:bg-[#004A9E] hover:shadow-ambient-lg"
                 >
-                  Comienza tu camino
+                  {t('landing:advanced.ctaButton')}
                   <ArrowRight className="h-5 w-5" />
                 </Link>
                 <a
@@ -221,7 +243,7 @@ export default function Landing() {
                   style={{ color: "#2F75DC" }}
                 >
                   <Play className="h-5 w-5 text-[#2F75DC]" />
-                  Ver cómo funciona
+                  {t('landing:advanced.ctaSecondary')}
                 </a>
               </div>
 
@@ -242,8 +264,7 @@ export default function Landing() {
                   ))}
                 </div>
                 <div className="text-sm leading-snug sm:max-w-[260px]" style={{ color: "#002F68" }}>
-                  Miles de personas ya están transformando su futuro con{" "}
-                  <span style={{ color: "#2F75DC" }} className="font-semibold">BiT</span>.
+                  {t('landing:advanced.socialProof')}
                 </div>
               </div>
             </motion.div>
@@ -262,7 +283,7 @@ export default function Landing() {
             className="font-display text-center text-xl font-bold md:text-2xl lg:text-3xl"
             style={{ color: "#002F68", letterSpacing: "-0.02em" }}
           >
-            Todo lo que necesitas, en un solo lugar
+            {t('landing:advanced.featuresHeading')}
           </motion.h2>
 
           <motion.div
@@ -332,14 +353,14 @@ export default function Landing() {
                     <div className="relative">
                       <img
                         src="/pet-2.webp"
-                        alt="Mascota de apoyo"
+                        alt={t('landing:advanced.petAltComplete')}
                         className="absolute bottom-0 left-0 h-full w-full object-contain object-left-bottom"
                       />
                       <div className="absolute bottom-0 left-0 right-0 px-4 pb-4">
                         <div className="inline-flex items-center rounded-2xl sb-badge" style={{ backgroundColor: "#E5DAFF" }}>
                           <Sparkles className="shrink-0" style={{ color: "#7C3AED", width: "clamp(0.875rem, 2.2cqi, 1.25rem)", height: "clamp(0.875rem, 2.2cqi, 1.25rem)" }} />
                           <p className="text-left sb-body" style={{ color: "#7C3AED" }}>
-                            BiT es un asistente de IA especializado en garantizar tu bienestar y ayudarte a cumplir tus metas.
+                            {t('landing:advanced.aiBadge')}
                           </p>
                         </div>
                       </div>
@@ -349,7 +370,7 @@ export default function Landing() {
                   <div className="grid h-full w-full items-end" style={{ gridTemplateAreas: '"pet dialog"', gridTemplateColumns: '45% 55%' }}>
                     <img
                       src="/pet-2.webp"
-                      alt="Mascota de apoyo"
+                      alt={t('landing:advanced.petAltComplete')}
                       className="h-full w-full object-contain object-left-bottom"
                       style={{ gridArea: "pet" }}
                     />
@@ -377,7 +398,7 @@ export default function Landing() {
                       <div className="mt-4 inline-flex items-center rounded-2xl sb-badge" style={{ backgroundColor: "#E5DAFF" }}>
                         <Sparkles className="shrink-0" style={{ color: "#7C3AED", width: "clamp(0.875rem, 2.2cqi, 1.25rem)", height: "clamp(0.875rem, 2.2cqi, 1.25rem)" }} />
                         <p className="text-left sb-body" style={{ color: "#7C3AED" }}>
-                          BiT es un asistente de IA especializado en garantizar tu bienestar y ayudarte a cumplir tus metas.
+                          {t('landing:advanced.aiBadge')}
                         </p>
                       </div>
                     </div>
@@ -427,7 +448,7 @@ export default function Landing() {
                       onClick={() => setCurrentTestimonial(i)}
                       className={`rounded-full transition-all duration-300 ${i === currentTestimonial ? 'sb-dot-active' : 'sb-dot-inactive'}`}
                       style={{ backgroundColor: i === currentTestimonial ? "#D97706" : "#FDE68A" }}
-                      aria-label={`Testimonio ${i + 1}`}
+                      aria-label={t('landing:testimonials.testimonyAria', { index: i + 1 })}
                     />
                   ))}
                 </div>
@@ -451,7 +472,7 @@ export default function Landing() {
               className="font-display text-center text-xl font-bold md:text-2xl lg:text-3xl"
               style={{ color: "#002F68", letterSpacing: "-0.02em" }}
             >
-              Usar BiT es muy fácil
+              {t('landing:advanced.roadmap.heading')}
             </h2>
 
             <motion.div
@@ -466,7 +487,7 @@ export default function Landing() {
                   <User className="h-5 w-5 sm:h-6 sm:w-6 md:h-7 md:w-7 lg:h-10 lg:w-10 text-[#7C3AED]" />
                 </div>
                 <span className="mt-3 block w-24 text-center font-display text-sm font-bold sm:text-sm md:text-xs lg:text-base min-h-[1.75rem]" style={{ color: "#002F68" }}>
-                  Crea tu<br />perfil
+                  {t('landing:advanced.roadmap.step1')}
                 </span>
               </motion.div>
               <motion.div variants={{ hidden: { opacity: 0 }, visible: { opacity: 1, transition: { duration: 0.4 } } }} className="hidden md:flex md:h-16 md:flex-1 md:items-center">
@@ -487,7 +508,7 @@ export default function Landing() {
                   <Compass className="h-5 w-5 sm:h-6 sm:w-6 md:h-7 md:w-7 lg:h-10 lg:w-10 text-[#006D34]" />
                 </div>
                 <span className="mt-3 block w-28 text-center font-display text-sm font-bold sm:text-sm md:text-xs lg:text-base min-h-[1.75rem]" style={{ color: "#002F68" }}>
-                  Descubre tu<br />camino
+                  {t('landing:advanced.roadmap.step2')}
                 </span>
               </motion.div>
               <motion.div variants={{ hidden: { opacity: 0 }, visible: { opacity: 1, transition: { duration: 0.4 } } }} className="hidden md:flex md:h-16 md:flex-1 md:items-center">
@@ -508,7 +529,7 @@ export default function Landing() {
                   <BookOpen className="h-5 w-5 sm:h-6 sm:w-6 md:h-7 md:w-7 lg:h-10 lg:w-10 text-[#2F75DC]" />
                 </div>
                 <span className="mt-3 block w-28 text-center font-display text-sm font-bold sm:text-sm md:text-xs lg:text-base min-h-[1.75rem]" style={{ color: "#002F68" }}>
-                  Aprende y<br />desarrolla
+                  {t('landing:advanced.roadmap.step3')}
                 </span>
               </motion.div>
               <motion.div variants={{ hidden: { opacity: 0 }, visible: { opacity: 1, transition: { duration: 0.4 } } }} className="hidden md:flex md:h-16 md:flex-1 md:items-center">
@@ -529,7 +550,7 @@ export default function Landing() {
                   <MessageCircle className="h-5 w-5 sm:h-6 sm:w-6 md:h-7 md:w-7 lg:h-10 lg:w-10 text-[#D97706]" />
                 </div>
                 <span className="mt-3 block w-28 text-center font-display text-sm font-bold sm:text-sm md:text-xs lg:text-base min-h-[1.75rem]" style={{ color: "#002F68" }}>
-                  Conecta con<br />mentores
+                  {t('landing:advanced.roadmap.step4')}
                 </span>
               </motion.div>
               <motion.div variants={{ hidden: { opacity: 0 }, visible: { opacity: 1, transition: { duration: 0.4 } } }} className="hidden md:flex md:h-16 md:flex-1 md:items-center">
@@ -550,7 +571,7 @@ export default function Landing() {
                   <Briefcase className="h-5 w-5 sm:h-6 sm:w-6 md:h-7 md:w-7 lg:h-10 lg:w-10 text-[#2F75DC]" />
                 </div>
                 <span className="mt-3 block w-24 text-center font-display text-sm font-bold sm:text-sm md:text-xs lg:text-base min-h-[1.75rem]" style={{ color: "#002F68" }}>
-                  Aplica a<br />trabajos
+                  {t('landing:advanced.roadmap.step5')}
                 </span>
               </motion.div>
               <motion.div variants={{ hidden: { opacity: 0 }, visible: { opacity: 1, transition: { duration: 0.4 } } }} className="hidden md:flex md:h-16 md:flex-1 md:items-center">
@@ -571,7 +592,7 @@ export default function Landing() {
                   <Trophy className="h-5 w-5 sm:h-6 sm:w-6 md:h-7 md:w-7 lg:h-10 lg:w-10 text-[#006D34]" />
                 </div>
                 <span className="mt-3 block w-28 text-center font-display text-sm font-bold sm:text-sm md:text-xs lg:text-base min-h-[1.75rem]" style={{ color: "#002F68" }}>
-                  Celebra tus<br />logros
+                  {t('landing:advanced.roadmap.step6')}
                 </span>
               </motion.div>
             </motion.div>
@@ -598,7 +619,7 @@ export default function Landing() {
           >
             <motion.img
               src="/pet-3.webp"
-              alt="Mascota BiT"
+              alt={t('landing:advanced.petAlt2')}
               className="h-auto w-[160px] object-contain sm:w-[200px] md:w-[260px] lg:w-[320px] min-[1261px]:w-[400px]"
               whileHover={{ rotate: -6, scale: 1.05 }}
               transition={{ type: "spring", stiffness: 200, damping: 15 }}
@@ -610,20 +631,20 @@ export default function Landing() {
               className="font-display font-bold text-2xl sm:text-3xl md:text-4xl lg:text-4xl min-[1261px]:text-5xl"
               style={{ color: "#002F68", letterSpacing: "-0.02em" }}
             >
-              Tu camino empieza ahora.
+              {t('landing:advanced.bottomCTA.heading')}
             </h2>
             <p
               className="mt-4 max-w-md leading-relaxed text-sm sm:text-base md:text-base min-[1261px]:text-lg"
               style={{ color: "#424753" }}
             >
-              ¿Qué estás esperando? Comienza ahora y descubre todo lo que tenemos preparado para ti.
+              {t('landing:advanced.bottomCTA.description')}
             </p>
             <Link
               to="/register"
               onClick={() => window.scrollTo(0, 0)}
               className="mt-6 inline-flex items-center justify-center gap-2 rounded-full bg-[#2F75DC] px-8 py-3.5 text-sm font-semibold text-white shadow-ambient transition-all hover:bg-[#004A9E] hover:shadow-ambient-lg sm:text-base"
             >
-              Comenzar mi camino
+              {t('landing:advanced.bottomCTA.button')}
               <ArrowRight className="h-5 w-5" />
             </Link>
           </div>

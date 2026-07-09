@@ -1,0 +1,116 @@
+{
+  "hero": {
+    "badge": "Plataforma de orientación integral",
+    "title": "Tu crecimiento profesional y personal en un solo lugar.",
+    "subtitle": "Formación, empleabilidad, mentorías y bienestar emocional impulsados por inteligencia artificial.",
+    "cta": "Comenzar ahora",
+    "ctaSecondary": "Ver más",
+    "compatLabel": "Compatibilidad laboral",
+    "trayectoryLabel": "Trayectoria sugerida:",
+    "trayectoryRole": "Frontend Developer",
+    "moodLabel": "😊 Estado emocional positivo"
+  },
+  "howItWorks": {
+    "heading": "¿Cómo funciona?",
+    "step1": "Completa tu perfil",
+    "step2": "Analizamos tu situación",
+    "step3": "Recibe orientación",
+    "step4": "Avanza con confianza"
+  },
+  "problem": {
+    "heading": "Entendemos los desafíos reales",
+    "item1": "Falta de oportunidades laborales",
+    "item2": "Networking limitado",
+    "item3": "Baja autoestima profesional",
+    "item4": "Falta de acompañamiento",
+    "item5": "Dificultad para encontrar formación adecuada"
+  },
+  "services": {
+    "heading": "Los 5 pilares de App BiT",
+    "service1": "Formación",
+    "service2": "Empleabilidad",
+    "service3": "Experiencias",
+    "service4": "Mentorías",
+    "service5": "Salud Mental"
+  },
+  "ai": {
+    "heading": "Inteligencia Artificial que te acompaña",
+    "description": "Analizamos tu perfil, detectamos oportunidades y te ayudamos a avanzar con confianza.",
+    "card1Title": "Orientación Profesional",
+    "card1Description": "Identificación automática de gaps.",
+    "card2Title": "Bienestar Emocional",
+    "card2Description": "Check-ins y recomendaciones personalizadas."
+  },
+  "testimonials": {
+    "badge": "Comunidad App BiT",
+    "heading": "Historias que inspiran",
+    "description": "Personas que encontraron nuevas oportunidades y confianza para crecer.",
+    "testimonyAria": "Ver testimonio {{index}}"
+  },
+  "cta": {
+    "heading": "Tu próximo paso comienza hoy",
+    "description": "Únete a App BiT y descubre oportunidades diseñadas para tu crecimiento.",
+    "button": "Crear cuenta gratis"
+  },
+  "advanced": {
+    "features": {
+      "learn": "Aprende",
+      "learnDesc": "Rutas de aprendizaje personalizadas para desarrollar tus habilidades.",
+      "opportunities": "Oportunidades",
+      "opportunitiesDesc": "Encuentra empleos que se ajusten a tus habilidades.",
+      "mentorship": "Mentorías",
+      "mentorshipDesc": "Conecta con mentores que te inspiran y te guían.",
+      "community": "Comunidad",
+      "communityDesc": "Comparte, aprende y crece junto a otras personas.",
+      "wellness": "Bienestar",
+      "wellnessDesc": "Cuida tu salud emocional con ayuda y recursos pensados para ti"
+    },
+    "testimonial1": {
+      "quote": "BiT me ayudó a entender qué habilidades necesitaba mejorar y me dio una ruta clara para avanzar. Hoy me siento mucho más segura y motivada para alcanzar mi primer empleo.",
+      "name": "Julia",
+      "country": "Brasil",
+      "role": "Desarrolladora Frontend"
+    },
+    "testimonial2": {
+      "quote": "No solo encontré cursos y oportunidades, también recuperé la confianza en mí mismo. Tener una guía personalizada hizo que cada paso fuera mucho más fácil.",
+      "name": "José",
+      "country": "Perú",
+      "role": "Desarrollador Full Stack"
+    },
+    "testimonial3": {
+      "quote": "Con BiT dejé de sentir que estaba avanzando sin rumbo. Ahora sé exactamente cuál es mi siguiente objetivo y cada día estoy más cerca de conseguir el trabajo que quiero.",
+      "name": "Ousmane",
+      "country": "Angola",
+      "role": "Estudiante"
+    },
+    "typewriter": {
+      "title": "¡Craa! Soy BiT",
+      "subtitle": "Voy a acompañarte durante todo el camino para ayudarte a alcanzar tus objetivos."
+    },
+    "petAlt": "Mascota guacamaya",
+    "petAltComplete": "Mascota de apoyo",
+    "petAlt2": "Mascota BiT",
+    "aiBadge": "BiT es un asistente de IA especializado en garantizar tu bienestar y ayudarte a cumplir tus metas.",
+    "socialProof": "Miles de personas ya están transformando su futuro con BiT.",
+    "featuresHeading": "Todo lo que necesitas, en un solo lugar",
+    "heading1": "Cada pequeño paso te acerca a tu",
+    "headingFuturo": "futuro",
+    "description": "Te acompañamos con aprendizaje, mentorías, oportunidades y bienestar para que crezcas a tu ritmo.",
+    "ctaButton": "Comienza tu camino",
+    "ctaSecondary": "Ver cómo funciona",
+    "roadmap": {
+      "heading": "Usar BiT es muy fácil",
+      "step1": "Crea tu perfil",
+      "step2": "Descubre tu camino",
+      "step3": "Aprende y desarrolla",
+      "step4": "Conecta con mentores",
+      "step5": "Aplica a trabajos",
+      "step6": "Celebra tus logros"
+    },
+    "bottomCTA": {
+      "heading": "Tu camino empieza ahora.",
+      "description": "¿Qué estás esperando? Comienza ahora y descubre todo lo que tenemos preparado para ti.",
+      "button": "Comenzar mi camino"
+    }
+  }
+}
