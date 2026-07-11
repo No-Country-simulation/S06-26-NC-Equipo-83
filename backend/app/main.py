@@ -54,6 +54,7 @@ app.include_router(users.router)
 # Health-check endpoint
 # ---------------------------------------------------------------------------
 @app.get("/health", tags=["system"])
+@app.head("/health", include_in_schema=False)
 async def health_check() -> dict[str, str]:
     """
     Verify that the API is running and responsive.
